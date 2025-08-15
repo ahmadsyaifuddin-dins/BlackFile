@@ -1,5 +1,4 @@
-{{-- HANYA ADA SATU PEMBUKA <x-guest-layout> DI SINI --}}
-    <x-guest-layout>
+<x-guest-layout>
         <div 
             x-data="{ 
                 status: 'idle', // 'idle', 'loading', 'granted', 'denied'
@@ -52,7 +51,7 @@
                         <input id="password" class="block mt-1 w-full bg-surface border-border-color focus:border-primary focus:ring-primary" type="password" name="password" required />
                     </div>
                     <div class="flex items-center justify-end mt-6">
-                        <button type="submit" class="w-full px-4 py-2 bg-primary text-base text-base hover:bg-primary-hover font-bold tracking-widest">
+                        <button type="submit" class="w-full px-4 py-2 bg-primary text-base text-base hover:bg-primary-hover font-bold tracking-widest cursor-pointer">
                             > INITIATE CONNECTION
                         </button>
                     </div>
@@ -72,5 +71,4 @@
                 <p class="mt-4 text-sm text-secondary" x-text="errorMessage"></p>
             </div>
         </div>
-    {{-- DAN SATU PENUTUP </x-guest-layout> DI SINI --}}
     </x-guest-layout>

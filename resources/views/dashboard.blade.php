@@ -1,8 +1,8 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot:title>
+        System Dashboard
+    </x-slot>
 
-@section('title', 'System Dashboard')
-
-@section('content')
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
         <div class="border-2 border-border-color bg-surface p-6 rounded-lg">
@@ -34,4 +34,4 @@
         </div>
 
     </div>
-@endsection
+</x-app-layout>

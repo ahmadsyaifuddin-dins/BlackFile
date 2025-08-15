@@ -1,112 +1,76 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laravel + Tailwind v4</title>
-     @vite(['resources/css/app.css', 'resources/js/app.js']) 
-    <script>
-        // Check for saved theme preference or use system preference
-        (function() {
-            if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        })();
-    </script>
-    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BLACKFILE // SECURE SYSTEM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-800 dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 dark:text-gray-100 font-sans transition-colors duration-300">
-    <div class="min-h-screen flex flex-col items-center justify-center p-4 relative">
-        <!-- Theme Toggle Button -->
-        <button id="theme-toggle" type="button" class="absolute top-4 right-4 p-2 rounded-lg bg-white/30 dark:bg-gray-800/30 backdrop-blur-md border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
-            <svg id="theme-toggle-dark-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-            </svg>
-            <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
-            </svg>
-        </button>
-
-        <div class="max-w-2xl w-full bg-white/70 dark:bg-white/5 backdrop-blur-md rounded-2xl border border-gray-200 dark:border-white/10 p-8 shadow-xl dark:shadow-2xl transition-all hover:shadow-indigo-500/10 dark:hover:shadow-indigo-500/20">
-            <h1 class="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-400 dark:to-purple-500 bg-clip-text text-transparent mb-6">
-                Welcome to <span class="animate-pulse">v4</span>
-            </h1>
-            
-            <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">
-                The future of CSS with Laravel & Vite
-            </p>
-            
-            <a href="https://github.com/ahmad-syaifuddin/tailwind4-best-practice-landing-page-laravel" target="_blank"
-            class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-medium text-white transition-all transform hover:-translate-y-1 inline-flex items-center gap-2">
-                📖 View Layout Best Practice
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-            </a>
-            
-            <div class="mt-8 flex gap-4 flex-wrap">
-                <span class="px-3 py-1 bg-gray-100 dark:bg-white/10 rounded-full text-xs font-mono">Laravel 10</span>
-                <span class="px-3 py-1 bg-gray-100 dark:bg-white/10 rounded-full text-xs font-mono">Tailwind v4</span>
-                <span class="px-3 py-1 bg-gray-100 dark:bg-white/10 rounded-full text-xs font-mono">Vite</span>
-                <span class="px-3 py-1 bg-gray-100 dark:bg-white/10 rounded-full text-xs font-mono">Dark Mode</span>
-            </div>
-        </div>
-
-        <!-- Stylish Footer -->
-        <footer class="mt-12 text-center text-gray-500 dark:text-gray-400 text-sm">
-            <div class="flex items-center justify-center gap-2">
-                <span>Crafted with</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500 animate-pulse" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
-                </svg>
-                <span>by</span>
-                <a href="https://github.com/ahmadsyaifuddin-dins" target="_blank" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors">
-                    Ahmad Syaifuddin
+<body class="antialiased font-mono bg-base text-secondary">
+    <div class="relative min-h-screen">
+        <header class="absolute top-0 left-0 right-0 z-10 p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <span class="text-2xl font-bold text-primary tracking-[.25em]">[B.F]</span>
+                <a href="{{ route('login') }}" class="px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-base transition-colors font-bold text-sm">
+                    > AUTHENTICATE
                 </a>
             </div>
-            <div class="mt-2 opacity-75">
-                © {{ now()->year }} All rights reserved
-            </div>
+        </header>
+
+        <main>
+            <section class="min-h-screen flex items-center justify-center text-center p-4">
+                <div x-data="{ showCursor: true }" x-init="setInterval(() => showCursor = !showCursor, 600)">
+                    <div class="mb-4 flex justify-center">
+                        <img src="{{ asset('app-icon.png') }}" alt="App Icon BlackFile" class="w-32 h-32">
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl md:text-5xl font-bold text-white mt-4 tracking-wider">
+                        BLACKFILE PROTOCOL
+                        <span x-show="showCursor" class="animate-pulse">_</span>
+                    </h1>
+                    <p class="mt-4 max-w-2xl mx-auto text-sm sm:text-base">
+                        A secure, encrypted, and decentralized archive for sensitive field operations and agent network management.
+                    </p>
+                    <p class="mt-2 text-red-500/70 text-xs">[UNAUTHORIZED ACCESS IS STRICTLY PROHIBITED]</p>
+                </div>
+            </section>
+
+            <section class="py-20 bg-surface border-y-2 border-border-color p-4">
+                <div class="container mx-auto">
+                    <h2 class="text-center text-3xl font-bold text-primary mb-12">[ SYSTEM CAPABILITIES ]</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                        <div class="border border-border-color p-6 rounded-lg">
+                            <h3 class="text-xl font-bold text-white mb-2">> AGENT ROSTER</h3>
+                            <p class="text-sm">Securely manage operative profiles, designations, and clearance levels. On-demand deployment and extraction protocols.</p>
+                        </div>
+                        <div class="border border-border-color p-6 rounded-lg">
+                            <h3 class="text-xl font-bold text-white mb-2">> MISSION DIRECTIVES</h3>
+                            <p class="text-sm">Create, assign, and monitor multi-phase operations. Real-time status tracking from inception to archival.</p>
+                        </div>
+                        <div class="border border-border-color p-6 rounded-lg">
+                            <h3 class="text-xl font-bold text-white mb-2">> ASSET NETWORK</h3>
+                            <p class="text-sm">Map and visualize hierarchical relationships between operatives, informants, and key assets in the field.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-20 text-center p-4">
+                <div class="container mx-auto">
+                    <h2 class="text-2xl font-bold text-white">Your mission, should you choose to accept it, begins here.</h2>
+                    <p class="mt-4 mb-8 max-w-xl mx-auto">This terminal is the gateway. Verify your identity to proceed.</p>
+                    <a href="{{ route('login') }}" class="px-8 py-4 bg-primary text-base hover:bg-primary-hover transition-colors font-bold tracking-widest text-lg">
+                        > ACCESS TERMINAL
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center p-4 border-t border-border-color bg-surface">
+            <p class="text-xs text-secondary/50">&copy; <span class="font-bold"> 2025 - {{ date('Y') }} </span> Directorate Internal Systems // All communications are monitored and encrypted.</p>
         </footer>
     </div>
- 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const themeToggle = document.getElementById('theme-toggle');
-            const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-            const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-
-            // Function to update icon visibility
-            function updateThemeIcon() {
-                if (document.documentElement.classList.contains('dark')) {
-                    themeToggleDarkIcon.classList.add('hidden');
-                    themeToggleLightIcon.classList.remove('hidden');
-                } else {
-                    themeToggleDarkIcon.classList.remove('hidden');
-                    themeToggleLightIcon.classList.add('hidden');
-                }
-            }
-
-            // Initialize icon on page load
-            updateThemeIcon();
-
-            themeToggle.addEventListener('click', function() {
-                // Toggle dark class
-                document.documentElement.classList.toggle('dark');
-                
-                // Update localStorage
-                if (document.documentElement.classList.contains('dark')) {
-                    localStorage.setItem('color-theme', 'dark');
-                } else {
-                    localStorage.setItem('color-theme', 'light');
-                }
-                
-                // Update icon
-                updateThemeIcon();
-            });
-        });
-    </script>
 </body>
 </html>

@@ -77,18 +77,6 @@ class FriendController extends Controller
         return view('friends.tree', compact('root'));
     }
 
-    // // Lihat tree pusat (root = user yang login)
-    // public function centralTree()
-    // {
-    //     // Ambil semua teman yang parent_id = null (level pertama)
-    //     $roots = Friend::where('user_id', Auth::id())
-    //         ->whereNull('parent_id')
-    //         ->with('children')
-    //         ->get();
-
-    //     return view('friends.central-tree', compact('roots'));
-    // }
-
     public function centralTreeGraph()
     {
         $rootUser = auth()->user();

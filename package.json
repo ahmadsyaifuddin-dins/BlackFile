@@ -13,6 +13,9 @@
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.12",
-        "tailwindcss": "^4.1.12"
+        "cytoscape": "^3.33.1",
+        "raphael": "^2.3.0",
+        "tailwindcss": "^4.1.12",
+        "treant-js": "^1.0.1"
     }
 }

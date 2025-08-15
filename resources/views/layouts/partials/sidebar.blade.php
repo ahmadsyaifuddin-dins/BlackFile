@@ -8,28 +8,39 @@
     </div>
 
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto text-green-700">
-        <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors {{ request()->is('dashboard') 
-            ? 'bg-surface-light text-primary border-l-4 border-primary' 
-            : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+        <a href="{{ route('dashboard') }}" 
+           class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('dashboard') 
+                ? 'bg-surface-light text-primary border-l-4 border-primary' 
+                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> Dashboard</span>
         </a>
-        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors {{ request()->is('friends*') 
-            ? 'bg-surface-light text-primary border-l-4 border-primary' 
-            : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+
+        <a href="{{ route('friends.index') }}" 
+           class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('friends.index') 
+                ? 'bg-surface-light text-primary border-l-4 border-primary' 
+                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> Friends Network</span>
         </a>
-        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors {{ request()->is('projects*') 
-            ? 'bg-surface-light text-primary border-l-4 border-primary' 
-            : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
-            <span>> Projects</span>
+
+        <a href="{{ route('friends.central-tree') }}" 
+           class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('friends.central-tree') 
+                ? 'bg-surface-light text-primary border-l-4 border-primary' 
+                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+            <span>> Central Tree</span>
         </a>
-         <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors {{ request()->is('logs*') 
-            ? 'bg-surface-light text-primary border-l-4 border-primary' 
-            : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+
+        <a href="#" 
+           class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('logs.*') 
+                ? 'bg-surface-light text-primary border-l-4 border-primary' 
+                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> Activity Logs</span>
         </a>
-        
-        {{-- Item tambahan untuk tes scrolling --}}
+
+        {{-- Item tambahan --}}
         <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50"><span>> Laporan Mingguan</span></a>
         <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50"><span>> Arsip Intelijen</span></a>
         <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50"><span>> Pengaturan Agen</span></a>
@@ -39,7 +50,8 @@
     <div class="p-4 border-t border-border-color">
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-            <button type="submit" class="w-full text-left flex items-center space-x-3 px-3 py-2 rounded transition-colors hover:bg-red-900/50 hover:text-red-400 cursor-pointer">
+            <button type="submit" 
+                    class="w-full text-left flex items-center space-x-3 px-3 py-2 rounded transition-colors hover:bg-red-900/50 hover:text-red-400 cursor-pointer">
                 <span>> Terminate Session</span>
             </button>
         </form>

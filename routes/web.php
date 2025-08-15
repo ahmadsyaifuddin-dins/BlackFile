@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthManual\LoginController;
 use App\Http\Controllers\AuthManual\RegisterController;
 use App\Http\Controllers\AuthManual\LogoutController;
+use App\Http\Controllers\FriendController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,4 +35,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/register', [RegisterController::class, 'register'])->middleware('role:director');
 
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+
+    Route::get('/friends', [FriendController::class, 'index'])->name('friends.index');
+    Route::get('/friends/create', [FriendController::class, 'create'])->name('friends.create');
+    Route::post('/friends', [FriendController::class, 'store'])->name('friends.store');
+    Route::get('/friends/{id}/tree', [FriendController::class, 'showTree'])->name('friends.tree');
+    Route::get('/friends/central-tree', [FriendController::class, 'centralTreeGraph'])->name('friends.central-tree');
 });

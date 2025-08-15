@@ -8,7 +8,9 @@
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
         <div>
             {{-- Menggunakan named route lebih baik daripada hardcoded '/' --}}
-            <h1 class="text-5xl font-bold text-primary">[B.F]</h1>
+            <a href="{{ route('welcome') }}">
+                <h1 class="text-5xl font-bold text-primary">[B.F]</h1>
+            </a>
         </div>
 
         <div class="w-full sm:max-w-md mt-6 px-6 py-8 bg-surface border-2 border-border-color shadow-md overflow-hidden sm:rounded-lg">

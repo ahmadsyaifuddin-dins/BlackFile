@@ -17,7 +17,7 @@ use App\Http\Controllers\AuthManual\LogoutController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

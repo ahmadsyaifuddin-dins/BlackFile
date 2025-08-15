@@ -9,6 +9,7 @@ return new class extends Migration {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // Nama asli
+            $table->string('username')->unique(); // Nama untuk login
             $table->string('codename')->unique(); // Codename intelijen
             $table->string('email')->unique();
             $table->string('password');

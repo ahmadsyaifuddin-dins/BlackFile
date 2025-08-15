@@ -13,7 +13,7 @@ class RegisterController extends Controller
     public function showRegisterForm()
     {
         // Pastikan hanya Director yang bisa akses
-        if (Auth::user()->role->name !== 'director') {
+        if (strtolower(Auth::user()->role->name) !== 'director') {
             abort(403, 'Unauthorized');
         }
         return view('auth.register');
@@ -21,12 +21,13 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        if (Auth::user()->role->name !== 'director') {
+        if (strtolower(Auth::user()->role->name) !== 'director') {
             abort(403, 'Unauthorized');
         }
 
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'username' => 'required|string|max:50|unique:users,username',
             'codename' => 'required|string|max:50|unique:users,codename',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|min:6|confirmed',
@@ -35,6 +36,7 @@ class RegisterController extends Controller
 
         User::create([
             'name' => $data['name'],
+            'username' => $data['username'],
             'codename' => $data['codename'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),

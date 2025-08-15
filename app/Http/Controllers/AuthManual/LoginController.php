@@ -16,7 +16,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'codename' => 'required|string',
+            'username' => 'required|string',
             'password' => 'required|string',
         ]);
 
@@ -26,7 +26,7 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'codename' => 'Codename atau password salah.',
+            'username' => 'Username atau password salah.',
         ]);
     }
 }

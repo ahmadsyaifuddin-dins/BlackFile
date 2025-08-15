@@ -13,20 +13,23 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(Request $request) // Hapus type-hint RedirectResponse
     {
         $credentials = $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect('/dashboard');
+            // Kirim respons JSON jika sukses
+            return response()->json(['status' => 'success', 'redirect' => route('dashboard')]);
         }
 
-        return back()->withErrors([
-            'username' => 'ACCESS DENIED. Invalid credentials.',
-        ])->onlyInput('username');
+        // Kirim respons JSON jika gagal
+        return response()->json([
+            'status' => 'denied',
+            'message' => 'ACCESS DENIED. Invalid credentials.'
+        ], 422); // 422 Unprocessable Entity
     }
 }

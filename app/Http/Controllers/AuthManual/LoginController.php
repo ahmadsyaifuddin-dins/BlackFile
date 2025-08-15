@@ -20,13 +20,13 @@ class LoginController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+            return redirect('/dashboard');
         }
 
         return back()->withErrors([
-            'username' => 'Username atau password salah.',
-        ]);
+            'username' => 'ACCESS DENIED. Invalid credentials.',
+        ])->onlyInput('username');
     }
 }

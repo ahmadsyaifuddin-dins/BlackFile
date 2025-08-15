@@ -24,12 +24,13 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard'); // <-- Bagian .name('dashboard') ini penting
+
     Route::get('/register', [RegisterController::class, 'showRegisterForm'])->middleware('role:director');
     Route::post('/register', [RegisterController::class, 'register'])->middleware('role:director');
 
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
-
-    Route::get('/dashboard', function () {
-        return 'Halo, ini dashboard!';
-    });
 });

@@ -4,3 +4,22 @@
 
 /* Tell Tailwind to scan views directory */
 @source "../views";
+
+@layer base {
+    :root {
+      --color-base: #0d1117;          /* Background utama */
+      --color-surface: #161b22;      /* Background card/panel */
+      --color-primary: #2ea043;      /* Hijau neon */
+      --color-primary-hover: #36d351;
+      --color-secondary: #8b949e;    /* Teks abu-abu */
+      --color-border: #30363d;       /* Warna border */
+      --color-text-default: var(--color-secondary);
+      --font-mono: "Roboto Mono", monospace;
+    }
+  
+    html, body {
+      background-color: var(--color-base);
+      color: var(--color-text-default);
+      font-family: var(--font-mono);
+    }
+  }

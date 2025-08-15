@@ -1,7 +1,7 @@
 <x-layout>
     {{-- Mengatur judul spesifik untuk layout ini --}}
     <x-slot:title>
-        BLACKFILE // AUTHENTICATION
+        AUTHENTICATION
     </x-slot:title>
 
     {{-- Ini adalah konten asli dari guest-layout, tanpa tag html, head, dan body --}}

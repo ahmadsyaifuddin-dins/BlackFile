@@ -1,25 +1,25 @@
+/* Mengimpor fungsionalitas inti Tailwind */
 @import 'tailwindcss';
 
-@custom-variant dark (&:where(.dark, .dark *));
-
-/* Tell Tailwind to scan views directory */
-@source "../views";
+/* Memberitahu Tailwind di mana harus memindai class */
+@source "../**/*.blade.php", "../**/*.js";
 
 @layer base {
     :root {
-      --color-base: #0d1117;          /* Background utama */
-      --color-surface: #161b22;      /* Background card/panel */
-      --color-primary: #2ea043;      /* Hijau neon */
+      --color-base: #0d1117;
+      --color-surface: #161b22;
+      --color-surface-light: #21262d; /* Menambahkan ini dari revisi sebelumnya */
+      --color-primary: #2ea043;
       --color-primary-hover: #36d351;
-      --color-secondary: #8b949e;    /* Teks abu-abu */
-      --color-border: #30363d;       /* Warna border */
+      --color-secondary: #8b949e;
+      --color-border: #30363d;
       --color-text-default: var(--color-secondary);
       --font-mono: "Roboto Mono", monospace;
     }
-  
+ 
     html, body {
       background-color: var(--color-base);
       color: var(--color-text-default);
       font-family: var(--font-mono);
     }
-  }
+}

@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="antialiased font-mono bg-base text-secondary">
+<body class="antialiased font-mono bg-base text-secondary bg-[#000]">
     <div class="relative min-h-screen">
         <header class="absolute top-0 left-0 right-0 z-10 p-4">
             <div class="container mx-auto flex justify-between items-center">

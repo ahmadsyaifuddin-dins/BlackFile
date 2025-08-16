@@ -154,15 +154,15 @@ class FriendController extends Controller
                 return back()->withErrors(['target_entity' => 'This connection has already been established.'])->withInput();
             }
 
-            $reverseConnectionExists = Connection::where('source_type', get_class($targetEntity))
-                ->where('source_id', $targetEntity->id)
-                ->where('target_type', get_class($source))
-                ->where('target_id', $source->id)
-                ->exists();
+            // $reverseConnectionExists = Connection::where('source_type', get_class($targetEntity))
+            //     ->where('source_id', $targetEntity->id)
+            //     ->where('target_type', get_class($source))
+            //     ->where('target_id', $source->id)
+            //     ->exists();
 
-            if ($reverseConnectionExists) {
-                return back()->withErrors(['target_entity' => 'A reciprocal connection to this entity already exists.'])->withInput();
-            }
+            // if ($reverseConnectionExists) {
+            //     return back()->withErrors(['target_entity' => 'A reciprocal connection to this entity already exists.'])->withInput();
+            // }
 
             // Buat koneksi dengan tipe yang sudah dinamis
             Connection::create([

@@ -1,4 +1,4 @@
-<x-app-layout>
+{{-- <x-app-layout>
     <x-slot:title>Central Tree Friend</x-slot>
 
     <div class="p-6">
@@ -42,4 +42,4 @@
         }
     </style>
     @endpush
-</x-app-layout>
+</x-app-layout> --}}

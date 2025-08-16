@@ -23,3 +23,17 @@
       font-family: var(--font-mono);
     }
 }
+
+@layer components {
+  .highlighted {
+      min-zoomed-font-size: 12px;
+      font-weight: bold;
+      background-color: #2ea043; /* Warna hijau primary */
+      border-color: #fff;
+      border-width: 2px;
+      z-index: 9999;
+  }
+  .faded {
+      opacity: 0.25;
+  }
+}

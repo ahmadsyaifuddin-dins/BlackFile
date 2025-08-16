@@ -27,7 +27,7 @@ class FriendController extends Controller
         return view('friends.index', $graphData);
     }
 
-     /**
+    /**
      * Menampilkan Network Analysis Graph untuk jaringan UTAMA milik Director.
      */
     public function centralTreeGraph()
@@ -41,7 +41,7 @@ class FriendController extends Controller
         // Menambahkan data tambahan untuk view
         $graphData['pageTitle'] = 'Central Tree';
         $graphData['rootNodeId'] = 'u' . $director->id;
-        
+
         return view('friends.index', $graphData); // <-- Menggunakan view yang sama
     }
 
@@ -60,7 +60,7 @@ class FriendController extends Controller
             $entityId = $entityType . $entity->id;
 
             if (in_array($entityId, $processedIds)) return;
-            
+
             $nodes[$entityId] = [
                 'data' => [
                     'id'     => $entityId,
@@ -103,7 +103,7 @@ class FriendController extends Controller
         // Ambil semua entitas yang bisa dihubungkan
         $connectableUsers = User::where('id', '!=', Auth::id())->orderBy('codename')->get();
         $connectableFriends = Friend::orderBy('codename')->get();
-        
+
         return view('friends.create', compact('connectableUsers', 'connectableFriends'));
     }
 
@@ -112,7 +112,7 @@ class FriendController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validasi: Pastikan salah satu dari dua mode diisi
+        // 1. Validasi (tetap sama)
         $request->validate([
             'name' => 'nullable|required_without:target_entity|string|max:255',
             'codename' => 'nullable|required_without:target_entity|string|max:50|unique:friends,codename',
@@ -125,34 +125,35 @@ class FriendController extends Controller
         $source = Auth::user();
         $targetEntity = null;
 
-        // 2. Tentukan Target: Apakah membuat aset baru atau menghubungkan ke yang sudah ada
+        // 2. Tentukan Target (tetap sama)
         if ($request->filled('target_entity')) {
             [$type, $id] = explode('-', $request->target_entity);
             $modelClass = $type === 'user' ? User::class : Friend::class;
             $targetEntity = $modelClass::findOrFail($id);
-        } 
-        elseif ($request->filled('name') && $request->filled('codename')) {
+        } elseif ($request->filled('name') && $request->filled('codename')) {
             $targetEntity = Friend::create([
-                'user_id' => $source->id, // Catat siapa pembuat asli aset ini
+                'user_id' => $source->id,
                 'name' => $request->name,
                 'codename' => $request->codename,
             ]);
         }
 
-        // 3. Proses Koneksi (jika target valid)
+        // 3. Proses Koneksi (dengan logika baru)
         if ($targetEntity) {
-            // [VALIDASI PENTING] Cek apakah koneksi yang sama persis sudah ada
+            // [LOGIKA BARU] Tentukan tipe relasi secara dinamis
+            $relationshipType = $targetEntity instanceof Friend ? 'asset' : 'operative';
+
+            // Validasi koneksi duplikat & terbalik (tetap sama)
             $connectionExists = Connection::where('source_type', get_class($source))
                 ->where('source_id', $source->id)
                 ->where('target_type', get_class($targetEntity))
                 ->where('target_id', $targetEntity->id)
                 ->exists();
-            
+
             if ($connectionExists) {
                 return back()->withErrors(['target_entity' => 'This connection has already been established.'])->withInput();
             }
 
-            // [VALIDASI PENTING] Cek apakah koneksi terbalik sudah ada (mencegah panah 2 arah)
             $reverseConnectionExists = Connection::where('source_type', get_class($targetEntity))
                 ->where('source_id', $targetEntity->id)
                 ->where('target_type', get_class($source))
@@ -163,14 +164,15 @@ class FriendController extends Controller
                 return back()->withErrors(['target_entity' => 'A reciprocal connection to this entity already exists.'])->withInput();
             }
 
-            // Jika semua pengecekan lolos, buat koneksi
+            // Buat koneksi dengan tipe yang sudah dinamis
             Connection::create([
                 'source_id' => $source->id,
                 'source_type' => get_class($source),
                 'target_id' => $targetEntity->id,
                 'target_type' => get_class($targetEntity),
+                'relationship_type' => $relationshipType, // <-- Gunakan variabel baru
             ]);
-            
+
             return redirect()->route('friends.index')->with('success', 'Connection established successfully.');
         }
 
@@ -186,7 +188,7 @@ class FriendController extends Controller
         if ($friend->user_id !== auth()->id()) {
             abort(403, 'UNAUTHORIZED ACTION - You are not the original creator of this asset.');
         }
-        
+
         // Cukup kirim data teman yang akan diedit, tidak perlu 'parentOptions' lagi
         return view('friends.edit', compact('friend'));
     }
@@ -239,5 +241,4 @@ class FriendController extends Controller
 
         return view('friends.tree', compact('root'));
     }
-
 }

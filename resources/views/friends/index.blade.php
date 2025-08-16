@@ -1,15 +1,15 @@
 <x-app-layout>
     <x-slot:title>
-        Network Analysis Terminal
+        {{ $pageTitle ?? 'Network Analysis' }}
     </x-slot:title>
 
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
         <h2 class="text-2xl font-bold text-primary">
-            > [ NETWORK ANALYSIS TERMINAL ]
+            > [ {{ $pageTitle ?? 'NETWORK ANALYSIS TERMINAL' }} ]
         </h2>
         <a href="{{ route('friends.create') }}" 
            class="mt-2 sm:mt-0 px-4 py-2 bg-primary text-base hover:bg-primary-hover transition-colors font-bold tracking-widest rounded-md text-sm">
-            [ + REGISTER NEW ASSET ]
+            [ + ESTABLISH CONNECTION ]
         </a>
     </div>
     <div>

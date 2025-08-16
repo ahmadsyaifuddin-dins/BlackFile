@@ -16,27 +16,82 @@ class FriendController extends Controller
      */
     public function index()
     {
-        // Memanggil helper untuk membangun graph, dimulai dari user yang login
-        $graphData = $this->buildGraphData(Auth::user());
+        $startUser = Auth::user();
+        $graphData = $this->buildGraphData($startUser);
+
+        // Menambahkan data tambahan untuk view
+        $graphData['pageTitle'] = 'My Network';
+        $graphData['rootNodeId'] = 'u' . $startUser->id;
 
         return view('friends.index', $graphData);
     }
 
-    /**
+     /**
      * Menampilkan Network Analysis Graph untuk jaringan UTAMA milik Director.
      */
     public function centralTreeGraph()
     {
-        // Mencari Director sebagai titik awal
         $director = User::whereHas('role', function ($query) {
             $query->where('name', 'Director');
         })->firstOrFail();
 
-        // Memanggil helper untuk membangun graph, dimulai dari Director
         $graphData = $this->buildGraphData($director);
 
-        // Menggunakan view yang sama dengan index, hanya sumber datanya yang berbeda
-        return view('friends.index', $graphData);
+        // Menambahkan data tambahan untuk view
+        $graphData['pageTitle'] = 'Central Tree';
+        $graphData['rootNodeId'] = 'u' . $director->id;
+        
+        return view('friends.index', $graphData); // <-- Menggunakan view yang sama
+    }
+
+    /**
+     * Helper private untuk membangun data graph (nodes & edges).
+     */
+    private function buildGraphData(Model $startEntity): array
+    {
+        $nodes = [];
+        $edges = [];
+        $processedIds = [];
+
+        $traverse = function (Model $entity) use (&$nodes, &$edges, &$processedIds, &$traverse) {
+            $isUser = $entity instanceof User;
+            $entityType = $isUser ? 'u' : 'f';
+            $entityId = $entityType . $entity->id;
+
+            if (in_array($entityId, $processedIds)) return;
+            
+            $nodes[$entityId] = [
+                'data' => [
+                    'id'     => $entityId,
+                    'label'  => $entity->codename,
+                    'role'   => $isUser ? $entity->role->alias : 'Asset'
+                ]
+            ];
+            $processedIds[] = $entityId;
+
+            $connections = Connection::where('source_type', get_class($entity))
+                ->where('source_id', $entity->id)
+                ->with('target')
+                ->get();
+
+            foreach ($connections as $connection) {
+                if ($target = $connection->target) {
+                    $targetIsUser = $target instanceof User;
+                    $targetType = $targetIsUser ? 'u' : 'f';
+                    $targetId = $targetType . $target->id;
+
+                    $edges[] = ['data' => ['source' => $entityId, 'target' => $targetId]];
+                    $traverse($target);
+                }
+            }
+        };
+
+        $traverse($startEntity);
+
+        return [
+            'nodes' => array_values($nodes),
+            'edges' => $edges
+        ];
     }
 
     /**
@@ -119,74 +174,6 @@ class FriendController extends Controller
         }
 
         return back()->withErrors(['msg' => 'Invalid operation. Please try again.']);
-    }
-    
-    /**
-     * Helper private untuk membangun data graph (nodes & edges) secara rekursif.
-     * @param Model $startEntity - Titik awal (bisa User atau Friend)
-     * @return array - Berisi 'nodes' dan 'edges'
-     */
-    private function buildGraphData(Model $startEntity): array
-    {
-        $nodes = [];
-        $edges = [];
-        $processedIds = []; // Untuk mencegah infinite loop
-
-        // Fungsi rekursif untuk menelusuri jaringan
-        $traverse = function (Model $entity) use (&$nodes, &$edges, &$processedIds, &$traverse) {
-            $isUser = $entity instanceof User;
-            $entityType = $isUser ? 'u' : 'f';
-            $entityId = $entityType . $entity->id;
-
-            // Jika sudah diproses, hentikan untuk menghindari loop tak terbatas
-            if (in_array($entityId, $processedIds)) {
-                return;
-            }
-
-            // Tambahkan node ke daftar
-            $nodes[$entityId] = [
-                'data' => [
-                    'id'     => $entityId,
-                    'label'  => $entity->codename,
-                    'role'   => $isUser ? $entity->role->alias : 'Asset'
-                ]
-            ];
-            $processedIds[] = $entityId;
-
-            // Ambil semua koneksi DARI entitas ini
-            $connections = Connection::where('source_type', get_class($entity))
-                ->where('source_id', $entity->id)
-                ->with('target') // Eager load target untuk efisiensi
-                ->get();
-
-            foreach ($connections as $connection) {
-                $target = $connection->target;
-                if ($target) {
-                    $targetIsUser = $target instanceof User;
-                    $targetType = $targetIsUser ? 'u' : 'f';
-                    $targetId = $targetType . $target->id;
-
-                    // Tambahkan edge
-                    $edges[] = [
-                        'data' => [
-                            'source' => $entityId,
-                            'target' => $targetId
-                        ]
-                    ];
-
-                    // Lanjutkan penelusuran dari target
-                    $traverse($target);
-                }
-            }
-        };
-
-        // Mulai penelusuran dari titik awal
-        $traverse($startEntity);
-
-        return [
-            'nodes' => array_values($nodes),
-            'edges' => $edges
-        ];
     }
 
     /**

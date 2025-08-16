@@ -41,4 +41,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/friends', [FriendController::class, 'store'])->name('friends.store');
     Route::get('/friends/{id}/tree', [FriendController::class, 'showTree'])->name('friends.tree');
     Route::get('/friends/central-tree', [FriendController::class, 'centralTreeGraph'])->name('friends.central-tree');
+
+     // [BARU] Tambahkan rute untuk edit dan hapus
+     Route::get('/friends/{friend}/edit', [FriendController::class, 'edit'])->name('friends.edit');
+     Route::put('/friends/{friend}', [FriendController::class, 'update'])->name('friends.update');
+     Route::delete('/friends/{friend}', [FriendController::class, 'destroy'])->name('friends.destroy');
 });

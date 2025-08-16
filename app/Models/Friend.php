@@ -38,4 +38,18 @@ class Friend extends Model
     {
         return $this->children()->with('childrenRecursive');
     }
+
+    public function getAllChildrenIds()
+    {
+        $ids = [];
+        // Loop melalui semua anak di semua level
+        foreach ($this->childrenRecursive as $child) {
+            $ids[] = $child->id;
+            // Jika anak ini punya anak lagi, gabungkan ID mereka
+            if ($child->childrenRecursive->isNotEmpty()) {
+                $ids = array_merge($ids, $child->getAllChildrenIds());
+            }
+        }
+        return $ids;
+    }
 }

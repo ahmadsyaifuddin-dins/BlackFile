@@ -5,7 +5,7 @@
             <svg x-show="sidebarOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         <h1 class="text-lg font-semibold text-white truncate hidden sm:block">
-            > @yield('title', 'Dashboard')
+            > @yield('title', $title ?? 'Dashboard')
         </h1>
     </div>
 

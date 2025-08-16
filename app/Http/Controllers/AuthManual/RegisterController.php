@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\AuthManual;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,11 +13,11 @@ class RegisterController extends Controller
 {
     public function showRegisterForm()
     {
-        // Pastikan hanya Director yang bisa akses
-        if (strtolower(Auth::user()->role->name) !== 'director') {
-            abort(403, 'Unauthorized');
-        }
-        return view('auth.register');
+        // Ambil semua role KECUALI 'Director' untuk pilihan
+        // Karena seorang Director seharusnya tidak bisa membuat Director lain
+        $roles = Role::where('name', '!=', 'Director')->get();
+
+        return view('auth.register', compact('roles'));
     }
 
     public function register(Request $request)
@@ -32,6 +33,7 @@ class RegisterController extends Controller
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|min:6|confirmed',
             'role_id' => 'required|exists:roles,id',
+            // 'parent_id' => 'required|exists:users,id',
         ]);
 
         User::create([
@@ -41,6 +43,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role_id' => $data['role_id'],
+            'parent_id' => Auth::id(),
         ]);
 
         return redirect('/dashboard')->with('success', 'Akun berhasil dibuat.');

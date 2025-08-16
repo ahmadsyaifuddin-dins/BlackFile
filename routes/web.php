@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     Route::get('/register', [RegisterController::class, 'showRegisterForm'])->middleware('role:director');
-    Route::post('/register', [RegisterController::class, 'register'])->middleware('role:director');
+    Route::post('/register', [RegisterController::class, 'register'])->middleware('role:director')->name('register');
 
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 

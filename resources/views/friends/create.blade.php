@@ -1,15 +1,15 @@
 <x-app-layout>
     <x-slot:title>
-        Register New Asset
+        Establish New Connection
     </x-slot:title>
 
     <div class="p-4 md:p-6 bg-surface border border-border-color rounded-lg">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-bold text-primary">
-                > [ REGISTER NEW ASSET ]
+                > [ ESTABLISH NEW CONNECTION ]
             </h2>
             <a href="{{ route('friends.index') }}" class="text-secondary hover:text-primary transition-colors text-sm">
-                &lt; Back to Directory
+                &lt; Back to Network
             </a>
         </div>
 
@@ -24,40 +24,64 @@
             </div>
         @endif
         
-        <form method="POST" action="{{ route('friends.store') }}" class="space-y-6">
+        <form method="POST" action="{{ route('friends.store') }}">
             @csrf
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="name" class="block text-primary text-sm">> REAL NAME</label>
-                    <input type="text" id="name" name="name" value="{{ old('name') }}"
-                           class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded" 
-                           required>
-                </div>
+            
+            {{-- ====================================================== --}}
+            {{-- BAGIAN INI MENGGANTIKAN FORM LAMA ANDA --}}
+            {{-- ====================================================== --}}
 
-                <div>
-                    <label for="codename" class="block text-primary text-sm">> CODENAME</label>
-                    <input type="text" id="codename" name="codename" value="{{ old('codename') }}"
-                           class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded" 
-                           required>
+            <!-- Mode 1: Daftarkan Aset Baru -->
+            <div class="border-b border-border-color pb-6">
+                <h3 class="text-lg text-primary font-bold mb-4">> OPTION A: REGISTER NEW ASSET</h3>
+                <p class="text-sm text-secondary mb-4">// Use this to add a new informant or asset that is not a system user.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="name" class="block text-primary text-sm">> REAL NAME</label>
+                        <input type="text" id="name" name="name" value="{{ old('name') }}"
+                               class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded">
+                    </div>
+                    <div>
+                        <label for="codename" class="block text-primary text-sm">> CODENAME</label>
+                        <input type="text" id="codename" name="codename" value="{{ old('codename') }}"
+                               class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded">
+                    </div>
                 </div>
             </div>
 
+            <!-- Pembatas -->
+            <div class="text-center text-secondary my-4 font-bold tracking-widest">OR</div>
+
+            <!-- Mode 2: Hubungkan ke yang Sudah Ada -->
             <div>
-                <label for="parent_id" class="block text-primary text-sm">> PARENT ASSET (Optional)</label>
-                <select id="parent_id" name="parent_id"
-                        class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
-                    <option value="">-- No Direct Superior --</option>
-                    @foreach($parentOptions as $option)
-                        <option value="{{ $option->id }}" {{ old('parent_id') == $option->id ? 'selected' : '' }}>
-                            {{ $option->codename }} ({{ $option->name }})
-                        </option>
-                    @endforeach
-                </select>
+                <h3 class="text-lg text-primary font-bold mb-4">> OPTION B: CONNECT TO EXISTING ENTITY</h3>
+                <p class="text-sm text-secondary mb-4">// Use this to link to another registered operative or an existing asset.</p>
+                <div>
+                    <label for="target_entity" class="block text-primary text-sm">> SELECT TARGET</label>
+                    <select id="target_entity" name="target_entity"
+                            class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
+                        <option value="">-- Select Entity --</option>
+                        <optgroup label="OPERATIVES (USERS)">
+                            @foreach($connectableUsers as $user)
+                                <option value="user-{{ $user->id }}">{{ $user->codename }} ({{ $user->role->alias }})</option>
+                            @endforeach
+                        </optgroup>
+                        <optgroup label="EXISTING ASSETS (FRIENDS)">
+                            @foreach($connectableFriends as $friend)
+                                <option value="friend-{{ $friend->id }}">{{ $friend->codename }}</option>
+                            @endforeach
+                        </optgroup>
+                    </select>
+                </div>
             </div>
             
+            {{-- ====================================================== --}}
+            {{-- AKHIR DARI BAGIAN YANG BARU --}}
+            {{-- ====================================================== --}}
+
             <div class="border-t border-border-color pt-6 flex justify-end">
                 <button type="submit" class="px-6 py-2 bg-primary text-base hover:bg-primary-hover transition-colors font-bold tracking-widest rounded-md text-sm">
-                    [ SAVE DOSSIER ]
+                    [ ESTABLISH CONNECTION ]
                 </button>
             </div>
         </form>

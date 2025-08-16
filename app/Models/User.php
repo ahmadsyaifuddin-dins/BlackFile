@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Connection;
 
 class User extends Authenticatable
 {
@@ -48,6 +49,38 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+
+      /**
+     * Koneksi di mana user ini adalah SUMBER.
+     */
+    public function connections()
+    {
+        return $this->morphMany(Connection::class, 'source');
+    }
+
+    /**
+     * Mendapatkan semua TARGET (bisa User atau Friend) yang terhubung DARI user ini.
+     */
+    public function targets()
+    {
+        return $this->hasManyThrough(
+            'App\Models\Friend', // Model akhir yang ingin diakses (contoh)
+            'App\Models\Connection', // Model perantara
+            'source_id', // Foreign key di tabel connections
+            'id', // Local key di tabel friends
+            'id', // Local key di tabel users
+            'target_id' // Foreign key di tabel connections
+        )->where('connections.source_type', User::class);
+    }
+
+    /**
+     * Relasi untuk mendapatkan SEMUA level bawahan secara rekursif.
+     */
+    public function childrenRecursive()
+    {
+        return $this->children()->with('childrenRecursive');
+    }
+
 
     public function friends()
     {

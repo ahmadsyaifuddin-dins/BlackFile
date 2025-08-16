@@ -13,43 +13,67 @@ class Friend extends Model
         'user_id',
         'name',
         'codename',
-        'parent_id',
+        // 'parent_id', // Seharusnya sudah dihapus jika Anda menjalankan migrasi terakhir
     ];
 
-    // Relasi ke user pemilik
+    // Relasi ke user yang membuat record friend ini
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relasi ke parent (teman di level atas)
+    // ===================================================================
+    // CATATAN: Method di bawah ini adalah untuk arsitektur LAMA (parent_id)
+    // ===================================================================
+
+    /**
+     * [BARU] Relasi untuk mendapatkan parent LANGSUNG dari friend ini.
+     */
     public function parent()
     {
         return $this->belongsTo(Friend::class, 'parent_id');
     }
 
-    // Relasi ke anak (teman di level bawah)
+    /**
+     * [BARU & MEMPERBAIKI ERROR] Relasi untuk mendapatkan anak-anak LANGSUNG.
+     */
     public function children()
     {
         return $this->hasMany(Friend::class, 'parent_id');
     }
 
+    /**
+     * Relasi untuk mengambil semua turunan secara rekursif.
+     */
     public function childrenRecursive()
     {
         return $this->children()->with('childrenRecursive');
     }
 
+    /**
+     * Method untuk mengumpulkan semua ID turunan secara rekursif.
+     */
     public function getAllChildrenIds()
     {
         $ids = [];
-        // Loop melalui semua anak di semua level
         foreach ($this->childrenRecursive as $child) {
             $ids[] = $child->id;
-            // Jika anak ini punya anak lagi, gabungkan ID mereka
             if ($child->childrenRecursive->isNotEmpty()) {
                 $ids = array_merge($ids, $child->getAllChildrenIds());
             }
         }
         return $ids;
+    }
+
+    // ===================================================================
+    // METHOD UNTUK ARSITEKTUR BARU (connections)
+    // ===================================================================
+    
+    /**
+     * Relasi untuk semua koneksi di mana friend ini adalah SUMBER.
+     */
+    public function connections()
+    {
+        return $this->morphMany(Connection::class, 'source');
     }
 }

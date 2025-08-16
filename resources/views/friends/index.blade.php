@@ -12,8 +12,8 @@
             [ + ESTABLISH CONNECTION ]
         </a>
     </div>
-    <div>
 
+    <div>
         <div id="graph-controls" class="mb-4 p-4 bg-surface border border-border-color rounded-lg">
             <div class="flex flex-col md:flex-row gap-4 md:items-center">
                 <div class="w-full md:w-1/3">
@@ -21,7 +21,7 @@
                     <input type="text" id="search-input" placeholder="E.g., EAGLE-01" 
                            class="w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded">
                 </div>
-            
+                
                 <div class="w-full md:w-2/3">
                     <label class="block text-primary text-sm mb-1">> FILTER VISIBILITY</label>
                     <div class="flex flex-wrap gap-x-6 gap-y-2">
@@ -30,15 +30,21 @@
                             <span>My Role ({{ auth()->user()->role->alias }})</span>
                         </label>
                         <label for="filter-friend" class="flex items-center space-x-2 text-secondary cursor-pointer hover:text-white">
-                            <input type="checkbox" id="filter-friend" value="Friend" class="filter-role form-checkbox bg-base border-border-color text-primary focus:ring-primary">
-                            <span>Friend</span>
+                            <input type="checkbox" id="filter-friend" value="Asset" class="filter-role form-checkbox bg-base border-border-color text-primary focus:ring-primary">
+                            {{-- Diperbaiki menjadi "Asset" agar konsisten dengan controller --}}
+                            <span>Asset</span>
                         </label>
                     </div>
                 </div>
             </div>
         </div>
     
-        <div id="cy" class="w-full h-[70vh] bg-base border-2 border-border-color rounded-lg"></div>
+        <div id="cy" 
+             class="w-full h-[70vh] bg-base border-2 border-border-color rounded-lg"
+             data-nodes='@json($nodes)'
+             data-edges='@json($edges)'
+             data-rootnodeid='{{ $rootNodeId }}'
+        ></div>
     </div>
 
     <div 
@@ -94,66 +100,4 @@
             </template>
         </div>
     </div>
-
-
-    @push('scripts')
-        <script type="module">
-            // Import fungsi kontroler dari file eksternal
-            import { initializeGraphControls } from '{{ Vite::asset('resources/js/graph-controls.js') }}';
-
-            document.addEventListener("DOMContentLoaded", function() {
-                // Inisialisasi Cytoscape
-                const cy = window.cytoscape({
-                    container: document.getElementById('cy'),
-                    elements: {
-                        nodes: @json($nodes),
-                        edges: @json($edges)
-                    },
-                    style: [
-                        { selector: 'node', style: { 'background-color': '#00ff88', 'label': 'data(label)', 'color': '#00ff88', 'text-outline-width': 1, 'text-outline-color': '#003322', 'font-size': '12px' }},
-                        { selector: `node[id = "u{{ auth()->user()->id }}"]`, style: { 'width': 80, 'height': 80, 'font-size': '16px' }},
-                        { selector: 'edge', style: { 'width': 2, 'line-color': '#00ff88', 'target-arrow-color': '#00ff88', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier' }},
-                        { selector: '.highlighted', style: { 'min-zoomed-font-size': 12, 'font-weight': 'bold', 'background-color': '#2ea043', 'border-color': '#fff', 'border-width': 2, 'z-index': 9999 }},
-                        { selector: '.faded', style: { 'opacity': 0.25 }},
-                        { selector: '.hover-highlighted', style: { 'border-color': '#ffffff', 'border-width': 3, 'box-shadow': '0 0 15px #00ff88' }},
-                        { selector: '.hover-faded', style: { 'opacity': 0.4 }}
-                    ],
-                    layout: {
-                        name: 'concentric',
-                        concentric: function(node){ return node.id() === 'u{{ auth()->user()->id }}' ? 100 : 50; },
-                        levelWidth: function(nodes){ return 10; },
-                        spacingFactor: 1.5,
-                        animate: true
-                    }
-                });
-
-                // --- INTERAKTIVITAS GRAPH ---
-
-                // Efek Hover
-                cy.on('mouseover', 'node', function(evt){
-                    const selectedNode = evt.target;
-                    const neighborhood = selectedNode.neighborhood();
-                    cy.elements().addClass('hover-faded');
-                    selectedNode.removeClass('hover-faded').addClass('hover-highlighted');
-                    neighborhood.removeClass('hover-faded');
-                });
-                cy.on('mouseout', 'node', function(evt){
-                    cy.elements().removeClass('hover-faded hover-highlighted');
-                });
-
-                // Klik Node -> Buka Modal
-                cy.on('tap', 'node', function(evt) {
-                    const nodeData = evt.target.data();
-                    window.dispatchEvent(new CustomEvent('open-node-modal', { detail: nodeData }));
-                });
-
-                // Panggil modul untuk mengaktifkan search & filter
-                initializeGraphControls({
-                    cytoscapeInstance: cy,
-                    searchInputId: 'search-input',
-                    filterCheckboxSelector: '.filter-role'
-                });
-            });
-        </script>
-    @endpush
 </x-app-layout>

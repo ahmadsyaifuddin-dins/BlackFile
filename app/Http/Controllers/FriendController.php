@@ -16,6 +16,7 @@ class FriendController extends Controller
      */
     public function index()
     {
+        /** @var \App\Models\User $startUser */
         $startUser = Auth::user();
         $graphData = $this->buildGraphData($startUser);
 

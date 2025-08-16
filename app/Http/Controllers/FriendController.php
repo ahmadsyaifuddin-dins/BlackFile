@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Friend;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -210,41 +211,53 @@ class FriendController extends Controller
 
     public function centralTreeGraph()
     {
-        $rootUser = auth()->user();
+        // GANTI: Logika tidak lagi mengambil dari auth()->user()
+        // $rootUser = auth()->user();
 
-        // Ambil semua teman termasuk rekursif
-        $allFriends = \App\Models\Friend::with('childrenRecursive')
-            ->where('user_id', $rootUser->id)
+        // MENJADI: Cari user yang memiliki role 'Director'.
+        // firstOrFail() akan otomatis error 404 jika Director tidak ditemukan.
+        $director = User::whereHas('role', function ($query) {
+            $query->where('name', 'Director');
+        })->firstOrFail();
+
+        // Sejak titik ini, semua logika menggunakan variabel $director, bukan $rootUser
+
+        // Mengambil semua teman yang terhubung dengan Director, beserta semua turunannya.
+        $allFriends = Friend::with('childrenRecursive')
+            ->where('user_id', $director->id)
+            ->whereNull('parent_id')
             ->get();
 
         $nodes = [];
         $edges = [];
+        $addedNodeIds = [];
 
-        // Tambahkan root
+        // Tambahkan node untuk Director (root dari graph)
+        $directorId = 'u' . $director->id;
         $nodes[] = [
             'data' => [
-                'id' => 'u' . $rootUser->id,
-                'label' => $rootUser->codename,
-                'role' => $rootUser->role->alias
+                'id'     => $directorId,
+                'label'  => $director->codename,
+                'role'   => $director->role->alias
             ]
         ];
+        $addedNodeIds[] = $directorId;
 
-        // Fungsi rekursif
-        $addFriendNode = function ($friend, $parentId) use (&$nodes, &$edges, &$addFriendNode) {
+        // Fungsi rekursif untuk memproses setiap teman dan turunannya
+        $processNodeAndChildren = function ($friend, $parentId) use (&$nodes, &$edges, &$addedNodeIds, &$processNodeAndChildren) {
             $friendId = 'f' . $friend->id;
 
-            // Hindari node duplikat
-            if (!collect($nodes)->contains(fn($n) => $n['data']['id'] === $friendId)) {
+            if (!in_array($friendId, $addedNodeIds)) {
                 $nodes[] = [
                     'data' => [
-                        'id' => $friendId,
-                        'label' => $friend->codename ?? $friend->name,
-                        'role' => 'Friend'
+                        'id'     => $friendId,
+                        'label'  => $friend->codename,
+                        'role'   => 'Friend'
                     ]
                 ];
+                $addedNodeIds[] = $friendId;
             }
 
-            // Tambahkan edge
             $edges[] = [
                 'data' => [
                     'source' => $parentId,
@@ -252,23 +265,22 @@ class FriendController extends Controller
                 ]
             ];
 
-            // Rekursif ke child
             foreach ($friend->childrenRecursive as $child) {
-                $addFriendNode($child, $friendId);
+                $processNodeAndChildren($child, $friendId);
             }
         };
 
-        // Mulai dari semua teman root
+        // Mulai proses dari teman-teman level atas milik Director
         foreach ($allFriends as $friend) {
-            $addFriendNode($friend, 'u' . $rootUser->id);
+            $processNodeAndChildren($friend, $directorId);
         }
 
-        // 🔹 Filter supaya tidak ada edge duplikat
         $uniqueEdges = collect($edges)->unique(function ($edge) {
             return $edge['data']['source'] . '-' . $edge['data']['target'];
-        })->values();
+        })->values()->all();
 
-        return view('friends.central-tree-graph', [
+        // Menggunakan view yang sama, hanya data source-nya yang berubah
+        return view('friends.index', [
             'nodes' => $nodes,
             'edges' => $uniqueEdges
         ]);

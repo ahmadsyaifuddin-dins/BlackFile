@@ -47,6 +47,7 @@ class ProfileController extends Controller
         $user->fill($request->except('password', 'avatar'));
 
         // [BARU] Logika handle upload avatar
+        // [BARU] Logika handle upload avatar
         if ($request->hasFile('avatar')) {
             // Hapus avatar lama jika ada
             if ($user->avatar && File::exists(public_path($user->avatar))) {
@@ -54,13 +55,13 @@ class ProfileController extends Controller
             }
 
             // Buat nama file baru yang unik
-            $imageName = strtolower($user->codename) . '_' . time() . '.' . $request->avatar->extension();
+            $imageName = strtolower(str_replace(' ', '_', $user->codename)) . '_' . time() . '.' . $request->avatar->extension();
 
             // Pindahkan file ke public/avatars
             $request->avatar->move(public_path('avatars'), $imageName);
 
-            // Simpan path baru ke database
-            $user->avatar = 'avatars/' . $imageName;
+            // [DIUBAH] Simpan path baru ke database DENGAN leading slash
+            $user->avatar = '/avatars/' . $imageName;
         }
 
         // Hanya update password jika diisi

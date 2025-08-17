@@ -3,10 +3,8 @@ import { initializeGraphControls } from '../graph-controls.js';
 document.addEventListener("DOMContentLoaded", function() {
     const cyContainer = document.getElementById('cy');
 
-    // Jika elemen graph tidak ada di halaman ini, hentikan eksekusi
     if (!cyContainer) return;
 
-    // [DIUBAH] Ambil data dari atribut data-* di elemen #cy
     const nodes = JSON.parse(cyContainer.dataset.nodes);
     const edges = JSON.parse(cyContainer.dataset.edges);
     const rootNodeId = cyContainer.dataset.rootnodeid;
@@ -18,13 +16,43 @@ document.addEventListener("DOMContentLoaded", function() {
             edges: edges
         },
         style: [
-            { selector: 'node', style: { 'background-color': '#00ff88', 'label': 'data(label)', 'color': '#00ff88', 'text-outline-width': 1, 'text-outline-color': '#003322', 'font-size': '12px' }},
-            { selector: `node[id = "${rootNodeId}"]`, style: { 'width': 80, 'height': 80, 'font-size': '16px' }},
-            { selector: 'edge', style: { 'width': 2, 'line-color': '#00ff88', 'target-arrow-color': '#00ff88', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier' }},
-            { selector: '.highlighted', style: { 'min-zoomed-font-size': 12, 'font-weight': 'bold', 'background-color': '#2ea043', 'border-color': '#fff', 'border-width': 2, 'z-index': 9999 }},
-            { selector: '.faded', style: { 'opacity': 0.25 }},
-            { selector: '.hover-highlighted', style: { 'border-color': '#ffffff', 'border-width': 3, 'box-shadow': '0 0 15px #00ff88' }},
-            { selector: '.hover-faded', style: { 'opacity': 0.4 }}
+            {
+                selector: 'node',
+                style: {
+                    'background-image': function(ele) {
+                        return ele.data('avatar') || 'none';
+                    },
+                    // [PERBAIKAN CORS] Tambahkan properti ini
+                    'background-image-crossorigin': 'anonymous',
+                    
+                    'background-color': function(ele) {
+                        return ele.data('avatar') ? 'transparent' : '#00ff88';
+                    },
+                    'background-fit': 'cover',
+                    'border-color': '#00ff88',
+                    'border-width': 2,
+                    'text-valign': 'bottom',
+                    'text-margin-y': 5,
+                    'label': 'data(label)',
+                    'color': '#00ff88',
+                    'text-outline-width': 2,
+                    'text-outline-color': '#000',
+                    'font-size': '12px'
+                }
+            },
+            {
+                // [PERBAIKAN BUG] Gunakan template literal JavaScript, bukan Blade
+                selector: `node[id = "${rootNodeId}"]`,
+                style: {
+                    'width': 80,
+                    'height': 80,
+                    'font-size': '16px'
+                }
+            },
+            {
+                selector: 'edge',
+                style: { 'width': 2, 'line-color': '#00ff88', 'target-arrow-color': '#00ff88', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier' }
+            },
         ],
         layout: {
             name: 'concentric',

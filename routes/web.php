@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthManual\LogoutController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Http;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,3 +70,29 @@ Route::middleware('auth')->group(function () {
         Route::delete('/agents/{user}', [UserController::class, 'destroy'])->name('agents.destroy');
     });
 });
+
+
+
+
+
+
+
+// [BARU] Rute untuk proxy avatar
+Route::get('/avatar-proxy/{name}', function (string $name) {
+    // Ambil gambar dari ui-avatars
+    $response = Http::get('https://ui-avatars.com/api/', [
+        'name' => $name,
+        'background' => '0d1117',
+        'color' => '2ea043',
+        'bold' => 'true',
+    ]);
+
+    // Jika berhasil, kirimkan gambar kembali ke browser dengan header yang benar
+    if ($response->successful()) {
+        return response($response->body())
+            ->header('Content-Type', $response->header('Content-Type'));
+    }
+
+    // Jika gagal, bisa kembalikan gambar default atau error
+    abort(404, 'Avatar not found.');
+})->name('avatar.proxy');

@@ -58,14 +58,27 @@ class FriendController extends Controller
             $isUser = $entity instanceof User;
             $entityType = $isUser ? 'u' : 'f';
             $entityId = $entityType . $entity->id;
-
+    
             if (in_array($entityId, $processedIds)) return;
-
+            
+            // [PERUBAHAN DI SINI] Logika untuk avatar
+            $avatarUrl = null;
+            if ($isUser) {
+                // Prioritaskan avatar yang di-upload
+                if ($entity->avatar) {
+                    $avatarUrl = asset($entity->avatar);
+                } else {
+                    // Jika tidak ada, gunakan PROXY kita, bukan URL langsung
+                    $avatarUrl = route('avatar.proxy', ['name' => $entity->codename]);
+                }
+            }
+    
             $nodes[$entityId] = [
                 'data' => [
                     'id'     => $entityId,
                     'label'  => $entity->codename,
-                    'role'   => $isUser ? $entity->role->alias : 'Asset'
+                    'role'   => $isUser ? $entity->role->alias : 'Asset',
+                    'avatar' => $avatarUrl // <-- Gunakan URL yang sudah benar
                 ]
             ];
             $processedIds[] = $entityId;

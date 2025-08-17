@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -59,6 +60,15 @@ class User extends Authenticatable
     }
 
     /**
+     * Mendapatkan semua koneksi di mana user ini adalah TARGET.
+     */
+    public function connectionsAsTarget()
+    {
+        return $this->morphMany(Connection::class, 'target');
+    }
+
+
+    /**
      * Mendapatkan semua TARGET (bisa User atau Friend) yang terhubung DARI user ini.
      */
     public function targets()
@@ -85,5 +95,27 @@ class User extends Authenticatable
     public function friends()
     {
         return $this->hasMany(Friend::class);
+    }
+
+
+    /**
+     * [BARU & MEMPERBAIKI MASALAH]
+     * Accessor cerdas untuk mendapatkan "parent" atau "handler" dari tabel connections.
+     * Ini akan dipanggil secara otomatis saat kita menulis `$user->parent`.
+     */
+    protected function parent(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                // Cari koneksi di mana user ini adalah target, dan sumbernya adalah user lain.
+                $connection = $this->connectionsAsTarget()
+                                   ->where('source_type', User::class)
+                                   ->first();
+                
+                // Jika koneksi ditemukan, kembalikan objek User dari sumbernya.
+                // Jika tidak, kembalikan null.
+                return $connection ? $connection->source : null;
+            },
+        );
     }
 }

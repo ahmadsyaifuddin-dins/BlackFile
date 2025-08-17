@@ -7,7 +7,6 @@
         <h2 class="text-2xl font-bold text-primary text-glow">> [ PERSONAL DOSSIER ]</h2>
     </div>
 
-    {{-- [DIUBAH] Dossier sekarang memiliki layout flex untuk menampung avatar --}}
     <div class="bg-surface/50 border border-border-color rounded-lg p-6 text-glow flex flex-col sm:flex-row items-start gap-6">
         
         <!-- Avatar -->

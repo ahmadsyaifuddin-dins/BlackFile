@@ -78,7 +78,9 @@ class FriendController extends Controller
                     'id'     => $entityId,
                     'label'  => $entity->codename,
                     'role'   => $isUser ? $entity->role->alias : 'Asset',
-                    'avatar' => $avatarUrl // <-- Gunakan URL yang sudah benar
+                    'avatar' => $avatarUrl,
+                    'name'   => $entity->name,
+                    'specialization' => $entity->specialization ? $entity->specialization : 'Not Available',
                 ]
             ];
             $processedIds[] = $entityId;

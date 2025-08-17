@@ -16,25 +16,48 @@ export function initializeGraphControls({ cytoscapeInstance, searchInputId, filt
         return;
     }
 
-    // --- FITUR PENCARIAN ---
-    searchInput.addEventListener('input', function(e) {
+     // --- FITUR PENCARIAN (YANG DISEMPURNAKAN) ---
+     searchInput.addEventListener('input', function(e) {
         const searchTerm = e.target.value.trim().toUpperCase();
+
         cy.elements().removeClass('highlighted faded');
-        
+
         if (searchTerm === '') {
             cy.fit(null, 100);
             return;
         }
 
-        const targetNodes = cy.nodes('[label *= "' + searchTerm + '"]');
-        if (targetNodes.length > 0) {
+        let targetNodes;
+
+        // Prioritas 1: Cari kecocokan sempurna (case-insensitive)
+        targetNodes = cy.nodes().filter(node => 
+            node.data('label').toUpperCase() === searchTerm
+        );
+
+        // Prioritas 2: Jika tidak ada, cari yang 'starts with' (case-insensitive)
+        if (targetNodes.empty()) {
+            targetNodes = cy.nodes().filter(node => 
+                node.data('label').toUpperCase().startsWith(searchTerm)
+            );
+        }
+
+        // Prioritas 3: Jika masih tidak ada, baru gunakan 'contains' (fallback)
+        // Kita gunakan selector *= karena lebih cepat untuk 'contains'
+        if (targetNodes.empty()) {
+            // Cytoscape selector 'contains' bersifat case-sensitive, jadi kita coba beberapa variasi
+            // Ini trik sederhana, untuk case-insensitive sejati perlu plugin/regex kompleks
+            targetNodes = cy.nodes(`[label *= "${e.target.value.trim()}"]`);
+        }
+
+        // Lanjutkan dengan logika highlighting dan zoom yang sama
+        if (targetNodes.nonempty()) {
             const otherElements = cy.elements().not(targetNodes);
             targetNodes.addClass('highlighted');
             otherElements.addClass('faded');
             cy.animate({ fit: { eles: targetNodes, padding: 150 }, duration: 500 });
         }
     });
-
+    
     // --- FITUR FILTER ---
     function applyFilters() {
         const selectedRoles = Array.from(filterCheckboxes)

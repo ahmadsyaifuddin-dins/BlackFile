@@ -179,6 +179,44 @@ class FriendController extends Controller
         return back()->withErrors(['msg' => 'Invalid operation. Please try again.']);
     }
 
+    public function storeSubAsset(Request $request)
+    {
+        $data = $request->validate([
+            'source_type' => 'required|string',
+            'source_id'   => 'required|integer',
+            'name'        => 'required|string|max:255',
+            'codename'    => 'required|string|max:50|unique:friends,codename',
+        ]);
+
+        // Cari source dari koneksi
+        $source = ($data['source_type'])::find($data['source_id']);
+        if (!$source) {
+            return back()->withErrors(['msg' => 'Source entity not found.']);
+        }
+
+        // Otorisasi: Pastikan user yang login adalah pemilik asli dari source
+        if ($source->user_id !== Auth::id()) {
+            abort(403, 'UNAUTHORIZED ACTION. You are not the handler of this asset.');
+        }
+
+        // Buat target (sub-aset baru)
+        $target = Friend::create([
+            'user_id'  => Auth::id(), // Pemilik sub-aset tetap handler utama
+            'name'     => $data['name'],
+            'codename' => $data['codename'],
+        ]);
+
+        // Buat koneksi dari source ke target
+        Connection::create([
+            'source_id'   => $source->id,
+            'source_type' => get_class($source),
+            'target_id'   => $target->id,
+            'target_type' => get_class($target),
+        ]);
+
+        return redirect()->route('friends.index')->with('success', 'Sub-asset connection established.');
+    }
+
     /**
      * [DISEMPURNAKAN] Menampilkan form untuk mengedit data aset.
      */

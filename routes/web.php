@@ -46,4 +46,7 @@ Route::middleware('auth')->group(function () {
      Route::get('/friends/{friend}/edit', [FriendController::class, 'edit'])->name('friends.edit');
      Route::put('/friends/{friend}', [FriendController::class, 'update'])->name('friends.update');
      Route::delete('/friends/{friend}', [FriendController::class, 'destroy'])->name('friends.destroy');
+
+     // [BARU] Tambahkan rute untuk store sub-asset
+     Route::post('/connections/sub-asset', [FriendController::class, 'storeSubAsset'])->name('connections.store_sub_asset');
 });

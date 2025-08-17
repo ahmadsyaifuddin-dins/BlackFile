@@ -33,9 +33,6 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/register', [RegisterController::class, 'showRegisterForm'])->middleware('role:director')->name('register');
-    Route::post('/register', [RegisterController::class, 'register'])->middleware('role:director');
-
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
     Route::get('/friends', [FriendController::class, 'index'])->name('friends.index');
@@ -63,6 +60,10 @@ Route::middleware('auth')->group(function () {
 
     // [BARU] Rute untuk aksi Director, dilindungi oleh middleware role
     Route::middleware('role:Director')->group(function () {
+
+        Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
+        Route::post('/register', [RegisterController::class, 'register']);
+
         Route::get('/agents/{user}/edit', [UserController::class, 'edit'])->name('agents.edit');
         Route::patch('/agents/{user}', [UserController::class, 'update'])->name('agents.update');
         Route::delete('/agents/{user}', [UserController::class, 'destroy'])->name('agents.destroy');

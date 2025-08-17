@@ -1,10 +1,9 @@
 <aside class="w-64 bg-surface border-r bg-black border-border-color flex flex-col transition-transform duration-300 ease-in-out z-20
-           fixed inset-y-0 left-0 md:relative md:translate-x-0"
+           fixed inset-y-0 left-0 -translate-x-full md:relative md:translate-x-0"
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
     <div class="p-4 text-2xl font-bold border-b border-border-color text-primary tracking-[.25em]">
         [B.F]
     </div>
-
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto text-green-700">
         <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
            {{ request()->routeIs('dashboard') 

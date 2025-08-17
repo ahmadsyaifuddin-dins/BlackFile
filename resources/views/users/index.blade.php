@@ -5,18 +5,20 @@
 
     <div class="space-y-4">
         @foreach($users as $agent)
-            {{-- Diubah dari <a> menjadi <div> agar bisa menampung tombol --}}
-            <div class="block bg-surface/50 border border-border-color rounded-lg p-4 hover:border-primary transition-colors">
-                <div class="flex justify-between items-center">
+            <div class="block bg-surface/50 border border-border-color rounded-lg p-4 transition-colors">
+                {{-- [DIUBAH] Tambahkan class flex-col dan sm:flex-row --}}
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                    
                     <div>
-                        <a href="{{ route('agents.show', $agent->id) }}">
+                        <a href="{{ route('agents.show', $agent->id) }}" class="hover:text-primary">
                             <p class="font-bold text-white text-lg text-glow">{{ $agent->codename }}</p>
                             <p class="text-secondary text-sm">{{ $agent->role->alias }}</p>
                         </a>
                     </div>
     
                     @if(strtolower(Auth::user()->role->name) === 'director')
-                        <div class="flex items-center space-x-3">
+                        {{-- [DIUBAH] Tambahkan margin atas untuk mobile dan atur alignment --}}
+                        <div class="flex items-center space-x-3 mt-4 sm:mt-0 self-end sm:self-center">
                             <a href="{{ route('agents.edit', $agent->id) }}" class="text-blue-400 hover:text-blue-300" title="Edit Agent">
                                 [ EDIT ]
                             </a>

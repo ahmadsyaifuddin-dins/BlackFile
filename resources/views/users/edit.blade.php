@@ -33,6 +33,18 @@
                         <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required
                                class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded">
                     </div>
+                    <div>
+                        <label for="specialization" class="block text-primary text-sm">> SPECIALIZATION</label>
+                        <input type="text" id="specialization" name="specialization" value="{{ old('specialization', $user->specialization) }}"
+                               class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary p-2 rounded"
+                               placeholder="e.g., Digital Research, Data Analysis">
+                    </div>
+                    <div>
+                        <label for="quotes" class="block text-primary text-sm">> PERSONAL QUOTES</label>
+                        <textarea id="quotes" name="quotes"
+                               class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary p-2 rounded"
+                               placeholder="e.g., Fortune favors the bold.">{{ old('quotes', $user->quotes) }}</textarea>
+                    </div>
                 </div>
                 
                 {{-- Bagian Role --}}

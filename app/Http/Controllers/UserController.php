@@ -49,6 +49,8 @@ class UserController extends Controller
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'role_id' => 'required|exists:roles,id',
             'password' => 'nullable|min:6|confirmed',
+            'specialization' => 'nullable|string|max:255',
+            'quotes' => 'nullable|string',
         ]);
         
         // Update data utama, kecuali password

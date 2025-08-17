@@ -23,6 +23,9 @@
             <p><span class="text-primary">> CODENAME:</span> {{ $user->codename }}</p>
             <p><span class="text-primary">> DESIGNATION:</span> {{ $user->role->alias }}</p>
             <p><span class="text-primary">> HANDLER:</span> {{ $user->parent->codename ?? '[ UNKNOWN ]' }}</p>
+            <p><span class="text-primary">> SPECIALIZATION:</span> {{ $user->specialization ?? 'N/A' }}</p>
+            <p><span class="text-primary">> QUOTES:</span> "{{ $user->quotes ?? '...' }}"</p>
+            <p><span class="text-primary">> LAST ACTIVITY:</span> {{ $user->last_active_at ? $user->last_active_at->diffForHumans() : 'Never' }}</p>
             <p><span class="text-primary">> AGENT SINCE:</span> {{ $user->created_at->format('Y-m-d') }}</p>
         </div>
     </div>

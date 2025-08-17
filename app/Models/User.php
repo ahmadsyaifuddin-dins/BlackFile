@@ -24,7 +24,11 @@ class User extends Authenticatable
         'codename',
         'email',
         'password',
-        'role_id'
+        'role_id',
+        'avatar',
+        'specialization',
+        'quotes',
+        'last_active_at',
     ];
 
     /**
@@ -44,6 +48,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'password' => 'hashed',
+        'last_active_at' => 'datetime',
     ];
 
     public function role()
@@ -51,7 +56,7 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-      /**
+    /**
      * Koneksi di mana user ini adalah SUMBER.
      */
     public function connections()
@@ -109,9 +114,9 @@ class User extends Authenticatable
             get: function () {
                 // Cari koneksi di mana user ini adalah target, dan sumbernya adalah user lain.
                 $connection = $this->connectionsAsTarget()
-                                   ->where('source_type', User::class)
-                                   ->first();
-                
+                    ->where('source_type', User::class)
+                    ->first();
+
                 // Jika koneksi ditemukan, kembalikan objek User dari sumbernya.
                 // Jika tidak, kembalikan null.
                 return $connection ? $connection->source : null;

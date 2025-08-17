@@ -39,14 +39,15 @@ class ProfileController extends Controller
             'username' => ['required', 'string', 'max:50', Rule::unique('users')->ignore($user->id)],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|min:6|confirmed',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi file
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'specialization' => 'nullable|string|max:255',
+            'quotes' => 'nullable|string|max:255',
         ]);
 
         // Update data teks
         /** @var \App\Models\User $user */
         $user->fill($request->except('password', 'avatar'));
 
-        // [BARU] Logika handle upload avatar
         // [BARU] Logika handle upload avatar
         if ($request->hasFile('avatar')) {
             // Hapus avatar lama jika ada

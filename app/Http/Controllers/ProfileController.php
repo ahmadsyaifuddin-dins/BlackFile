@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\File;
 
 class ProfileController extends Controller
 {
@@ -32,27 +33,41 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        // Validasi data yang masuk
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'codename' => ['required', 'string', 'max:50', Rule::unique('users')->ignore($user->id)],
             'username' => ['required', 'string', 'max:50', Rule::unique('users')->ignore($user->id)],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'password' => 'nullable|min:6|confirmed', // Password opsional
+            'password' => 'nullable|min:6|confirmed',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi file
         ]);
 
-        // Update data utama
-        $user->name = $validatedData['name'];
-        $user->codename = $validatedData['codename'];
-        $user->username = $validatedData['username'];
-        $user->email = $validatedData['email'];
+        // Update data teks
+        /** @var \App\Models\User $user */
+        $user->fill($request->except('password', 'avatar'));
+
+        // [BARU] Logika handle upload avatar
+        if ($request->hasFile('avatar')) {
+            // Hapus avatar lama jika ada
+            if ($user->avatar && File::exists(public_path($user->avatar))) {
+                File::delete(public_path($user->avatar));
+            }
+
+            // Buat nama file baru yang unik
+            $imageName = strtolower($user->codename) . '_' . time() . '.' . $request->avatar->extension();
+
+            // Pindahkan file ke public/avatars
+            $request->avatar->move(public_path('avatars'), $imageName);
+
+            // Simpan path baru ke database
+            $user->avatar = 'avatars/' . $imageName;
+        }
 
         // Hanya update password jika diisi
         if ($request->filled('password')) {
             $user->password = Hash::make($validatedData['password']);
         }
 
-        /** @var \App\Models\User $user */
         $user->save();
 
         return redirect()->route('profile.show')->with('success', 'Personal dossier has been updated.');

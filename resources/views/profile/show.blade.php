@@ -7,14 +7,25 @@
         <h2 class="text-2xl font-bold text-primary text-glow">> [ PERSONAL DOSSIER ]</h2>
     </div>
 
-    <div class="bg-surface/50 border border-border-color rounded-lg p-6 space-y-4 text-glow">
-        <p><span class="text-primary">> CODENAME:</span> {{ $user->codename }}</p>
-        <p><span class="text-primary">> REAL NAME:</span> {{ $user->name }}</p>
-        <p><span class="text-primary">> DESIGNATION:</span> {{ $user->role->alias }}</p>
-        <p class="border-t border-border-color/50 pt-4 mt-4"><span class="text-primary">> LOGIN ID:</span> {{ $user->username }}</p>
-        <p><span class="text-primary">> RECOVERY EMAIL:</span> {{ $user->email }}</p>
-        <p><span class="text-primary">> HANDLER:</span> {{ $user->parent->codename ?? '[ DIRECTORATE ]' }}</p>
-        <p><span class="text-primary">> REGISTERED ON:</span> {{ $user->created_at->format('Y-m-d H:i:s') }}</p>
+    {{-- [DIUBAH] Dossier sekarang memiliki layout flex untuk menampung avatar --}}
+    <div class="bg-surface/50 border border-border-color rounded-lg p-6 text-glow flex flex-col sm:flex-row items-start gap-6">
+        
+        <!-- Avatar -->
+        <div class="flex-shrink-0 mx-auto sm:mx-0">
+            <img src="{{ $user->avatar ? asset($user->avatar) : 'https://ui-avatars.com/api/?name='.urlencode($user->codename).'&size=128&background=041607&color=00ff88&bold=true' }}" 
+                 alt="Avatar" class="w-32 h-32 rounded-full border-4 border-border-color shadow-lg">
+        </div>
+        
+        <!-- Detail Teks -->
+        <div class="space-y-4 w-full">
+            <p><span class="text-primary">> CODENAME:</span> {{ $user->codename }}</p>
+            <p><span class="text-primary">> REAL NAME:</span> {{ $user->name }}</p>
+            <p><span class="text-primary">> DESIGNATION:</span> {{ $user->role->alias }}</p>
+            <p class="border-t border-border-color/50 pt-4 mt-4"><span class="text-primary">> LOGIN ID:</span> {{ $user->username }}</p>
+            <p><span class="text-primary">> RECOVERY EMAIL:</span> {{ $user->email }}</p>
+            <p><span class="text-primary">> HANDLER:</span> {{ $user->parent->codename ?? '[ DIRECTORATE ]' }}</p>
+            <p><span class="text-primary">> REGISTERED ON:</span> {{ $user->created_at->format('Y-m-d H:i:s') }}</p>
+        </div>
     </div>
 
     <div class="mt-6 border-t border-border-color pt-6 flex justify-end">

@@ -33,8 +33,8 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/register', [RegisterController::class, 'showRegisterForm'])->middleware('role:director');
-    Route::post('/register', [RegisterController::class, 'register'])->middleware('role:director')->name('register');
+    Route::get('/register', [RegisterController::class, 'showRegisterForm'])->middleware('role:director')->name('register');
+    Route::post('/register', [RegisterController::class, 'register'])->middleware('role:director');
 
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 

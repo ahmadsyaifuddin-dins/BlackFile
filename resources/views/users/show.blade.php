@@ -3,9 +3,12 @@
         Dossier: {{ $user->codename }}
     </x-slot:title>
 
-    <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-primary text-glow">> [ AGENT DOSSIER: {{ $user->codename }} ]</h2>
-        <a href="{{ route('agents.index') }}" class="text-secondary hover:text-primary transition-colors text-sm text-glow">&lt; Back to Directory</a>
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold text-primary text-glow"> > [ AGENT : {{ $user->codename }} ] </h2>
+        <div class="mt-3 sm:mt-2 flex sm:justify-end">
+            <a href="{{ route('agents.index') }}"
+                class="text-secondary hover:text-primary transition-colors text-sm text-glow">&lt; Back to Directory</a>
+        </div>
     </div>
     
     {{-- [DIUBAH] Dossier sekarang memiliki layout flex untuk menampung avatar --}}
@@ -20,6 +23,7 @@
         <!-- Detail Teks -->
         <div class="space-y-4 w-full">
             <p class="text-red-500/80 text-xs">// READ-ONLY // FOR SITUATIONAL AWARENESS ONLY</p>
+            <p><span class="text-primary">> REAL NAME:</span> {{ $user->name }}</p>
             <p><span class="text-primary">> CODENAME:</span> {{ $user->codename }}</p>
             <p><span class="text-primary">> DESIGNATION:</span> {{ $user->role->alias }}</p>
             <p><span class="text-primary">> HANDLER:</span> {{ $user->parent->codename ?? '[ UNKNOWN ]' }}</p>

@@ -16,6 +16,7 @@
                             <a href="{{ route('agents.show', $agent->id) }}">
                                 <p class="font-bold text-white text-lg text-glow">{{ $agent->codename }}</p>
                                 <p class="text-secondary text-sm">{{ $agent->role->alias }}</p>
+                                <p class="text-secondary text-sm text-glow">{{ $agent->specialization }}</p>
                             </a>
                         </div>
                     </div>

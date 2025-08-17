@@ -8,15 +8,16 @@
     <title>{{ $title ?? 'BLACKFILE // SECURE SYSTEM' }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ asset('app-icon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @vite('resources/js/pages/friends-index.js')
     
 </head>
 
-<body class="font-mono antialiased text-secondary bg-base">
-    
+<body class="font-inconsolata antialiased text-secondary bg-base">
+    <div class="fixed top-0 left-0 h-full w-full scan-overlay pointer-events-none"></div>
+
     {{ $slot }}
     
     @stack('scripts')

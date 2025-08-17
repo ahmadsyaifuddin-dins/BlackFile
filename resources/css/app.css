@@ -14,13 +14,13 @@
       --color-secondary: #8b949e;
       --color-border: #30363d;
       --color-text-default: var(--color-secondary);
-      --font-mono: "Roboto Mono", monospace;
+      --font-inconsolata: "inconsolata", monospace;
     }
  
     html, body {
       background-color: var(--color-base);
       color: var(--color-text-default);
-      font-family: var(--font-mono);
+      font-family: var(--font-inconsolata);
     }
 }
 

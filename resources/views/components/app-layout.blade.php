@@ -1,4 +1,5 @@
-<x-layout>
+@props(['title', 'theme' => 'default']) {{-- [BARU] Menerima prop 'theme' --}}
+<x-layout :title="$title ?? null" :theme="$theme">
     <x-slot:title>
         {{ $title ?? 'SECURE TERMINAL' }}
     </x-slot>

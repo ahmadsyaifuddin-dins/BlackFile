@@ -9,11 +9,14 @@
         </h1>
     </div>
 
-    <div class="flex items-center space-x-4">
-        <span class="text-sm text-primary sm:inline text-right">
-            {{ Auth::user()->role->alias }} — {{ Auth::user()->codename }}
-        </span>
-        <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=0d1117&color=2ea043&bold=true"
-             class="w-8 h-8 rounded-full border-2 border-border-color flex-shrink-0">
+    <div class="flex items-center">
+        <a href="{{ route('profile.show') }}" class="flex items-center gap-3 group max-w-[60vw] sm:max-w-none">
+            <span class="hidden sm:block text-sm text-secondary group-hover:text-primary transition-colors truncate">
+                {{ Auth::user()->role->alias }} — {{ Auth::user()->codename }}
+            </span>
+            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=0d1117&color=2ea043&bold=true"
+                 alt="{{ Auth::user()->codename }} avatar"
+                 class="w-8 h-8 rounded-full border-2 border-border-color flex-shrink-0 group-hover:border-primary transition-colors">
+        </a>
     </div>
 </header>

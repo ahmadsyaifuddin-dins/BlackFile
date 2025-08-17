@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthManual\LoginController;
 use App\Http\Controllers\AuthManual\RegisterController;
 use App\Http\Controllers\AuthManual\LogoutController;
 use App\Http\Controllers\FriendController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,4 +51,20 @@ Route::middleware('auth')->group(function () {
 
      // [BARU] Tambahkan rute untuk store sub-asset
      Route::post('/connections/sub-asset', [FriendController::class, 'storeSubAsset'])->name('connections.store_sub_asset');
+
+      // --- Rute untuk Profil Pribadi (di-handle oleh ProfileController) ---
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    // --- Rute untuk Manajemen Agen ---
+    Route::get('/agents', [UserController::class, 'index'])->name('agents.index');
+    Route::get('/agents/{user}', [UserController::class, 'show'])->name('agents.show');
+
+    // [BARU] Rute untuk aksi Director, dilindungi oleh middleware role
+    Route::middleware('role:Director')->group(function () {
+        Route::get('/agents/{user}/edit', [UserController::class, 'edit'])->name('agents.edit');
+        Route::patch('/agents/{user}', [UserController::class, 'update'])->name('agents.update');
+        Route::delete('/agents/{user}', [UserController::class, 'destroy'])->name('agents.destroy');
+    });
 });

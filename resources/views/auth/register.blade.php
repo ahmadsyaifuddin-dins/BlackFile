@@ -4,13 +4,15 @@
     </x-slot:title>
 
     <div class="p-4 md:p-6 bg-surface border border-border-color rounded-lg">
-        <div class="flex items-center justify-between mb-6">
+        <div class="mb-6">
             <h2 class="text-2xl font-bold text-primary">
-                > [ NEW AGENT REGISTRATION FORM ]
+                > [ NEW AGENT FORM ]
             </h2>
-            <a href="{{ url()->previous() }}" class="text-secondary hover:text-primary transition-colors text-sm">
-                &lt; Back
-            </a>
+            <div class="mt-3 sm:mt-2 flex sm:justify-end">
+                <a href="{{ url()->previous() }}" class="text-secondary hover:text-primary transition-colors text-sm">
+                    &lt; Back
+                </a>
+            </div>
         </div>
 
         @if($errors->any())

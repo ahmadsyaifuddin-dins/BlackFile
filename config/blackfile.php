@@ -33,4 +33,24 @@ return [
         'Lainnya',
     ],
 
-];
+    /*
+    |--------------------------------------------------------------------------
+    | Project Types
+    |--------------------------------------------------------------------------
+    |
+    | Daftar tipe project.
+    |
+    */
+    'project_types' => [
+        'Web',
+        'Web Application',
+        'Mobile Application',
+        'Desktop Application',
+        'Library / API',
+        'CLI Tool',
+        'BOT',
+        'Operating System',
+        'UI/UX Design',
+        'Lainnya',
+    ],
+];  

@@ -17,8 +17,8 @@
         
         <!-- Detail Teks -->
         <div class="space-y-4 w-full">
-            <p><span class="text-primary">> CODENAME:</span> {{ $user->codename }}</p>
             <p><span class="text-primary">> REAL NAME:</span> {{ $user->name }}</p>
+            <p><span class="text-primary">> CODENAME:</span> {{ $user->codename }}</p>
             <p><span class="text-primary">> DESIGNATION:</span> {{ $user->role->alias }}</p>
             <p class="border-t border-border-color/50 pt-4 mt-4"><span class="text-primary">> LOGIN ID:</span> {{ $user->username }}</p>
             <p><span class="text-primary">> HANDLER:</span> {{ $user->parent->codename ?? '[ DIRECTORATE ]' }}</p>

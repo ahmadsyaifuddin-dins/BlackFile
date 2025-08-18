@@ -12,23 +12,77 @@ use Illuminate\Support\Facades\Auth;
 class FriendController extends Controller
 {
     /**
-     * Menampilkan Network Analysis Graph untuk jaringan PRIBADI user yang sedang login.
+     * [DIPERBAIKI] Menampilkan Network Analysis Graph HANYA untuk koneksi langsung
+     * dari user yang sedang login.
      */
     public function index()
     {
-        /** @var \App\Models\User $startUser */
-        $startUser = Auth::user();
-        $graphData = $this->buildGraphData($startUser);
+        $currentUser = Auth::user();
 
-        // Menambahkan data tambahan untuk view
-        $graphData['pageTitle'] = 'My Network';
-        $graphData['rootNodeId'] = 'u' . $startUser->id;
+        $nodes = [];
+        $edges = [];
 
-        return view('friends.index', $graphData);
+        // 1. Tambahkan user yang login sebagai node utama (root)
+        $rootNodeId = 'u' . $currentUser->id;
+        $nodes[] = [
+            'data' => [
+                'id'     => $rootNodeId,
+                'label'  => $currentUser->codename,
+                'role'   => $currentUser->role->alias,
+                'name'   => $currentUser->name,
+                'avatar' => $currentUser->avatar ? asset($currentUser->avatar) : route('avatar.proxy', ['name' => $currentUser->codename]),
+                'specialization' => $currentUser->specialization,
+            ]
+        ];
+
+        // 2. Ambil HANYA koneksi langsung dari user ini
+        $directConnections = Connection::where('source_type', User::class)
+            ->where('source_id', $currentUser->id)
+            ->with('target')
+            ->get();
+
+        // 3. Proses setiap koneksi langsung
+        foreach ($directConnections as $connection) {
+            $target = $connection->target;
+            if ($target) {
+                $isUser = $target instanceof User;
+                $targetId = ($isUser ? 'u' : 'f') . $target->id;
+
+                // Tambahkan target sebagai node
+                $nodes[] = [
+                    'data' => [
+                        'id'     => $targetId,
+                        'label'  => $target->codename,
+                        'name'   => $target->name,
+                        'role'   => $isUser ? $target->role->alias : 'Asset',
+                        'avatar' => $isUser ? ($target->avatar ? asset($target->avatar) : route('avatar.proxy', ['name' => $target->codename])) : null,
+                        'category' => !$isUser ? $target->category : null,
+                        'specialization' => $isUser ? $target->specialization : null,
+                    ]
+                ];
+
+                // Tambahkan garis (edge) dari root ke target
+                $edges[] = [
+                    'data' => [
+                        'source' => $rootNodeId,
+                        'target' => $targetId
+                    ]
+                ];
+            }
+        }
+
+        return view('friends.index', [
+            'pageTitle' => 'My Network',
+            'rootNodeId' => $rootNodeId,
+            'nodes' => $nodes,
+            'edges' => $edges
+        ]);
     }
+
 
     /**
      * Menampilkan Network Analysis Graph untuk jaringan UTAMA milik Director.
+     * Method ini tidak berubah dan tetap menggunakan helper rekursif.
      */
     public function centralTreeGraph()
     {
@@ -38,15 +92,15 @@ class FriendController extends Controller
 
         $graphData = $this->buildGraphData($director);
 
-        // Menambahkan data tambahan untuk view
-        $graphData['pageTitle'] = 'Central Tree';
+        $graphData['pageTitle'] = 'Central Command Network';
         $graphData['rootNodeId'] = 'u' . $director->id;
-
-        return view('friends.index', $graphData); // <-- Menggunakan view yang sama
+        
+        return view('friends.index', $graphData);
     }
 
-    /**
-     * Helper private untuk membangun data graph (nodes & edges).
+
+     /**
+     * Helper private untuk membangun data graph REKURSIF (hanya untuk Central Tree).
      */
     private function buildGraphData(Model $startEntity): array
     {
@@ -58,31 +112,18 @@ class FriendController extends Controller
             $isUser = $entity instanceof User;
             $entityType = $isUser ? 'u' : 'f';
             $entityId = $entityType . $entity->id;
-    
+
             if (in_array($entityId, $processedIds)) return;
             
-            // [PERUBAHAN DI SINI] Logika untuk avatar
-            $avatarUrl = null;
-            if ($isUser) {
-                // Prioritaskan avatar yang di-upload
-                if ($entity->avatar) {
-                    $avatarUrl = asset($entity->avatar);
-                } else {
-                    // Jika tidak ada, gunakan PROXY kita, bukan URL langsung
-                    $avatarUrl = route('avatar.proxy', ['name' => $entity->codename]);
-                }
-            }
-    
             $nodes[$entityId] = [
                 'data' => [
                     'id'     => $entityId,
                     'label'  => $entity->codename,
-                    'role'   => $isUser ? $entity->role->alias : 'Asset',
-                    'avatar' => $avatarUrl,
                     'name'   => $entity->name,
-                    'specialization' => $entity->specialization ? $entity->specialization : 'Not Available',
+                    'role'   => $isUser ? $entity->role->alias : 'Asset',
+                    'avatar' => $isUser ? ($entity->avatar ? asset($entity->avatar) : route('avatar.proxy', ['name' => $entity->codename])) : null,
                     'category'       => !$isUser ? $entity->category : null,
-
+                    'specialization' => $isUser ? $entity->specialization : null,
                 ]
             ];
             $processedIds[] = $entityId;
@@ -176,16 +217,6 @@ class FriendController extends Controller
                 return back()->withErrors(['target_entity' => 'This connection has already been established.'])->withInput();
             }
 
-            // $reverseConnectionExists = Connection::where('source_type', get_class($targetEntity))
-            //     ->where('source_id', $targetEntity->id)
-            //     ->where('target_type', get_class($source))
-            //     ->where('target_id', $source->id)
-            //     ->exists();
-
-            // if ($reverseConnectionExists) {
-            //     return back()->withErrors(['target_entity' => 'A reciprocal connection to this entity already exists.'])->withInput();
-            // }
-
             // Buat koneksi dengan tipe yang sudah dinamis
             Connection::create([
                 'source_id' => $source->id,
@@ -195,7 +226,7 @@ class FriendController extends Controller
                 'relationship_type' => $relationshipType, // <-- Gunakan variabel baru
             ]);
 
-            return redirect()->route('friends.index')->with('success', 'Connection established successfully.');
+            return redirect()->route('friends.central-tree')->with('success', 'Connection established successfully.');
         }
 
         return back()->withErrors(['msg' => 'Invalid operation. Please try again.']);
@@ -238,7 +269,7 @@ class FriendController extends Controller
             'target_type' => get_class($target),
         ]);
 
-        return redirect()->route('friends.index')->with('success', 'Sub-asset connection established.');
+        return redirect()->route('friends.central-tree')->with('success', 'Sub-asset connection established.');
     }
 
     /**
@@ -275,7 +306,7 @@ class FriendController extends Controller
         // Update data teman
         $friend->update($data);
 
-        return redirect()->route('friends.index')->with('success', "Agent for asset '{$friend->codename}' has been updated.");
+        return redirect()->route('friends.central-tree')->with('success', "Agent for asset '{$friend->codename}' has been updated.");
     }
 
     /**
@@ -291,7 +322,7 @@ class FriendController extends Controller
         $codename = $friend->codename;
         $friend->delete();
 
-        return redirect()->route('friends.index')->with('success', "Asset '{$codename}' has been terminated.");
+        return redirect()->route('friends.central-tree')->with('success', "Asset '{$codename}' has been terminated.");
     }
 
     // Lihat tree dari teman tertentu (friends of friend)

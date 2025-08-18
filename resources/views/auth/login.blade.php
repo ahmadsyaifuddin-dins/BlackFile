@@ -63,11 +63,11 @@
             </div>
     
             <div x-show="status === 'granted'" class="text-center text-green-600" x-transition>
-                <p class="text-4xl font-bold">[ ACCESS GRANTED ]</p>
+                <p class="text-2xl sm:text-4xl text- font-bold">[ ACCESS GRANTED ]</p>
             </div>
     
             <div x-show="status === 'denied'" class="text-center text-red-500" x-transition>
-                <p class="text-4xl font-bold">[ ACCESS DENIED ]</p>
+                <p class="text-2xl sm:text-4xl font-bold">[ ACCESS DENIED ]</p>
                 <p class="mt-4 text-sm text-secondary" x-text="errorMessage"></p>
             </div>
         </div>

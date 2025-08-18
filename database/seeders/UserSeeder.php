@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
                 'email' => 'ahmadsyai598@gmail.com', // opsional
                 'password' => Hash::make('ahmads1230906'),
                 'specialization' => 'System Architecture & Counter-Intelligence',
-                'qoutes' => 'The future is not set in stone, it is shaped by our actions.',
+                'quotes' => 'The future is not set in stone, it is shaped by our actions.',
                 'role_id' => 1, // Director
             ]
         );
@@ -31,7 +31,6 @@ class UserSeeder extends Seeder
                 'email' => 'haldi@gmail.com',
                 'password' => Hash::make('password'),
                 'specialization' => 'Open-Source Intelligence (OSINT) & Data Extraction',
-                'qoutes' => '',
                 'role_id' => 2, // Agent
             ]
         );
@@ -44,7 +43,6 @@ class UserSeeder extends Seeder
                 'email' => 'elrio@gmail.com',
                 'password' => Hash::make('password'),
                 'specialization' => 'Digital Ghost & OS Manipulation',
-                'qoutes' => '',
                 'role_id' => 3, // Analyst
             ]
         );
@@ -57,7 +55,6 @@ class UserSeeder extends Seeder
                 'email' => 'ryandyrhamadhany@gmail.com',
                 'password' => Hash::make('password'),
                 'specialization' => 'Solution Architect & System Auditing',
-                'qoutes' => '',
                 'role_id' => 2, // Agent
             ]
         );
@@ -70,7 +67,6 @@ class UserSeeder extends Seeder
                 'email' => 'aldyr@gmail.com',
                 'password' => Hash::make('password'),
                 'specialization' => 'Psychological Operations (PSYOP) Specialist & Infiltration',
-                'qoutes' => '',
                 'role_id' => 2, // Agent
             ]   
         );
@@ -83,7 +79,6 @@ class UserSeeder extends Seeder
                 'email' => 'mhmmdmaulidi21@gmail.com',
                 'password' => Hash::make('password'),
                 'specialization' => 'Field Operations & Execution',
-                'qoutes' => '',
                 'role_id' => 2, // Agent
             ]
         );

@@ -17,16 +17,18 @@
         
         <!-- Detail Teks -->
         <div class="space-y-4 w-full">
-            <p><span class="text-primary">> REAL NAME:</span> {{ $user->name }}</p>
-            <p><span class="text-primary">> CODENAME:</span> {{ $user->codename }}</p>
-            <p><span class="text-primary">> DESIGNATION:</span> {{ $user->role->alias }}</p>
-            <p class="border-t border-border-color/50 pt-4 mt-4"><span class="text-primary">> LOGIN ID:</span> {{ $user->username }}</p>
-            <p><span class="text-primary">> HANDLER:</span> {{ $user->parent->codename ?? '[ DIRECTORATE ]' }}</p>
-            <p><span class="text-primary">> SPECIALIZATION:</span> {{ $user->specialization ?? 'N/A' }}</p>
-            <p><span class="text-primary">> QUOTES:</span> "{{ $user->quotes ?? '...' }}"</p>
-            <p><span class="text-primary">> LAST ACTIVITY:</span> {{ $user->last_active_at ? $user->last_active_at->diffForHumans() : 'Never' }}</p>
-            <p><span class="text-primary">> RECOVERY EMAIL:</span> {{ $user->email }}</p>
-            <p><span class="text-primary">> REGISTERED ON:</span> {{ $user->created_at->format('Y-m-d H:i:s') }}</p>
+            <p><span class="text-primary/25">> REAL NAME:</span> {{ $user->name }}</p>
+            <p><span class="text-primary/25">> CODENAME:</span> {{ $user->codename }}</p>
+            <p><span class="text-primary/25">> DESIGNATION:</span> {{ $user->role->alias }}</p>
+            <p><span class="text-primary/25">> SPECIALIZATION:</span> {{ $user->specialization ?? 'N/A' }}</p>
+            <p><span class="text-primary/25">> QUOTES:</span> "{{ $user->quotes ?? '...' }}"</p>
+            <p class="border-t border-border-color/50 pt-4 mt-4">
+                <span class="text-primary/25">> LOGIN ID:</span> {{ $user->username }}
+            </p>
+            <p><span class="text-primary/25">> HANDLER:</span> {{ $user->parent->codename ?? '[ DIRECTORATE ]' }}</p>
+            <p><span class="text-primary/25">> LAST ACTIVITY:</span> {{ $user->last_active_at ? $user->last_active_at->diffForHumans() : 'Never' }}</p>
+            <p><span class="text-primary/25">> RECOVERY EMAIL:</span> {{ $user->email }}</p>
+            <p><span class="text-primary/25">> REGISTERED ON:</span> {{ $user->created_at->format('Y-m-d H:i:s') }}</p>
         </div>
     </div>
 

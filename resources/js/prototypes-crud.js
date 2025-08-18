@@ -36,9 +36,9 @@ export default function prototypesCRUD() {
         openCreateModal() {
             this.isModalOpen = true;
             this.isEditMode = false;
-            this.formTitle = '[ FILE NEW PROTOTYPE DOSSIER ]';
+            this.formTitle = '[ FILE NEW PROTOTYPE PROJECT]';
             this.formAction = '/prototypes'; // Use a static URL, as route() is PHP
-            this.formSubmitButton = 'SUBMIT DOSSIER';
+            this.formSubmitButton = 'SUBMIT PROJECT';
             // Reset form data to its initial state
             this.formData = { 
                 name: '', codename: '', project_type: '', status: 'PLANNED', 
@@ -51,9 +51,9 @@ export default function prototypesCRUD() {
         openEditModal(prototype) {
             this.isModalOpen = true;
             this.isEditMode = true;
-            this.formTitle = '[ EDIT PROTOTYPE DOSSIER ]';
+            this.formTitle = '[ EDIT PROTOTYPE PROJECT ]';
             this.formAction = `/prototypes/${prototype.id}`; // Build the update URL
-            this.formSubmitButton = 'UPDATE DOSSIER';
+            this.formSubmitButton = 'UPDATE PROJECT';
             this.formData = {
                 name: prototype.name,
                 codename: prototype.codename,

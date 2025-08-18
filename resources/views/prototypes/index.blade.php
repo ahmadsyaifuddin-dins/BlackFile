@@ -5,11 +5,11 @@
         We now call the 'prototypesCRUD' component we registered in app.js.
     --}}
     <div x-data="prototypesCRUD">
-        <x-slot:title>Prototypes Dossier</x-slot:title>
+        <x-slot:title>Prototypes Project</x-slot:title>
         
         <x-slot name="header">
             <h2 class="font-semibold text-xl text-gray-200 leading-tight">
-                {{ __('Prototypes Dossier') }}
+                {{ __('Prototypes Project') }}
             </h2>
         </x-slot>
 
@@ -32,7 +32,7 @@
                     <div class="p-2 sm:p-6 bg-gray-900 border-b border-gray-700">
                         @if($prototypes->isEmpty())
                         <div class="text-center py-10 font-mono text-gray-500">
-                            <p>// NO PROTOTYPE DOSSIERS FOUND IN THE ARCHIVE //</p>
+                            <p>// NO PROTOTYPE FOUND IN THE ARCHIVE //</p>
                             <p class="mt-4">Click "[ + FILE NEW PROTOTYPE ]" to begin cataloging your work.</p>
                         </div>
                         @else
@@ -120,7 +120,7 @@
                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                         </svg>
                         <h3 class="mb-5 text-lg font-normal text-gray-300">
-                            Are you sure you want to terminate dossier
+                            Are you sure you want to terminate project
                             <br>
                             <span class="font-bold text-yellow-400" x-text="prototypeToDeleteName"></span>?
                         </h3>

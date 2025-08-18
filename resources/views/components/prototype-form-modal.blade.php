@@ -1,9 +1,3 @@
-{{--
-Komponen Blade ini "bodoh" (dumb component).
-Ia tidak memiliki logika sendiri dan sepenuhnya dikontrol oleh state Alpine.js
-yang di-passing dari view induknya (prototypes.index.blade.php).
---}}
-
 <div x-show="isModalOpen" @keydown.escape.window="isModalOpen = false; isDeleteModalOpen = false"
     x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
     x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
@@ -24,7 +18,7 @@ yang di-passing dari view induknya (prototypes.index.blade.php).
 
             <div class="p-6 font-mono">
                 {{-- Judul Modal dinamis --}}
-                <h3 class="text-xl text-green-400 border-b border-gray-700 pb-2 mb-4" x-text="formTitle"></h3>
+                <h3 class="text-base sm:text-xl text-green-400 border-b border-gray-700 pb-2 mb-4" x-text="formTitle"></h3>
 
                 {{-- Baris 1: Name & Codename --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

@@ -19,6 +19,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('ahmads1230906'),
                 'specialization' => 'System Architecture & Counter-Intelligence',
                 'quotes' => 'The future is not set in stone, it is shaped by our actions.',
+                'avatar' => '/avatars/el_absolute_1755504759.jpg',
                 'role_id' => 1, // Director
             ]
         );

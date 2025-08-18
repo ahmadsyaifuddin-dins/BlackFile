@@ -82,7 +82,7 @@
                         </div>
                         <div class="text-right">
                             <button type="submit"
-                                class="px-3 py-1 bg-primary text-base hover:bg-primary-hover font-bold text-xs rounded">[
+                                class="px-3 py-1 bg-primary text-base text-primary-hover font-bold text-xs rounded">[
                                 ESTABLISH LINK ]</button>
                         </div>
                     </form>
@@ -163,7 +163,7 @@
                     <button type="button" @click="isEditing = false"
                         class="px-4 py-2 bg-secondary/20 text-secondary hover:bg-secondary/40 font-bold text-sm rounded">CANCEL</button>
                     <button type="submit"
-                        class="px-4 py-2 bg-primary text-base hover:bg-primary-hover font-bold text-sm rounded">[ SAVE
+                        class="px-4 py-2 bg-primary text-base text-primary-hover font-bold text-sm rounded">[ SAVE
                         CHANGES ]</button>
                 </div>
             </form>

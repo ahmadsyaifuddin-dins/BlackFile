@@ -31,6 +31,10 @@
     .text-primary {
       color: var(--color-primary);
     }
+
+    .text-primary-hover:hover { 
+       color: var(--color-primary-hover); 
+    }
 }
 
 /* ========================================================================== */

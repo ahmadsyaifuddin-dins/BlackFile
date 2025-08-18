@@ -62,7 +62,7 @@
                 <div class="container mx-auto">
                     <h2 class="text-2xl font-bold text-white">Your mission, should you choose to accept it, begins here.</h2>
                     <p class="mt-4 mb-8 max-w-xl mx-auto">This terminal is the gateway. Verify your identity to proceed.</p>
-                    <a href="{{ route('login') }}" class="px-8 py-4 bg-primary text-base hover:bg-primary-hover transition-colors font-bold tracking-widest text-lg">
+                    <a href="{{ route('login') }}" class="px-8 py-4 bg-primary text-base text-primary-hover transition-colors font-bold tracking-widest text-lg">
                         > ACCESS TERMINAL
                     </a>
                 </div>

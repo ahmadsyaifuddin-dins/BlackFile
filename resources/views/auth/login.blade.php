@@ -51,7 +51,7 @@
                         <input id="password" class="block mt-1 w-full bg-surface border-border-color focus:border-primary focus:ring-primary" type="password" name="password" required />
                     </div>
                     <div class="flex items-center justify-end mt-6">
-                        <button type="submit" class="w-full px-4 py-2 bg-primary text-base text-base hover:bg-primary-hover font-bold tracking-widest cursor-pointer">
+                        <button type="submit" class="w-full px-4 py-2 bg-primary text-base text-primary-hover font-bold tracking-widest cursor-pointer">
                             > INITIATE CONNECTION
                         </button>
                     </div>

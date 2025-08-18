@@ -44,13 +44,13 @@ class UserSeeder extends Seeder
         );
 
         User::firstOrCreate(
-            ['username' => 'analyst-02'],
+            ['username' => 'agent-X9'],
             [
                 'name' => 'Ryandy Rhamadhany',
                 'codename' => 'Cybernetic Sentinel',
                 'email' => 'ryandyrhamadhany@gmail.com',
                 'password' => Hash::make('password'),
-                'role_id' => 3, // Analyst
+                'role_id' => 2, // Agent
             ]
         );
 

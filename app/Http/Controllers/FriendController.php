@@ -81,6 +81,8 @@ class FriendController extends Controller
                     'avatar' => $avatarUrl,
                     'name'   => $entity->name,
                     'specialization' => $entity->specialization ? $entity->specialization : 'Not Available',
+                    'category'       => !$isUser ? $entity->category : null,
+
                 ]
             ];
             $processedIds[] = $entityId;
@@ -119,7 +121,10 @@ class FriendController extends Controller
         $connectableUsers = User::where('id', '!=', Auth::id())->orderBy('codename')->get();
         $connectableFriends = Friend::orderBy('codename')->get();
 
-        return view('friends.create', compact('connectableUsers', 'connectableFriends'));
+        // [BARU] Ambil daftar kategori dari file config
+        $categories = config('blackfile.asset_categories');
+
+        return view('friends.create', compact('connectableUsers', 'connectableFriends', 'categories'));
     }
 
     /**
@@ -132,6 +137,7 @@ class FriendController extends Controller
             'name' => 'nullable|required_without:target_entity|string|max:255',
             'codename' => 'nullable|required_without:target_entity|string|max:50|unique:friends,codename',
             'target_entity' => 'nullable|required_without_all:name,codename|string',
+            'category' => 'nullable|required_without:target_entity|string', // [BARU] Tambahkan validasi
         ], [
             'required_without' => 'The :attribute field is required when creating a new asset.',
             'required_without_all' => 'Please either register a new asset or select an existing entity to connect to.'
@@ -150,6 +156,7 @@ class FriendController extends Controller
                 'user_id' => $source->id,
                 'name' => $request->name,
                 'codename' => $request->codename,
+                'category' => $request->category, // [BARU] Simpan kategori
             ]);
         }
 
@@ -201,6 +208,7 @@ class FriendController extends Controller
             'source_id'   => 'required|integer',
             'name'        => 'required|string|max:255',
             'codename'    => 'required|string|max:50|unique:friends,codename',
+            'category'    => 'nullable|string',
         ]);
 
         // Cari source dari koneksi
@@ -219,6 +227,7 @@ class FriendController extends Controller
             'user_id'  => Auth::id(), // Pemilik sub-aset tetap handler utama
             'name'     => $data['name'],
             'codename' => $data['codename'],
+            'category' => $data['category'],
         ]);
 
         // Buat koneksi dari source ke target
@@ -260,6 +269,7 @@ class FriendController extends Controller
         $data = $request->validate([
             'name'      => 'required|string|max:255',
             'codename'  => 'required|string|max:50|unique:friends,codename,' . $friend->id,
+            'category'  => 'nullable|string',
         ]);
 
         // Update data teman

@@ -20,20 +20,17 @@ class LoginController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            // Kirim respons JSON jika sukses
-            return response()->json(['status' => 'success', 'redirect' => route('dashboard')]);
-        }
-
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-    
+
             // [BARU] Update timestamp aktivitas terakhir
             $user = Auth::user();
             $user->last_active_at = now();
+
             /** @var \App\Models\User $user */
             $user->save();
+            // Kirim respons JSON jika sukses
+            return response()->json(['status' => 'success', 'redirect' => route('dashboard')]);
         }
 
         // Kirim respons JSON jika gagal

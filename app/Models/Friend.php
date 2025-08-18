@@ -13,7 +13,7 @@ class Friend extends Model
         'user_id',
         'name',
         'codename',
-        // 'parent_id', // Seharusnya sudah dihapus jika Anda menjalankan migrasi terakhir
+        'category', // <-- TAMBAHKAN INI
     ];
 
     // Relasi ke user yang membuat record friend ini
@@ -25,22 +25,6 @@ class Friend extends Model
     // ===================================================================
     // CATATAN: Method di bawah ini adalah untuk arsitektur LAMA (parent_id)
     // ===================================================================
-
-    /**
-     * [BARU] Relasi untuk mendapatkan parent LANGSUNG dari friend ini.
-     */
-    public function parent()
-    {
-        return $this->belongsTo(Friend::class, 'parent_id');
-    }
-
-    /**
-     * [BARU & MEMPERBAIKI ERROR] Relasi untuk mendapatkan anak-anak LANGSUNG.
-     */
-    public function children()
-    {
-        return $this->hasMany(Friend::class, 'parent_id');
-    }
 
     /**
      * Relasi untuk mengambil semua turunan secara rekursif.

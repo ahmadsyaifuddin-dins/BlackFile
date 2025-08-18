@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthManual\RegisterController;
 use App\Http\Controllers\AuthManual\LogoutController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PrototypeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Http;
 
@@ -58,6 +59,9 @@ Route::middleware('auth')->group(function () {
     // --- Rute untuk Manajemen Agen ---
     Route::get('/agents', [UserController::class, 'index'])->name('agents.index');
     Route::get('/agents/{user}', [UserController::class, 'show'])->name('agents.show');
+
+
+    Route::resource('prototypes', PrototypeController::class);
 
     // [BARU] Rute untuk aksi Director, dilindungi oleh middleware role
     Route::middleware('role:Director')->group(function () {

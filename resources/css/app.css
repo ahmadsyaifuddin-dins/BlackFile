@@ -8,6 +8,10 @@
 /* == BAGIAN 1: TEMA DASAR (DARK MODE STANDAR) =============================== */
 /* ========================================================================== */
 
+[x-cloak] {
+  display: none !important;
+}
+
 @layer base {
     :root {
       --color-base: #0d1117;
@@ -42,6 +46,9 @@
 /* ========================================================================== */
 
 @layer components {
+  .form-input-dark {
+    @apply w-full bg-gray-800 border border-gray-600 rounded-md text-gray-300 focus:ring-green-500 focus:border-green-500;
+  }
   .highlighted {
       min-zoomed-font-size: 12px;
       font-weight: bold;

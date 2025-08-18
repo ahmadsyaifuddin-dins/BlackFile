@@ -33,6 +33,13 @@
             <span>> Agents Directory</span>
         </a>
 
+        <a href="{{ route('prototypes.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('prototypes.index') 
+                ? 'bg-surface-light text-primary border-l-4 border-primary' 
+                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+            <span>> Prototypes Dossier</span>
+        </a>
+
         <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
            {{ request()->routeIs('logs.*') 
                 ? 'bg-surface-light text-primary border-l-4 border-primary' 

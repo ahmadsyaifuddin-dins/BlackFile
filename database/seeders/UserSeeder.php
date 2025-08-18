@@ -17,6 +17,8 @@ class UserSeeder extends Seeder
                 'codename' => 'El Absolute',
                 'email' => 'ahmadsyai598@gmail.com', // opsional
                 'password' => Hash::make('ahmads1230906'),
+                'specialization' => 'System Architecture & Counter-Intelligence',
+                'qoutes' => 'The future is not set in stone, it is shaped by our actions.',
                 'role_id' => 1, // Director
             ]
         );
@@ -28,6 +30,8 @@ class UserSeeder extends Seeder
                 'codename' => 'ANTIMATERI',
                 'email' => 'haldi@gmail.com',
                 'password' => Hash::make('password'),
+                'specialization' => 'Open-Source Intelligence (OSINT) & Data Extraction',
+                'qoutes' => '',
                 'role_id' => 2, // Agent
             ]
         );
@@ -39,6 +43,8 @@ class UserSeeder extends Seeder
                 'codename' => 'El Rio',
                 'email' => 'elrio@gmail.com',
                 'password' => Hash::make('password'),
+                'specialization' => 'Digital Ghost & OS Manipulation',
+                'qoutes' => '',
                 'role_id' => 3, // Analyst
             ]
         );
@@ -47,9 +53,11 @@ class UserSeeder extends Seeder
             ['username' => 'agent-X9'],
             [
                 'name' => 'Ryandy Rhamadhany',
-                'codename' => 'Cybernetic Sentinel',
+                'codename' => 'Synapse-X9',
                 'email' => 'ryandyrhamadhany@gmail.com',
                 'password' => Hash::make('password'),
+                'specialization' => 'Solution Architect & System Auditing',
+                'qoutes' => '',
                 'role_id' => 2, // Agent
             ]
         );
@@ -61,8 +69,10 @@ class UserSeeder extends Seeder
                 'codename' => 'Aldy Stecu',
                 'email' => 'aldyr@gmail.com',
                 'password' => Hash::make('password'),
+                'specialization' => 'Psychological Operations (PSYOP) Specialist & Infiltration',
+                'qoutes' => '',
                 'role_id' => 2, // Agent
-            ]
+            ]   
         );
 
         User::firstOrCreate(
@@ -72,6 +82,8 @@ class UserSeeder extends Seeder
                 'codename' => 'Yatnua',
                 'email' => 'mhmmdmaulidi21@gmail.com',
                 'password' => Hash::make('password'),
+                'specialization' => 'Field Operations & Execution',
+                'qoutes' => '',
                 'role_id' => 2, // Agent
             ]
         );

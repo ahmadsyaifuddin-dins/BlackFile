@@ -13,30 +13,38 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request) // Hapus type-hint RedirectResponse
+    public function login(Request $request)
     {
-        $credentials = $request->validate([
+        // [DIUBAH] Tambahkan 'remember' ke validasi
+        $validated = $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
+            'remember' => 'boolean', // Memastikan nilainya true/false
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        // Pisahkan kredensial untuk login
+        $credentials = [
+            'username' => $validated['username'],
+            'password' => $validated['password'],
+        ];
+
+        // [DIUBAH] Gunakan nilai 'remember' sebagai argumen kedua di Auth::attempt()
+        if (Auth::attempt($credentials, $validated['remember'] ?? false)) {
             $request->session()->regenerate();
 
-            // [BARU] Update timestamp aktivitas terakhir
+            // Update last_active_at (jika Anda masih menggunakan ini)
             $user = Auth::user();
             $user->last_active_at = now();
-
+            
             /** @var \App\Models\User $user */
             $user->save();
-            // Kirim respons JSON jika sukses
+
             return response()->json(['status' => 'success', 'redirect' => route('dashboard')]);
         }
 
-        // Kirim respons JSON jika gagal
         return response()->json([
             'status' => 'denied',
             'message' => 'ACCESS DENIED. Invalid credentials.'
-        ], 422); // 422 Unprocessable Entity
+        ], 422);
     }
 }

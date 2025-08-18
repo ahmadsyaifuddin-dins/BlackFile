@@ -59,7 +59,7 @@
                             </div>
                             <div>
                                 <p class="text-gray-500">> PROJECT BY</p>
-                                <p class="text-red-400 font-semibold">{{ $prototype->user->name }}</p>
+                                <p class="text-green-600 font-semibold">{{ $prototype->user->name }}</p>
                             </div>
                             <div>
                                 <p class="text-gray-500">> PROJECT TYPE</p>

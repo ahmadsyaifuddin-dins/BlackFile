@@ -62,7 +62,7 @@ class UserController extends Controller
             $user->save();
         }
 
-        return redirect()->route('agents.index')->with('success', "Agent {$user->codename}'s dossier has been updated.");
+        return redirect()->route('agents.index')->with('success', "Agent {$user->codename}'s Agent has been updated.");
     }
 
     /**
@@ -72,7 +72,7 @@ class UserController extends Controller
     {
         // Pengaman: Director tidak bisa menghapus akunnya sendiri
         if ($user->id === Auth::id()) {
-            return back()->withErrors(['msg' => 'A Director cannot terminate their own dossier.']);
+            return back()->withErrors(['msg' => 'A Director cannot terminate their own Agent.']);
         }
         
         $codename = $user->codename;

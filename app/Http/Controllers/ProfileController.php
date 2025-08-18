@@ -72,6 +72,6 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return redirect()->route('profile.show')->with('success', 'Personal dossier has been updated.');
+        return redirect()->route('profile.show')->with('success', 'Personal Agent has been updated.');
     }
 }

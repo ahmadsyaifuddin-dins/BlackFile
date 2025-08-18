@@ -1,6 +1,6 @@
 <x-app-layout theme="terminal">
     <x-slot:title>
-        Dossier: {{ $user->codename }}
+        Agent: {{ $user->codename }}
     </x-slot:title>
 
     <div class="mb-6">
@@ -11,7 +11,7 @@
         </div>
     </div>
     
-    {{-- [DIUBAH] Dossier sekarang memiliki layout flex untuk menampung avatar --}}
+    {{-- [DIUBAH] Agent sekarang memiliki layout flex untuk menampung avatar --}}
     <div class="bg-surface/50 border border-border-color rounded-lg p-6 text-glow flex flex-col sm:flex-row items-start gap-6">
         
         <!-- Avatar -->

@@ -18,10 +18,10 @@
         class="relative w-full max-w-lg bg-surface border-2 border-border-color rounded-lg shadow-lg flex flex-col">
 
         <!-- ====================================================== -->
-        <!-- == MODE VIEW (TAMPILAN DOSSIER BACA-SAJA) =========== -->
+        <!-- == MODE VIEW (TAMPILAN AGENT BACA-SAJA) =========== -->
         <!-- ====================================================== -->
         <div x-show="!isEditing">
-            <!-- Header Dossier -->
+            <!-- Header Agent -->
             <div class="flex items-start justify-between p-4 border-b border-border-color">
                 <div class="min-w-0">
                     <h3 class="text-2xl font-bold text-primary break-words" x-text="selectedNodeData.label"></h3>
@@ -31,7 +31,7 @@
                     class="text-secondary hover:text-white text-2xl ml-4 flex-shrink-0">&times;</button>
             </div>
 
-            <!-- Konten Dossier -->
+            <!-- Konten Agent -->
             <div class="p-4 overflow-y-auto">
                 <p class="text-white"><strong class="text-primary">> ID:</strong> <span
                         x-text="selectedNodeData.id"></span></p>
@@ -128,7 +128,7 @@
 
                 <!-- Header Edit -->
                 <div class="p-4 border-b border-border-color">
-                    <h3 class="text-2xl font-bold text-primary">EDITING DOSSIER</h3>
+                    <h3 class="text-2xl font-bold text-primary">EDITING AGENT</h3>
                     <p class="text-secondary" x-text="selectedNodeData.label"></p>
                 </div>
 

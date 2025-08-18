@@ -1,10 +1,10 @@
 <x-app-layout theme="terminal">
     <x-slot:title>
-        My Dossier
+        My Agent
     </x-slot:title>
 
     <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-primary text-glow">> [ PERSONAL DOSSIER ]</h2>
+        <h2 class="text-2xl font-bold text-primary text-glow">> [ PERSONAL AGENT ]</h2>
     </div>
 
     <div class="bg-surface/50 border border-border-color rounded-lg p-6 text-glow flex flex-col sm:flex-row items-start gap-6">

@@ -275,7 +275,7 @@ class FriendController extends Controller
         // Update data teman
         $friend->update($data);
 
-        return redirect()->route('friends.index')->with('success', "Dossier for asset '{$friend->codename}' has been updated.");
+        return redirect()->route('friends.index')->with('success', "Agent for asset '{$friend->codename}' has been updated.");
     }
 
     /**

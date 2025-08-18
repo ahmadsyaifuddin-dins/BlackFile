@@ -46,5 +46,5 @@
             data-edges='@json($edges)' data-rootnodeid='{{ $rootNodeId }}'></div>
     </div>
 
-    <x-dossier-modal />
+    <x-Agent-modal />
 </x-app-layout>

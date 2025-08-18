@@ -4,7 +4,7 @@
     </x-slot:title>
 
     <div class="p-4 md:p-6 bg-surface border border-border-color rounded-lg">
-        <h2 class="text-2xl font-bold text-primary mb-6"> > [ EDITING AGENT DOSSIER: {{ $user->codename }} ] </h2>
+        <h2 class="text-2xl font-bold text-primary mb-6"> > [ EDITING AGENT: {{ $user->codename }} ] </h2>
         
         <form method="POST" action="{{ route('agents.update', $user->id) }}">
             @csrf
@@ -81,7 +81,7 @@
 
                 <div class="border-t border-border-color pt-6 flex justify-end">
                     <button type="submit" class="px-6 py-2 bg-primary text-base text-primary-hover transition-colors font-bold tracking-widest rounded-md text-sm">
-                        [ UPDATE DOSSIER ]
+                        [ UPDATE AGENT ]
                     </button>
                 </div>
             </div>

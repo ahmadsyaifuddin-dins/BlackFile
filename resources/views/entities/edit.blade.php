@@ -1,6 +1,12 @@
 <x-app-layout :title="'Edit: ' . ($entity->codename ?? $entity->name)">
-    <h2 class="text-2xl font-bold text-primary mb-6">Edit Entity Record // {{ $entity->codename ?? $entity->name }}</h2>
-
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-3">
+        <h2 class="text-2xl font-bold text-primary">Edit Record // {{ $entity->codename ?? $entity->name }}</h2>
+        
+        {{-- Tombol Kembali ke halaman Show --}}
+        <a href="{{ route('entities.show', $entity) }}" class="w-full sm:w-auto text-center bg-surface-light border border-border-color text-secondary font-bold py-2 px-4 rounded hover:text-primary hover:border-primary transition-colors">
+            &lt; Cancel and View
+        </a>
+    </div>
     <div class="bg-surface border border-border-color rounded-lg p-6">
         {{-- Arahkan form ke route 'update' dan gunakan method 'PUT' --}}
         <form action="{{ route('entities.update', $entity) }}" method="POST" enctype="multipart/form-data"

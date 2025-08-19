@@ -1,19 +1,26 @@
 <x-app-layout :title="$entity->codename ?? $entity->name">
     <div class="space-y-8">
         {{-- Header & Tombol Aksi --}}
-        <div class="flex justify-between items-start">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+            {{-- Bagian Kiri: Judul --}}
             <div>
                 <h1 class="text-3xl font-bold text-primary tracking-wider font-mono">{{ $entity->codename ?? $entity->name }}</h1>
                 <p class="text-secondary">{{ $entity->name }}</p>
             </div>
-            <div class="flex items-center space-x-3">
-                <a href="{{ route('entities.edit', $entity) }}" class="bg-surface-light border border-border-color text-secondary font-bold py-2 px-4 rounded hover:text-primary hover:border-primary transition-colors">
+            <div class="flex flex-col md:flex-row md:items-center gap-3 w-full md:w-auto">
+                {{-- Tombol Kembali --}}
+                <a href="{{ route('entities.index') }}" class="w-full md:w-auto text-center bg-surface-light border border-border-color text-secondary font-bold py-2 px-4 rounded hover:text-primary hover:border-primary transition-colors">
+                    &lt; Back to Index
+                </a>
+                {{-- Tombol Edit --}}
+                <a href="{{ route('entities.edit', $entity) }}" class="w-full md:w-auto text-center bg-surface-light border border-border-color text-secondary font-bold py-2 px-4 rounded hover:text-primary hover:border-primary transition-colors">
                     > Edit
                 </a>
-                <form action="{{ route('entities.destroy', $entity) }}" method="POST" onsubmit="return confirm('WARNING: Are you sure you want to terminate this entity record? This action cannot be undone.');">
+                {{-- Tombol Hapus --}}
+                <form action="{{ route('entities.destroy', $entity) }}" method="POST" class="w-full md:w-auto" onsubmit="return confirm('WARNING: Are you sure you want to terminate this entity record? This action cannot be undone.');">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="bg-red-900/50 border border-red-500/50 text-red-400 font-bold py-2 px-4 rounded hover:bg-red-900/80 transition-colors">
+                    <button type="submit" class="w-full bg-red-900/50 border border-red-500/50 text-red-400 font-bold py-2 px-4 rounded hover:bg-red-900/80 transition-colors">
                         > Terminate
                     </button>
                 </form>

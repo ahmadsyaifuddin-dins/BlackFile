@@ -39,7 +39,7 @@ class EntityController extends Controller
             'weaknesses' => 'nullable|string',
             'status' => 'required|in:ACTIVE,CONTAINED,NEUTRALIZED,UNKNOWN',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi untuk setiap file
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // Validasi untuk setiap file
             'captions' => 'nullable|array',
             'captions.*' => 'nullable|string|max:255',
         ]);
@@ -95,7 +95,7 @@ class EntityController extends Controller
             'weaknesses' => 'nullable|string',
             'status' => 'required|in:ACTIVE,CONTAINED,NEUTRALIZED,UNKNOWN',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'captions' => 'nullable|array',
             'captions.*' => 'nullable|string|max:255',
 

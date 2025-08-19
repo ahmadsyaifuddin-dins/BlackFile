@@ -30,10 +30,10 @@
 
             <div class="bg-gray-800 px-6 py-3 flex justify-center items-center gap-4">
                 {{-- Perbaikan: ganti isOpen dengan isDeleteModalOpen --}}
-                <button type="button" @click="isDeleteModalOpen = false" class="text-gray-400 bg-gray-700 hover:bg-gray-600 py-2 px-4 rounded transition">
+                <button type="button" @click="isDeleteModalOpen = false" class="text-gray-400 bg-gray-700 hover:bg-gray-600 py-2 px-4 rounded transition cursor-pointer">
                     CANCEL MISSION
                 </button>
-                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
                     CONFIRM TERMINATION
                 </button>
             </div>

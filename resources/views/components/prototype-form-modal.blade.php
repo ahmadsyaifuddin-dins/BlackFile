@@ -111,8 +111,8 @@
                     <template x-if="isEditMode && formData.cover_image_path">
                         <div class="mt-2">
                             <img x-bind:src="'/' + formData.cover_image_path" alt="Current Cover"
-                                class="max-h-32 rounded">
-                            <p class="text-xs text-gray-500 mt-1">Current image. Upload a new file to replace it.</p>
+                                class="max-h-32 rounded cursor-pointer">
+                            <p class="text-xs text-gray-500 mt-1 cursor-pointer">Current image. Upload a new file to replace it.</p>
                         </div>
                     </template>
                 </div>
@@ -122,8 +122,8 @@
             {{-- Tombol Aksi Modal --}}
             <div class="bg-gray-800 px-6 py-3 flex justify-end items-center gap-4">
                 <button type="button" @click="isModalOpen = false"
-                    class="text-gray-400 hover:text-white transition">CANCEL</button>
-                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    class="text-gray-400 hover:text-white transition cursor-pointer">CANCEL</button>
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
                     {{-- Teks tombol dinamis --}}
                     <span x-text="formSubmitButton"></span>
                 </button>

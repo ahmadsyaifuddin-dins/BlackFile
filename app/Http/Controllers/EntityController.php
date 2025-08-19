@@ -12,10 +12,38 @@ class EntityController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $entities = Entity::latest()->paginate(9);
+        // 1. Memulai query builder yang kosong dan fleksibel.
+        $query = Entity::query();
+
+        // 2. Menerapkan filter PENCARIAN jika ada input 'search' dari form.
+        if ($request->filled('search')) {
+            // Menyiapkan kata kunci dengan wildcard '%' agar bisa mencari bagian kata.
+            $searchTerm = '%' . $request->search . '%';
+            
+            // Menambahkan kondisi WHERE untuk mencari di beberapa kolom sekaligus.
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name', 'like', $searchTerm)
+                  ->orWhere('codename', 'like', $searchTerm)
+                  ->orWhere('description', 'like', $searchTerm);
+            });
+        }
+
+        // 3. Menerapkan filter KATEGORI jika ada input 'category' dari form.
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
+        // 4. Setelah semua filter diterapkan, baru kita atur urutan dan paginasi.
+        //    Hasilnya akan sesuai dengan permintaan Anda: data lama (ID kecil) di atas.
+        $entities = $query->orderBy('id', 'asc')->paginate(9);
+
+        // 5. Mengirim data yang sudah difilter dan diurutkan ke view.
         return view('entities.index', compact('entities'));
     }
 
@@ -163,7 +191,9 @@ class EntityController extends Controller
     {
         // 1. Hapus file gambar dari storage terlebih dahulu
         foreach ($entity->images as $image) {
-            Storage::disk('public_uploads')->delete($image->path);
+            if (!filter_var($image->path, FILTER_VALIDATE_URL)) {
+                Storage::disk('public_uploads')->delete($image->path);
+            }
         }
 
         // 2. Hapus record dari database

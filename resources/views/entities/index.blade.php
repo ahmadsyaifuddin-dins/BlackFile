@@ -14,6 +14,55 @@
         </div>
         @endif
 
+        {{-- ================================================================ --}}
+        {{-- == BAGIAN BARU: FORM SEARCH & FILTER == --}}
+        {{-- ================================================================ --}}
+        <div class="bg-surface border border-border-color p-4 font-mono">
+            <form action="{{ route('entities.index') }}" method="GET" class="flex flex-col md:flex-row items-center gap-4">
+                {{-- Input Search --}}
+                <div class="flex-grow w-full md:w-auto">
+                    <label for="search" class="sr-only">Search</label>
+                    <input type="text" name="search" id="search" placeholder="Search by keyword, name, or codename..."
+                           value="{{ request('search') }}"
+                           class="w-full bg-base border-2 border-border-color focus:border-primary focus:ring-0 text-white px-3 py-2">
+                </div>
+                
+                {{-- Filter Kategori --}}
+                <div class="flex-shrink-0 w-full md:w-64">
+                    @php
+                        $categories = config('blackfile.entity_categories');
+                        $currentCategory = request('category', '');
+                    @endphp
+                    <div x-data="{ open: false, selected: '{{ $currentCategory }}' }" class="relative font-mono">
+                        <input type="hidden" name="category" x-bind:value="selected">
+                        <button type="button" @click="open = !open" class="relative w-full bg-base border-2 border-border-color text-left text-white p-2 pr-10 focus:outline-none focus:border-primary">
+                            <span x-text="selected || '-- All Categories --'"></span>
+                            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"><svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a.75.75 0 01.53.22l3.5 3.5a.75.75 0 01-1.06 1.06L10 4.81 7.03 7.78a.75.75 0 01-1.06-1.06l3.5-3.5A.75.75 0 0110 3zm-3.72 9.53a.75.75 0 011.06 0L10 15.19l2.97-2.97a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 010-1.06z" clip-rule="evenodd" /></svg></span>
+                        </button>
+                        <div x-show="open" @click.away="open = false" class="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto bg-black border border-border-color shadow-lg" style="display: none;">
+                            <div class="py-1">
+                                <a @click="selected = ''; open = false" class="block px-4 py-2 text-sm cursor-pointer text-primary hover:text-green-400" :class="{'text-green-800 bg-surface': selected === ''}">-- All Categories --</a>
+                                @foreach($categories as $category)
+                                    <a @click="selected = '{{ addslashes($category) }}'; open = false" class="block px-4 py-2 text-sm cursor-pointer text-primary hover:text-green-400" :class="{'text-green-800 bg-surface': selected === '{{ addslashes($category) }}'}">{{ $category }}</a>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                {{-- Tombol Aksi --}}
+                <div class="flex items-center gap-2 w-full md:w-auto">
+                    <button type="submit" class="w-full md:w-auto bg-primary text-primary font-bold py-2 px-6 hover:text-green-700 transition-colors cursor-pointer">
+                        FILTER
+                    </button>
+                    <a href="{{ route('entities.index') }}" class="w-full md:w-auto text-center border border-border-color text-secondary py-2 px-6 hover:bg-surface-light">
+                        RESET
+                    </a>
+                </div>
+            </form>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             @forelse($entities as $entity)
             <div
@@ -86,7 +135,7 @@
         </div>
 
         <div class="mt-8">
-            {{ $entities->links() }}
+            {{ $entities->appends(request()->query())->links() }}
         </div>
     </div>
 </x-app-layout>

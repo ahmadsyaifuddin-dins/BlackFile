@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot:title>
-        Dossier: {{ $prototype->codename }}
+        Entities: {{ $prototype->codename }}
     </x-slot:title>
 
     <x-slot name="header">
@@ -11,7 +11,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="mb-3">
                 <h2 class="font-semibold text-xl text-gray-200 leading-tight">
-                    <span class="text-gray-500">Dossier //</span> {{ $prototype->codename }}
+                    <span class="text-gray-500">Entities //</span> {{ $prototype->codename }}
                 </h2>
                 <a href="{{ route('prototypes.index') }}" class="text-gray-400 hover:text-white transition duration-300 font-mono text-sm">
                     &lt;-- [ RETURN TO PROJECTS ]

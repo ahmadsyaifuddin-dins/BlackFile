@@ -17,7 +17,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="flex justify-end mb-4">
                     <button @click="openCreateModal()"
-                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300 w-full sm:w-auto">
+                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300 w-full sm:w-auto cursor-pointer">
                         [ + FILE NEW PROTOTYPE ]
                     </button>
                 </div>

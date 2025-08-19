@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthManual\LoginController;
 use App\Http\Controllers\AuthManual\RegisterController;
 use App\Http\Controllers\AuthManual\LogoutController;
+use App\Http\Controllers\CodexController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\ProfileController;
@@ -44,15 +45,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/friends/{id}/tree', [FriendController::class, 'showTree'])->name('friends.tree');
     Route::get('/friends/central-tree', [FriendController::class, 'centralTreeGraph'])->name('friends.central-tree');
 
-     // [BARU] Tambahkan rute untuk edit dan hapus
-     Route::get('/friends/{friend}/edit', [FriendController::class, 'edit'])->name('friends.edit');
-     Route::put('/friends/{friend}', [FriendController::class, 'update'])->name('friends.update');
-     Route::delete('/friends/{friend}', [FriendController::class, 'destroy'])->name('friends.destroy');
+    // [BARU] Tambahkan rute untuk edit dan hapus
+    Route::get('/friends/{friend}/edit', [FriendController::class, 'edit'])->name('friends.edit');
+    Route::put('/friends/{friend}', [FriendController::class, 'update'])->name('friends.update');
+    Route::delete('/friends/{friend}', [FriendController::class, 'destroy'])->name('friends.destroy');
 
-     // [BARU] Tambahkan rute untuk store sub-asset
-     Route::post('/connections/sub-asset', [FriendController::class, 'storeSubAsset'])->name('connections.store_sub_asset');
+    // [BARU] Tambahkan rute untuk store sub-asset
+    Route::post('/connections/sub-asset', [FriendController::class, 'storeSubAsset'])->name('connections.store_sub_asset');
 
-      // --- Rute untuk Profil Pribadi (di-handle oleh ProfileController) ---
+    // --- Rute untuk Profil Pribadi (di-handle oleh ProfileController) ---
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -63,9 +64,13 @@ Route::middleware('auth')->group(function () {
 
     // --- Rute untuk Manajemen Prototype/Projects ---
     Route::resource('prototypes', PrototypeController::class);
-    
+
     // --- Rute untuk Manajemen Entity ---
     Route::resource('entities', EntityController::class);
+
+    // Rute untuk Codex
+    Route::get('/codex', [CodexController::class, 'index'])->name('codex.index');
+
 
     // [BARU] Rute untuk aksi Director, dilindungi oleh middleware role
     Route::middleware('role:Director')->group(function () {

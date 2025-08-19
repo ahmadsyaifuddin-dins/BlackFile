@@ -6,6 +6,7 @@ use App\Models\Entity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use App\Models\EntityImage; // <-- PENTING: Import EntityImage
 
 class EntityController extends Controller
 {
@@ -97,12 +98,27 @@ class EntityController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'captions' => 'nullable|array',
             'captions.*' => 'nullable|string|max:255',
+
+            // --- VALIDASI BARU ---
+            'images_to_delete' => 'nullable|array',
+            'images_to_delete.*' => 'exists:entity_images,id', // Pastikan ID gambar yang dikirim ada di database
         ]);
 
-        // Update data utama entitas
-        $entity->update($validated);
+         // --- LOGIKA BARU: HAPUS GAMBAR YANG DIPILIH ---
+         if ($request->has('images_to_delete')) {
+            $imagesToDelete = EntityImage::whereIn('id', $request->input('images_to_delete'))
+                                        ->where('entity_id', $entity->id) // Keamanan: pastikan gambar milik entitas ini
+                                        ->get();
 
-        // Proses jika ada gambar baru yang diunggah
+            foreach ($imagesToDelete as $image) {
+                // 1. Hapus file fisik
+                Storage::disk('public_uploads')->delete($image->path);
+                // 2. Hapus record dari database
+                $image->delete();
+            }
+        }
+        
+        // --- LOGIKA LAMA: PROSES GAMBAR BARU ---
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $imageFile) {
                 $path = $imageFile->store('entity_images', 'public_uploads');
@@ -112,6 +128,10 @@ class EntityController extends Controller
                 ]);
             }
         }
+        
+        // Update data utama entitas (setelah proses gambar agar tidak error jika validasi gagal)
+        $entityData = $request->except(['images', 'images_to_delete', 'captions']);
+        $entity->update($entityData);
 
         return redirect()->route('entities.show', $entity)->with('success', 'Entity record updated successfully.');
     }

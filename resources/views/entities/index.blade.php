@@ -73,7 +73,7 @@
                     </form>
 
                     <a href="{{ route('entities.show', $entity) }}"
-                        class="text-primary hover:text-white text-sm font-bold font-mono">> VIEW ENTITIES</a>
+                        class="text-primary hover:text-white text-sm font-bold font-mono">> ACCESS ENTITY</a>
                 </div>
             </div>
             @empty

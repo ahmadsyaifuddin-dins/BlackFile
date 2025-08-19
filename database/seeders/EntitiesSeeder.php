@@ -33,7 +33,7 @@ class EntitiesSeeder extends Seeder
                 'weaknesses' => 'Rentan terhadap penyakit, kerusakan fisik, faktor psikologis, dan memiliki masa hidup yang terbatas.',
                 'status' => 'ACTIVE',
                 'images' => [
-                    'https://placehold.co/600x400/161b22/8b949e?text=SUBJECT-BASELINE',
+                    'https://static.scientificamerican.com/dam/m/4aaa836e513fa8a5/original/krijn_neanderthal_face_reconstruction.jpg?m=1728652157.415&w=900',
                 ],
             ],
             [
@@ -47,7 +47,7 @@ class EntitiesSeeder extends Seeder
                 'weaknesses' => 'Sepenuhnya tidak bergerak saat diamati secara langsung oleh organisme hidup.',
                 'status' => 'CONTAINED',
                 'images' => [
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/SCP-173.jpg/440px-SCP-173.jpg',
+                    'https://static.wikia.nocookie.net/power-level-world/images/b/b9/SCP-173.jpg',
                 ],
             ],
             [
@@ -61,8 +61,7 @@ class EntitiesSeeder extends Seeder
                 'weaknesses' => 'Saat ini dalam keadaan seperti kematian di R\'lyeh, meskipun dapat terbangun ketika "bintang-bintang berada di posisi yang benar".',
                 'status' => 'UNKNOWN',
                 'images' => [
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Cthulhu_and_R%27lyeh.png/560px-Cthulhu_and_R%27lyeh.png',
-                    'https://placehold.co/600x400/161b22/2ea043?text=R\'LYEH+GLYPH',
+                    'https://static.wikia.nocookie.net/villains/images/1/11/Cthulhu_Underwater.jpg',
                 ],
             ],
             [
@@ -76,7 +75,7 @@ class EntitiesSeeder extends Seeder
                 'weaknesses' => 'Terikat pada kehendak ilahi; intervensi langsung di alam fana sangat dibatasi.',
                 'status' => 'ACTIVE',
                 'images' => [
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/BLW_Seraph.jpg/500px-BLW_Seraph.jpg',
+                    'https://bonniewilks.com/wp-content/uploads/2011/10/burning.jpg',
                 ],
             ],
         ];

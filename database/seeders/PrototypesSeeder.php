@@ -16,7 +16,7 @@ class PrototypesSeeder extends Seeder
         $projects = [
             [
                 'name' => 'OkeeDins',
-                'codename' => 'Mini Marketplace',
+                'codename' => 'Project Chimera',
                 'description' => 'Marketplace sederhana untuk jual beli produk/jasa dengan sistem sederhana.',
                 'status' => 'ARCHIVED',
                 'project_type' => 'Web Application',
@@ -27,12 +27,12 @@ class PrototypesSeeder extends Seeder
                 'start_date' => '2024-12-20 09:00:00',
                 'completed_date' => '2025-03-5 18:30:00',
                 'user_id' => 1,
-                'created_at' => '2023-02-11 10:00:00',
-                'updated_at' => '2023-05-21 08:00:00'
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'name' => 'JokiDins',
-                'codename' => 'Joki Service',
+                'codename' => 'The Gambit Initiative',
                 'description' => 'Platform untuk manajemen order joki Tugas kuliah, Sekolah dengan sistem pembayaran dan tracking.',
                 'status' => 'ARCHIVED',
                 'project_type' => 'Web Application',
@@ -43,12 +43,12 @@ class PrototypesSeeder extends Seeder
                 'start_date' => '2025-02-17 09:00:00',
                 'completed_date' => '2025-04-7 16:30:00',
                 'user_id' => 1,
-                'created_at' => '2025-02-18 10:00:00',
-                'updated_at' => '2025-04-16 12:00:00'
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'name' => 'DinsSphere',
-                'codename' => 'Community Forum',
+                'codename' => 'The Agora Protocol',
                 'description' => 'Mini forum untuk sharing, Daftar Project, Tugas Kuliah, diskusi, dan posting antar user.',
                 'status' => 'ARCHIVED',
                 'project_type' => 'Web Application',
@@ -59,12 +59,12 @@ class PrototypesSeeder extends Seeder
                 'start_date' => '2025-02-24 14:00:00',
                 'completed_date' => '2025-05-07 11:00:00',
                 'user_id' => 1,
-                'created_at' => '2025-02-25 10:00:00',
-                'updated_at' => '2025-05-08 08:00:00'
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'name' => 'Liga Nusantara',
-                'codename' => 'PES League System',
+                'codename' => 'Project Colosseum',
                 'description' => 'Sistem liga PES dengan fitur multi-player match, klasemen, statistik, dan dokumentasi.',
                 'status' => 'IN_DEVELOPMENT',
                 'project_type' => 'Web Application',
@@ -75,12 +75,12 @@ class PrototypesSeeder extends Seeder
                 'start_date' => '2025-06-20 09:10:00',
                 'completed_date' => null,
                 'user_id' => 1,
-                'created_at' => '2025-06-23 09:20:06',
-                'updated_at' => '2025-07-12 11:33:06'
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'name' => 'SentryBank',
-                'codename' => 'Sentry Bank System',
+                'codename' => 'Project Vault',
                 'description' => 'Aplikasi manajemen bank sederhana dengan transaksi, transfer, dan laporan.',
                 'status' => 'IN_DEVELOPMENT',
                 'project_type' => 'Web Application',
@@ -91,12 +91,12 @@ class PrototypesSeeder extends Seeder
                 'start_date' => '2025-07-03 08:00:00',
                 'completed_date' => null,
                 'user_id' => 1,
-                'created_at' => '2025-07-05 09:47:06',
-                'updated_at' => '2025-07-20 19:47:06'
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'name' => 'DinsWealth',
-                'codename' => 'Tabungan & Donasi',
+                'codename' => 'Project Lumina',
                 'description' => 'Aplikasi tabungan pribadi + donasi dengan filter, chart visualisasi, dan dark mode.',
                 'status' => 'COMPLETED',
                 'project_type' => 'Web Application',
@@ -107,12 +107,12 @@ class PrototypesSeeder extends Seeder
                 'start_date' => '2025-07-20 10:00:00',
                 'completed_date' => '2025-07-31 14:20:00',
                 'user_id' => 1,
-                'created_at' => '2025-07-21 09:10:06',
-                'updated_at' => '2025-08-01 19:10:06'
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'name' => 'Sanrose Magang',
-                'codename' => 'Project Magang Semester 7',
+                'codename' => 'Project Waypoint',
                 'description' => 'Sanrose Magang adalah Aplikasi untuk Membantu Kunjungan Instansi Menjadi Mudah Aplikasi Sanrose Magang membantu para peserta magang untuk memilih lokasi kunjungan dengan mudah, melihat detail lokasi di peta interaktif, dan mencari rute terbaik.',
                 'status' => 'COMPLETED',
                 'project_type' => 'Web Application',
@@ -123,12 +123,12 @@ class PrototypesSeeder extends Seeder
                 'start_date' => '2025-08-7 13:30:06',
                 'completed_date' => '2025-08-13 18:46:00',
                 'user_id' => 1,
-                'created_at' => '2025-08-18 18:47:06',
-                'updated_at' => '2025-08-18 18:47:06'
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'name' => 'BlackFile',
-                'codename' => 'Project BlackFile',
+                'codename' => 'Operation Genesis',
                 'description' => 'Agent Intelligent',
                 'status' => 'IN_DEVELOPMENT',
                 'project_type' => 'Web Application',
@@ -139,8 +139,8 @@ class PrototypesSeeder extends Seeder
                 'start_date' => '2025-08-15 18:46:00',
                 'completed_date' => null,
                 'user_id' => 1,
-                'created_at' => '2025-08-18 18:47:06',
-                'updated_at' => '2025-08-18 18:47:06'
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'name' => 'SecureVault',
@@ -251,22 +251,6 @@ class PrototypesSeeder extends Seeder
                 'start_date' => '2025-09-15 00:00:00',
                 'completed_date' => null,
                 'user_id' => 5,
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'name' => 'TaskFlow',
-                'codename' => 'Project Organizer',
-                'description' => 'Team task management with automated prioritization',
-                'status' => 'IN_DEVELOPMENT',
-                'project_type' => 'Web Application',
-                'tech_stack' => '["React","Node.js","MongoDB"]',
-                'repository_url' => 'https://github.com/example/TaskFlow',
-                'live_url' => null,
-                'cover_image_path' => 'uploads/prototypes/taskflow.jpg',
-                'start_date' => '2025-07-20 00:00:00',
-                'completed_date' => null,
-                'user_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now()
             ],

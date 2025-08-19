@@ -15,7 +15,7 @@ class CodexController extends Controller
     public function index()
     {
         // Ambil semua data istilah dari file config
-        $terms = config('blackfile.codex_terms', []);
+        $terms = config('codex.codex_terms', []);
 
         // Gunakan Collection untuk mengelompokkan istilah berdasarkan kategori
         $groupedTerms = collect($terms)->groupBy('category');

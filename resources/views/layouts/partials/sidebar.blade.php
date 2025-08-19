@@ -37,7 +37,7 @@
            {{ request()->routeIs('prototypes.index') 
                 ? 'bg-surface-light text-primary border-l-4 border-primary' 
                 : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
-            <span>> Prototypes Dossier</span>
+            <span>> Prototypes Projects</span>
         </a>
 
         <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors

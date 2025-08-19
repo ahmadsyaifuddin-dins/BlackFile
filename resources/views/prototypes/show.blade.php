@@ -14,7 +14,7 @@
                     <span class="text-gray-500">Dossier //</span> {{ $prototype->codename }}
                 </h2>
                 <a href="{{ route('prototypes.index') }}" class="text-gray-400 hover:text-white transition duration-300 font-mono text-sm">
-                    &lt;-- [ RETURN TO ARCHIVE ]
+                    &lt;-- [ RETURN TO PROJECTS ]
                 </a>
             </div>
             <div class="bg-gray-900 border border-gray-700 shadow-sm sm:rounded-lg overflow-hidden">

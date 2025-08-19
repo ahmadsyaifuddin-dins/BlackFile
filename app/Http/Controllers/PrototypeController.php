@@ -77,7 +77,7 @@ class PrototypeController extends Controller
         Prototype::create($validatedData);
 
         // 5. Redirect kembali ke halaman index dengan pesan sukses
-        return redirect()->route('prototypes.index')->with('success', 'Prototype dossier successfully filed.');
+        return redirect()->route('prototypes.index')->with('success', 'Prototype project successfully filed.');
     }
 
     /**
@@ -134,7 +134,7 @@ class PrototypeController extends Controller
 
         $prototype->update($validatedData);
 
-        return redirect()->route('prototypes.index')->with('success', 'Prototype dossier successfully updated.');
+        return redirect()->route('prototypes.index')->with('success', 'Prototype project successfully updated.');
     }
 
     /**
@@ -155,6 +155,6 @@ class PrototypeController extends Controller
     // Hapus record dari database
     $prototype->delete();
 
-    return redirect()->route('prototypes.index')->with('success', 'Prototype dossier has been permanently deleted.');
+    return redirect()->route('prototypes.index')->with('success', 'Prototype project has been permanently deleted.');
 }
 }

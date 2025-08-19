@@ -26,9 +26,7 @@
     </div>
 
     {{-- Add custom CSS --}}
-    <style>
-     
-        
+    <style>   
         /* Main content should be able to shrink */
         .main-content-wrapper {
             min-width: 0;
@@ -40,9 +38,7 @@
             overflow-x: auto;
             width: 100%;
         }
-        
-     
-        
+           
         @media (max-width: 768px) {
             .sidebar-fixed {
                 position: fixed;

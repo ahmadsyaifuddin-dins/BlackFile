@@ -137,7 +137,7 @@ return [
     'entity_origins' => [
         // General & Terrestrial
         'Unknown',
-        'Earth (Unspecified)',
+        'Earth',
         'Remote/Unexplored Region',
         'The Abyss (Oceanic)',
         'Subterranean',
@@ -154,7 +154,7 @@ return [
         'Greek Mythology (Olympus/Underworld)',
         'Egyptian Mythology (Duat)',
         'Japanese Folklore (Yomi)',
-        'Abrahamic Lore (Heaven/Hell)',
+        'Abrahamic Lore',
         'Celtic Otherworld',
         
         // Cosmic & Extradimensional
@@ -162,7 +162,7 @@ return [
         'The Void',
         'Zeta Reticuli Star System',
         'Andromeda Galaxy',
-        'R\'lyeh (Cthulhu Mythos)',
+        'Cthulhu Mythos',
         'The Dreamlands',
         'Beyond the Wall of Sleep',
     ],

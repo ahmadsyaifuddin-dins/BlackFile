@@ -55,8 +55,10 @@
                             {{ Str::limit($entity->description, 100) }}
                         </p>
                         <div class="text-xs font-mono text-gray-400">
+                            <p>> Name: {{ $entity->name }}</p>
                             <p>> Category: {{ $entity->category }}</p>
                             <p>> Rank: {{ $entity->rank ?? 'Unclassified' }}</p>
+                            <p>> Origin: {{ $entity->origin ?? 'Unknown' }}</p>
                         </div>
                     </div>
                 </div>

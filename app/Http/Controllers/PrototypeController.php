@@ -26,7 +26,7 @@ class PrototypeController extends Controller
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'like', "%{$searchTerm}%")
-                  ->orWhere('codename', 'like', "%{$searchTerm}%");
+                    ->orWhere('codename', 'like', "%{$searchTerm}%");
             });
         }
 
@@ -47,8 +47,9 @@ class PrototypeController extends Controller
 
         // Lanjutkan query dengan eager loading, urutan, dan paginasi
         $prototypes = $query->with('user')
-                            ->latest()
-                            ->paginate(10);
+            ->orderBy('created_at', 'desc') // [PERBAIKAN] Urutkan berdasarkan tanggal (terbaru dulu)
+            ->orderBy('id', 'desc') // [PERBAIKAN] Jika ada tanggal yang sama, urutkan berdasarkan ID (terbaru dulu)
+            ->paginate(10);
 
         // Kirim data ke view
         return view('prototypes.index', [
@@ -174,20 +175,20 @@ class PrototypeController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Prototype $prototype)
-{
-    // Otorisasi (opsional tapi penting, pastikan hanya pemilik yang bisa hapus)
-    if (auth()->id() !== $prototype->user_id) {
-        abort(403, 'UNAUTHORIZED ACTION');
+    {
+        // Otorisasi (opsional tapi penting, pastikan hanya pemilik yang bisa hapus)
+        if (auth()->id() !== $prototype->user_id) {
+            abort(403, 'UNAUTHORIZED ACTION');
+        }
+
+        // Hapus gambar dari folder public jika ada
+        if ($prototype->cover_image_path && File::exists(public_path($prototype->cover_image_path))) {
+            File::delete(public_path($prototype->cover_image_path));
+        }
+
+        // Hapus record dari database
+        $prototype->delete();
+
+        return redirect()->route('prototypes.index')->with('success', 'Prototype project has been permanently deleted.');
     }
-
-    // Hapus gambar dari folder public jika ada
-    if ($prototype->cover_image_path && File::exists(public_path($prototype->cover_image_path))) {
-        File::delete(public_path($prototype->cover_image_path));
-    }
-
-    // Hapus record dari database
-    $prototype->delete();
-
-    return redirect()->route('prototypes.index')->with('success', 'Prototype project has been permanently deleted.');
-}
 }

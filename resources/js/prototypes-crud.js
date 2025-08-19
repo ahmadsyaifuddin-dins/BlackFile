@@ -23,8 +23,12 @@ export default function prototypesCRUD() {
 
         // State untuk modal Delete
         isDeleteModalOpen: false,
-        deleteFormAction: '', // ← Pastikan ini diisi dengan benar
-        prototypeToDeleteName: '',
+        deleteFormAction: '', // URL untuk form action
+        prototypeToDeleteName: '', // Nama prototype yang akan dihapus
+
+        // Legacy support untuk variable lama (jika masih ada referensi)
+        actionUrl: '', 
+        itemName: '',
 
         // Helper function to format DB time to a string for the input field
         formatDbTimeToInput(dbDateString) {
@@ -76,11 +80,16 @@ export default function prototypesCRUD() {
             this.isDeleteModalOpen = true;
             this.deleteFormAction = actionUrl;
             this.prototypeToDeleteName = itemName;
+            
+            // Legacy support
+            this.actionUrl = actionUrl;
+            this.itemName = itemName;
+            
             console.log('Delete modal opened:', { actionUrl, itemName }); // Debug
         },
 
-        // Method untuk menutup delete modal
-        closeDeleteModal() {
+         // Method untuk menutup delete modal
+         closeDeleteModal() {
             this.isDeleteModalOpen = false;
             this.deleteFormAction = '';
             this.prototypeToDeleteName = '';

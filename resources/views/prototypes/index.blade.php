@@ -75,8 +75,8 @@
                                                 <td class="px-4 py-4 whitespace-nowrap text-center text-sm font-medium">
                                                     <div class="flex justify-center gap-1">
                                                         <a href="{{ route('prototypes.show', $prototype) }}" class="text-indigo-400 hover:text-indigo-600 transition text-xs px-1">View</a>
-                                                        <button type="button" @click="openEditModal({{ json_encode($prototype) }})" class="text-yellow-400 hover:text-yellow-600 transition appearance-none bg-transparent border-none p-1 cursor-pointer text-xs">Edit</button>
-                                                        <button type="button" @click="$dispatch('open-delete-modal', { actionUrl: '{{ route('prototypes.destroy', $prototype) }}', itemName: '{{ $prototype->codename }}' })" class="text-red-400 hover:text-red-600 transition appearance-none bg-transparent border-none p-1 cursor-pointer text-xs">Del</button>
+                                                        <button type="button" @click="openEditModal({{ json_encode($prototype) }})" class="text-yellow-400 hover:text-yellow-600 transition appearance-none bg-transparent border-none cursor-pointer text-xs mr-1">Edit</button>
+                                                        <button type="button" @click="$dispatch('open-delete-modal', { actionUrl: '{{ route('prototypes.destroy', $prototype) }}', itemName: '{{ $prototype->codename }}' })" class="text-red-400 hover:text-red-600 transition appearance-none bg-transparent border-none cursor-pointer text-xs">Delete</button>
                                                     </div>
                                                 </td>
                                             </tr>

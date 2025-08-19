@@ -44,6 +44,15 @@ return [
             'throw' => false,
         ],
 
+        // TAMBAHKAN DISK BARU DI BAWAH INI
+        'public_uploads' => [
+            'driver' => 'local',
+            'root'   => public_path('uploads'), // Mengarah ke folder /public/uploads
+            'url'    => env('APP_URL').'/uploads',
+            'visibility' => 'public',
+        ],
+        // AKHIR PENAMBAHAN
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

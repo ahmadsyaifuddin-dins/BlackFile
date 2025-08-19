@@ -1,11 +1,11 @@
 <aside class="h-full bg-surface border-r bg-black border-border-color flex flex-col transition-transform duration-300 ease-in-out
            fixed inset-y-0 left-0 -translate-x-full md:relative md:translate-x-0 z-20 w-64"
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'">
-    
+
     <div class="p-4 text-2xl font-bold border-b border-border-color text-primary tracking-[.25em] flex-shrink-0">
         [B.F]
     </div>
-    
+
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto text-green-700">
         <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
            {{ request()->routeIs('dashboard') 
@@ -40,6 +40,13 @@
                 ? 'bg-surface-light text-primary border-l-4 border-primary' 
                 : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> Prototypes Projects</span>
+        </a>
+
+        <a href="{{ route('entities.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+            {{ request()->routeIs('entities.*') 
+        ? 'bg-surface-light text-primary border-l-4 border-primary' 
+        : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+            <span>> Entities Database</span>
         </a>
 
         <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors

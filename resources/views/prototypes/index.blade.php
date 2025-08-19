@@ -8,7 +8,7 @@
             </h2>
         </x-slot>
 
-        <div class="py-12">
+        <div class="py-1">
             <div class="w-full px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-end mb-4">
                     <button @click="openCreateModal()"
@@ -43,7 +43,7 @@
                                             <tr>
                                                 <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-16">#</th>
                                                 <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[200px]">Codename</th>
-                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[150px]">Project By</th>
+                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[150px]">Develop By</th>
                                                 <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[120px]">Project Type</th>
                                                 <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[100px]">Status</th>
                                                 <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[120px]">Last Update</th>
@@ -111,8 +111,8 @@
 
                                 {{-- Card Body --}}
                                 <div class="text-sm space-y-2 text-gray-300 border-t border-gray-700 pt-3">
-                                    {{-- [BARU] Project By di mobile --}}
-                                    <p class="flex"><span class="text-gray-500 w-24 flex-shrink-0">PROJECT BY</span>: <span class="truncate ml-1">{{
+                                    {{-- [BARU] Develop By di mobile --}}
+                                    <p class="flex"><span class="text-gray-500 w-24 flex-shrink-0">Develop By</span>: <span class="truncate ml-1">{{
                                         $prototype->user->name }}</span></p>
                                     <p class="flex"><span class="text-gray-500 w-24 flex-shrink-0">TYPE</span>: <span class="truncate ml-1">{{
                                         $prototype->project_type }}</span></p>

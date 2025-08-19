@@ -111,8 +111,7 @@
                                     <path fill-rule="evenodd"
                                         d="M10 3a.75.75 0 01.53.22l3.5 3.5a.75.75 0 01-1.06 1.06L10 4.81 7.03 7.78a.75.75 0 01-1.06-1.06l3.5-3.5A.75.75 0 0110 3zm-3.72 9.53a.75.75 0 011.06 0L10 15.19l2.97-2.97a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 010-1.06z"
                                         clip-rule="evenodd" />
-                                </svg>
-                            </span>
+                                </svg></span>
                         </button>
                         <div x-show="open" @click.away="open = false"
                             class="absolute z-10 mt-1 w-full max-h-60 bg-black overflow-y-auto bg-surface border border-border-color shadow-lg"
@@ -120,7 +119,8 @@
                             @foreach($origins as $origin)
                             <a @click="selected = '{{ addslashes($origin) }}'; open = false"
                                 class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-green-400"
-                                :class="{'bg-primary text-green-600': selected === '{{ addslashes($origin) }}'}">{{ $origin
+                                :class="{'bg-primary text-green-600': selected === '{{ addslashes($origin) }}'}">{{
+                                $origin
                                 }}</a>
                             @endforeach
                         </div>
@@ -197,16 +197,22 @@
             </div>
 
             {{-- Image Management --}}
+            {{-- Kode Baru untuk Image Management dengan Tab --}}
             <div class="pt-6 border-t-2 border-dashed border-border-color space-y-6">
-                {{-- Existing Images --}}
+                {{-- Existing Images (tidak berubah) --}}
                 @if($entity->images->isNotEmpty())
                 <div>
                     <label class="block text-primary">> CURRENT_VISUAL_EVIDENCE</label>
                     <p class="text-xs text-secondary mb-3">Check box to mark for termination upon saving changes.</p>
                     <div class="mt-2 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
                         @foreach($entity->images as $image)
+                        @php
+                        $imagePath = Illuminate\Support\Str::startsWith($image->path, 'http')
+                        ? $image->path
+                        : asset('uploads/' . $image->path);
+                        @endphp
                         <div class="relative group">
-                            <img src="{{ asset('uploads/' . $image->path) }}" alt="{{ $image->caption ?? '' }}"
+                            <img src="{{ $imagePath }}" alt="{{ $image->caption ?? '' }}"
                                 class="w-full h-32 object-cover rounded-none border-2 border-border-color group-hover:border-primary/50 transition-all">
                             <div class="mt-2 text-center">
                                 <label for="delete_image_{{ $image->id }}"
@@ -223,11 +229,42 @@
                 </div>
                 @endif
 
-                {{-- Image Upload --}}
-                <div>
+                {{-- Tab Interface untuk Input Gambar Baru --}}
+                <div x-data="{ tab: 'upload' }">
                     <label class="block text-primary mb-2">> ATTACH_NEW_EVIDENCE (To add or replace)</label>
-                    <input type="file" name="images[]" multiple
-                        class="block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-hover cursor-pointer">
+
+                    {{-- Tombol Tab --}}
+                    <div class="mb-4 flex border-b border-border-color">
+                        <button type="button" @click="tab = 'upload'"
+                            :class="{'border-primary text-primary': tab === 'upload', 'border-transparent text-secondary': tab !== 'upload'}"
+                            class="py-2 px-4 border-b-2 font-medium transition-colors">
+                            Upload File
+                        </button>
+                        <button type="button" @click="tab = 'link'"
+                            :class="{'border-primary text-primary': tab === 'link', 'border-transparent text-secondary': tab !== 'link'}"
+                            class="py-2 px-4 border-b-2 font-medium transition-colors">
+                            Link from URL
+                        </button>
+                    </div>
+
+                    {{-- Konten Tab --}}
+                    <div>
+                        {{-- Tab 1: Upload File --}}
+                        <div x-show="tab === 'upload'" x-transition>
+                            <input type="file" name="images[]" multiple
+                                class="block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-black hover:file:bg-primary-hover cursor-pointer">
+                        </div>
+
+                        {{-- Tab 2: Link from URL --}}
+                        <div x-show="tab === 'link'" x-transition style="display: none;">
+                            <label for="image_url" class="flex-shrink-0 text-primary">> IMAGE_URL:</label>
+                            <input type="text" name="image_url" id="image_url"
+                                placeholder="https://... Paste image URL here"
+                                class="mt-1 w-full bg-transparent border-0 border-b-2 border-border-color focus:border-primary focus:ring-0 text-white">
+                            <p class="text-xs text-secondary mt-2">Note: Only one URL can be added at a time. The linked
+                                image will be stored as a URL reference.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 

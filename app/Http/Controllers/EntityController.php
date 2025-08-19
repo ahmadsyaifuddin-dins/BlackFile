@@ -42,24 +42,32 @@ class EntityController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // Validasi untuk setiap file
             'captions' => 'nullable|array',
             'captions.*' => 'nullable|string|max:255',
+
+            'image_url' => 'nullable|url', // Memastikan input adalah URL yang valid
         ]);
 
-        $entity = Entity::create($validated);
-
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $imageFile) {
-                // --- PERUBAHAN DI SINI ---
-                // Ganti dari: $path = $imageFile->store('entity_images', 'public');
-                // Menjadi:
-                $path = $imageFile->store('entity_images', 'public_uploads');
-                // --- AKHIR PERUBAHAN ---
-
-                $entity->images()->create([
-                    'path' => $path,
-                    'caption' => $request->captions[$index] ?? null,
-                ]);
-            }
-        }
+         // Buat entitas tanpa data gambar terlebih dahulu
+         $entityData = $request->except(['images', 'image_url']);
+         $entity = Entity::create($entityData);
+ 
+         // Proses upload file (jika ada)
+         if ($request->hasFile('images')) {
+             foreach ($request->file('images') as $imageFile) {
+                 $path = $imageFile->store('entity_images', 'public_uploads');
+                 $entity->images()->create([
+                     'path' => $path,
+                     'caption' => 'Uploaded Evidence',
+                 ]);
+             }
+         }
+         
+         // --- LOGIKA BARU: Proses input URL gambar (jika ada) ---
+         if ($request->filled('image_url')) {
+             $entity->images()->create([
+                 'path' => $request->input('image_url'),
+                 'caption' => 'Linked Evidence',
+             ]);
+         }
         return redirect()->route('entities.index')->with('success', 'Entity created successfully.');
     }
 
@@ -99,25 +107,29 @@ class EntityController extends Controller
             'captions' => 'nullable|array',
             'captions.*' => 'nullable|string|max:255',
 
+            'image_url' => 'nullable|url', // Memastikan input adalah URL yang valid
+
             // --- VALIDASI BARU ---
             'images_to_delete' => 'nullable|array',
             'images_to_delete.*' => 'exists:entity_images,id', // Pastikan ID gambar yang dikirim ada di database
         ]);
 
-         // --- LOGIKA BARU: HAPUS GAMBAR YANG DIPILIH ---
-         if ($request->has('images_to_delete')) {
+        // --- LOGIKA BARU: HAPUS GAMBAR YANG DIPILIH ---
+        if ($request->has('images_to_delete')) {
             $imagesToDelete = EntityImage::whereIn('id', $request->input('images_to_delete'))
-                                        ->where('entity_id', $entity->id) // Keamanan: pastikan gambar milik entitas ini
-                                        ->get();
+                ->where('entity_id', $entity->id) // Keamanan: pastikan gambar milik entitas ini
+                ->get();
 
             foreach ($imagesToDelete as $image) {
-                // 1. Hapus file fisik
-                Storage::disk('public_uploads')->delete($image->path);
+                // Hanya hapus file fisik jika itu bukan URL
+                if (!filter_var($image->path, FILTER_VALIDATE_URL)) {
+                    Storage::disk('public_uploads')->delete($image->path);
+                }                
                 // 2. Hapus record dari database
                 $image->delete();
             }
         }
-        
+
         // --- LOGIKA LAMA: PROSES GAMBAR BARU ---
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $imageFile) {
@@ -128,15 +140,23 @@ class EntityController extends Controller
                 ]);
             }
         }
-        
+
+        // --- LOGIKA BARU: Proses input URL gambar ---
+        if ($request->filled('image_url')) {
+            $entity->images()->create([
+                'path' => $request->input('image_url'),
+                'caption' => 'Linked Evidence',
+            ]);
+        }
+
         // Update data utama entitas (setelah proses gambar agar tidak error jika validasi gagal)
-        $entityData = $request->except(['images', 'images_to_delete', 'captions']);
+        $entityData = $request->except(['images', 'images_to_delete', 'image_url']);
         $entity->update($entityData);
 
         return redirect()->route('entities.show', $entity)->with('success', 'Entity record updated successfully.');
     }
 
-     /**
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Entity $entity)

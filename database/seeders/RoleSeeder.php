@@ -12,6 +12,7 @@ class RoleSeeder extends Seeder
         $roles = [
             ['name' => 'Director', 'alias' => 'Pimpinan Intelijen'],
             ['name' => 'Agent', 'alias' => 'Operasi Lapangan'],
+            ['name' => 'Technician', 'alias' => 'Spesialis Teknis'],
             ['name' => 'Analyst', 'alias' => 'Pengolah Informasi'],
         ];
 

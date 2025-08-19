@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
                 'email' => 'elrio@gmail.com',
                 'password' => Hash::make('password'),
                 'specialization' => 'Digital Ghost & OS Manipulation',
-                'role_id' => 3, // Analyst
+                'role_id' => 4, // Analyst
             ]
         );
 
@@ -56,7 +56,7 @@ class UserSeeder extends Seeder
                 'email' => 'ryandyrhamadhany@gmail.com',
                 'password' => Hash::make('password'),
                 'specialization' => 'Solution Architect & System Auditing',
-                'role_id' => 2, // Agent
+                'role_id' => 3, // Spesialis Teknis
             ]
         );
 

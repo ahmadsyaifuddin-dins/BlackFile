@@ -4,9 +4,6 @@ export default function prototypesCRUD() {
     return {
         isModalOpen: false,
         isEditMode: false,
-        isDeleteModalOpen: false,
-        deleteUrl: '',
-        prototypeToDeleteName: '',
         formTitle: '',
         formAction: '',
         formSubmitButton: '',
@@ -23,6 +20,11 @@ export default function prototypesCRUD() {
             start_date: '',
             completed_date: ''
         },
+
+        // State untuk modal Delete
+        isDeleteModalOpen: false,
+        deleteFormAction: '', // ← Pastikan ini diisi dengan benar
+        prototypeToDeleteName: '',
 
         // Helper function to format DB time to a string for the input field
         formatDbTimeToInput(dbDateString) {
@@ -67,6 +69,29 @@ export default function prototypesCRUD() {
                 start_date: this.formatDbTimeToInput(prototype.start_date),
                 completed_date: this.formatDbTimeToInput(prototype.completed_date)
             };
-        }
+        },
+
+        // Method untuk membuka delete modal
+        openDeleteModal(actionUrl, itemName) {
+            this.isDeleteModalOpen = true;
+            this.deleteFormAction = actionUrl;
+            this.prototypeToDeleteName = itemName;
+            console.log('Delete modal opened:', { actionUrl, itemName }); // Debug
+        },
+
+        // Method untuk menutup delete modal
+        closeDeleteModal() {
+            this.isDeleteModalOpen = false;
+            this.deleteFormAction = '';
+            this.prototypeToDeleteName = '';
+        },
+
+        // Init function untuk mendaftarkan listener
+        init() {
+            // Listen untuk event custom
+            this.$el.addEventListener('open-delete-modal', (event) => {
+                this.openDeleteModal(event.detail.actionUrl, event.detail.itemName);
+            });
+        },
     };
 }

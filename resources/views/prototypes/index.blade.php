@@ -17,6 +17,8 @@
                     </button>
                 </div>
 
+                <x-prototypes.filter-section :projectTypes="$projectTypes" :users="$users" />
+
                 @if (session('success'))
                 <div class="bg-green-800 border border-green-600 text-green-200 px-4 py-3 rounded relative mb-4"
                     role="alert">
@@ -135,7 +137,7 @@
                         </div>
 
                         <div class="mt-6">
-                            {{ $prototypes->links() }}
+                            {{ $prototypes->withQueryString()->links() }}
                         </div>
                         @endif
                     </div>
@@ -147,6 +149,5 @@
         <x-prototype-form-modal />
 
         <x-confirmation-modal />
-
     </div>
 </x-app-layout>

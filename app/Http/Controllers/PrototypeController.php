@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Prototype;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File; // Pastikan ini ada
@@ -12,17 +13,49 @@ class PrototypeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil semua data prototype, diurutkan dari yang terbaru.
-        // Eager load relasi 'user' untuk efisiensi query (menghindari N+1 problem).
-        // Gunakan paginasi untuk menampilkan 10 item per halaman.
-        $prototypes = Prototype::with('user')
-            ->latest()
-            ->paginate(10);
+        // Ambil tipe proyek unik untuk opsi filter dropdown
+        $projectTypes = Prototype::select('project_type')->distinct()->orderBy('project_type')->pluck('project_type');
+        $users = User::select('id', 'name')->orderBy('name')->get();
+        // Mulai query builder
+        $query = Prototype::query();
+
+        // Terapkan filter PENCARIAN jika ada input 'search'
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name', 'like', "%{$searchTerm}%")
+                  ->orWhere('codename', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        // Terapkan filter STATUS jika ada input 'status'
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        // Terapkan filter OWNER jika ada input 'user_id'
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->input('user_id'));
+        }
+
+        // Terapkan filter TIPE PROYEK jika ada input 'project_type'
+        if ($request->filled('project_type')) {
+            $query->where('project_type', $request->input('project_type'));
+        }
+
+        // Lanjutkan query dengan eager loading, urutan, dan paginasi
+        $prototypes = $query->with('user')
+                            ->latest()
+                            ->paginate(10);
 
         // Kirim data ke view
-        return view('prototypes.index', compact('prototypes'));
+        return view('prototypes.index', [
+            'prototypes' => $prototypes,
+            'projectTypes' => $projectTypes,
+            'users' => $users
+        ]);
     }
 
     public function create()

@@ -171,7 +171,7 @@ return [
         [
             'term' => 'Pit Fiend',
             'category' => 'Angelic & Demonic Tiers',
-            'definition' => 'Demon kelas atas dari neraka dengan kekuatan destruktif. Jenderal dalam pasukan kegelapan.',
+            'definition' => 'Devil kelas tinggi dengan kekuatan destruktif massive. Jenderal dalam pasukan kegelapan.',
             'hierarchy_level' => 'Greater Demon',
         ],
         [

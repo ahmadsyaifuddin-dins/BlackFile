@@ -186,7 +186,7 @@ class EntitiesSeeder extends Seeder
                 'weaknesses' => 'Membutuhkan energi besar untuk regenerasi total.',
                 'status' => 'CONTAINED',
                 'images' => [
-                    'https://static.wikia.nocookie.net/scp/images/0/0d/SCP-682.png',
+                    '',
                 ],
             ],
             [
@@ -200,7 +200,7 @@ class EntitiesSeeder extends Seeder
                 'weaknesses' => 'Nama suci dan simbol pelindung tertentu.',
                 'status' => 'UNKNOWN',
                 'images' => [
-                    'https://upload.wikimedia.org/wikipedia/commons/5/5d/Lilith_%28John_Collier%29.jpg',
+                    '',
                 ],
             ],
             [
@@ -214,7 +214,7 @@ class EntitiesSeeder extends Seeder
                 'weaknesses' => 'Minuman keras suci yang melemahkan; dipenggal oleh Susanoo.',
                 'status' => 'UNKNOWN',
                 'images' => [
-                    'https://upload.wikimedia.org/wikipedia/commons/8/8e/Yamata_no_Orochi.jpg',
+                    '',
                 ],
             ],
             [
@@ -228,7 +228,7 @@ class EntitiesSeeder extends Seeder
                 'weaknesses' => 'Dihukum dirantai, disiksa setiap hari oleh elang Zeus.',
                 'status' => 'UNKNOWN',
                 'images' => [
-                    'https://upload.wikimedia.org/wikipedia/commons/f/f6/Prometheus_Bound_Louvre_Ma711.jpg',
+                    '',
                 ],
             ],
 
@@ -243,8 +243,7 @@ class EntitiesSeeder extends Seeder
                 'weaknesses' => 'Energy Instability: Teknologi penyamaran mereka membutuhkan energi tinggi → bisa terganggu dengan frekuensi elektromagnetik tertentu (EMP / gelombang sonik). Thermal Vulnerability: Sebagai makhluk berdarah dingin, mereka sensitif terhadap perubahan suhu ekstrem. Suhu sangat rendah → memperlambat pergerakan & metabolisme. Suhu sangat tinggi → menyebabkan dehidrasi cepat. Psionic Feedback: Upaya mereka mengendalikan pikiran manusia bisa berbalik jika target memiliki mental fortitude atau proteksi psionik (contoh: latihan meditasi, perangkat neuro-shield). Limited Numbers: Tidak tersebar luas → keberadaan kelompok yang diketahui relatif sedikit. Mengisolasi satu individu bisa sangat melemahkan jaringan infiltrasi mereka.',
                 'status' => 'ACTIVE',
                 'images' => [
-                    'https://example.com/reptilian1.jpg', // Ganti dengan URL gambar yang sesuai
-                    'https://example.com/reptilian2.jpg', // Ganti dengan URL gambar yang sesuai
+                    '', // Ganti dengan URL gambar yang sesuai
                 ],
             ],
         ];

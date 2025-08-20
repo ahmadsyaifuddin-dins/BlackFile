@@ -7,6 +7,7 @@ export default function prototypesCRUD() {
         formTitle: '',
         formAction: '',
         formSubmitButton: '',
+        uploadMethod: 'file',
         formData: {
             name: '',
             codename: '',
@@ -17,6 +18,7 @@ export default function prototypesCRUD() {
             repository_url: '',
             live_url: '',
             cover_image_path: '',
+            cover_image_url: '',
             start_date: '',
             completed_date: ''
         },
@@ -60,6 +62,14 @@ export default function prototypesCRUD() {
             this.formTitle = '[ EDIT PROTOTYPE PROJECT ]';
             this.formAction = `/prototypes/${prototype.id}`; // Build the update URL
             this.formSubmitButton = 'UPDATE PROJECT';
+
+             // [LOGIKA BARU] Tentukan metode upload default saat edit
+             if (prototype.cover_image_path && prototype.cover_image_path.startsWith('http')) {
+                this.uploadMethod = 'url';
+            } else {
+                this.uploadMethod = 'file';
+            }
+
             this.formData = {
                 name: prototype.name,
                 codename: prototype.codename,
@@ -70,6 +80,7 @@ export default function prototypesCRUD() {
                 repository_url: prototype.repository_url,
                 live_url: prototype.live_url,
                 cover_image_path: prototype.cover_image_path,
+                cover_image_url: this.uploadMethod === 'url' ? prototype.cover_image_path : '', // Isi jika tipenya URL
                 start_date: this.formatDbTimeToInput(prototype.start_date),
                 completed_date: this.formatDbTimeToInput(prototype.completed_date)
             };

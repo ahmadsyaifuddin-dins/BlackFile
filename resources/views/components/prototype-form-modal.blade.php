@@ -18,7 +18,8 @@
 
             <div class="p-6 font-mono">
                 {{-- Judul Modal dinamis --}}
-                <h3 class="text-base sm:text-xl text-green-400 border-b border-gray-700 pb-2 mb-4" x-text="formTitle"></h3>
+                <h3 class="text-base sm:text-xl text-green-400 border-b border-gray-700 pb-2 mb-4" x-text="formTitle">
+                </h3>
 
                 {{-- Baris 1: Name & Codename --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -103,18 +104,54 @@
                 </div>
 
                 {{-- [BARU] Input untuk upload gambar --}}
+                {{-- [BLOK BARU] Input untuk upload gambar dengan dua opsi --}}
                 <div class="mb-4">
-                    <label for="cover_image" class="block text-gray-400 text-sm mb-1">> Cover Image</label>
-                    <input type="file" name="cover_image" id="cover_image"
-                        class="form-input-dark file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-800 file:text-green-300 hover:file:bg-green-700">
-                    {{-- Tampilkan gambar saat ini jika sedang mode edit --}}
-                    <template x-if="isEditMode && formData.cover_image_path">
-                        <div class="mt-2">
-                            <img x-bind:src="'/' + formData.cover_image_path" alt="Current Cover"
-                                class="max-h-32 rounded cursor-pointer">
-                            <p class="text-xs text-gray-500 mt-1 cursor-pointer">Current image. Upload a new file to replace it.</p>
-                        </div>
-                    </template>
+                    <label class="block text-gray-400 text-sm mb-2">> Cover Image</label>
+
+                    {{-- Tombol Pilihan Metode Upload --}}
+                    <div class="flex border border-gray-700 rounded-md p-1 mb-3 max-w-xs">
+                        <button type="button" @click="uploadMethod = 'file'"
+                            :class="{ 'bg-green-600 text-white': uploadMethod === 'file', 'text-gray-400 hover:bg-gray-700': uploadMethod !== 'file' }"
+                            class="flex-1 py-1 px-2 text-sm rounded-md transition">
+                            Upload File
+                        </button>
+                        <button type="button" @click="uploadMethod = 'url'"
+                            :class="{ 'bg-green-600 text-white': uploadMethod === 'url', 'text-gray-400 hover:bg-gray-700': uploadMethod !== 'url' }"
+                            class="flex-1 py-1 px-2 text-sm rounded-md transition">
+                            From URL
+                        </button>
+                    </div>
+
+                    {{-- Opsi 1: Upload File --}}
+                    <div x-show="uploadMethod === 'file'">
+                        <input type="file" name="cover_image" id="cover_image"
+                            class="form-input-dark file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-800 file:text-green-300 hover:file:bg-green-700">
+                        {{-- Tampilkan pratinjau gambar LOKAL saat edit --}}
+                        <template
+                            x-if="isEditMode && formData.cover_image_path && !formData.cover_image_path.startsWith('http')">
+                            <div class="mt-2">
+                                <img x-bind:src="'/' + formData.cover_image_path" alt="Current Cover"
+                                    class="max-h-32 rounded">
+                                <p class="text-xs text-gray-500 mt-1">Current image. Upload a new file to replace it.
+                                </p>
+                            </div>
+                        </template>
+                    </div>
+
+                    {{-- Opsi 2: Dari URL --}}
+                    <div x-show="uploadMethod === 'url'">
+                        <input type="url" name="cover_image_url" x-model="formData.cover_image_url"
+                            class="form-input-dark" placeholder="https://example.com/image.png">
+                        {{-- Tampilkan pratinjau gambar URL saat edit --}}
+                        <template
+                            x-if="isEditMode && formData.cover_image_path && formData.cover_image_path.startsWith('http')">
+                            <div class="mt-2">
+                                <img x-bind:src="formData.cover_image_path" alt="Current Cover"
+                                    class="max-h-32 rounded">
+                                <p class="text-xs text-gray-500 mt-1">Current image. Enter a new URL to replace it.</p>
+                            </div>
+                        </template>
+                    </div>
                 </div>
 
             </div>
@@ -123,7 +160,8 @@
             <div class="bg-gray-800 px-6 py-3 flex justify-end items-center gap-4">
                 <button type="button" @click="isModalOpen = false"
                     class="text-gray-400 hover:text-white transition cursor-pointer">CANCEL</button>
-                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+                <button type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
                     {{-- Teks tombol dinamis --}}
                     <span x-text="formSubmitButton"></span>
                 </button>

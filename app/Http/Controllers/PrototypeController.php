@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File; // Pastikan ini ada
+use Illuminate\Support\Str;
 
 class PrototypeController extends Controller
 {
@@ -80,38 +81,33 @@ class PrototypeController extends Controller
             'tech_stack' => 'nullable|string', // Validasi sebagai string, akan di-handle di bawah
             'repository_url' => 'nullable|url',
             'live_url' => 'nullable|url',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'cover_image_url' => 'nullable|url', // [BARU] Validasi untuk URL
             'start_date' => 'nullable|date_format:Y-m-d\TH:i',
             'completed_date' => 'nullable|date_format:Y-m-d\TH:i|after_or_equal:start_date',
         ]);
 
-        // [BARU] Logika untuk handle upload gambar
+        // [LOGIKA BARU] Handle dua opsi gambar
         if ($request->hasFile('cover_image')) {
             $image = $request->file('cover_image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            // Pindahkan file ke public/uploads/prototypes
             $image->move(public_path('uploads/prototypes'), $imageName);
-            // Simpan path relatifnya ke database
             $validatedData['cover_image_path'] = 'uploads/prototypes/' . $imageName;
+        } elseif ($request->filled('cover_image_url')) {
+            $validatedData['cover_image_path'] = $request->input('cover_image_url');
         }
-        // =================================================================
-        // [BAGIAN KRUSIAL] Hapus key 'cover_image' dari array data.
-        // Ini mencegah Laravel mencoba menyimpannya ke kolom yang tidak ada.
-        unset($validatedData['cover_image']);
 
-        // 2. Handle tech_stack secara manual (mengubah string dipisahkan koma menjadi array)
+        // Unset input sementara
+        unset($validatedData['cover_image'], $validatedData['cover_image_url']);
+
         if (!empty($validatedData['tech_stack'])) {
             $validatedData['tech_stack'] = array_map('trim', explode(',', $validatedData['tech_stack']));
         }
 
-        // 3. Tambahkan user_id dari user yang sedang login
         $validatedData['user_id'] = Auth::id();
-
-        // 4. Buat record baru di database
         Prototype::create($validatedData);
 
-        // 5. Redirect kembali ke halaman index dengan pesan sukses
-        return redirect()->route('prototypes.index')->with('success', 'Prototype project successfully filed.');
+        return redirect()->route('prototypes.index')->with('success', 'Prototype dossier successfully filed.');
     }
 
     /**
@@ -141,24 +137,31 @@ class PrototypeController extends Controller
             'tech_stack' => 'nullable|string',
             'repository_url' => 'nullable|url',
             'live_url' => 'nullable|url',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // [BARU] Validasi gambar
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // [BARU] Validasi gambar
+            'cover_image_url' => 'nullable|url', // [BARU]
             'start_date' => 'nullable|date_format:Y-m-d\TH:i',
             'completed_date' => 'nullable|date_format:Y-m-d\TH:i|after_or_equal:start_date',
         ]);
 
-        // [BARU] Logika untuk handle upload gambar
+        // [LOGIKA BARU] Handle update dengan dua opsi gambar
         if ($request->hasFile('cover_image')) {
+            // Hapus gambar lokal lama jika ada
+            if ($prototype->cover_image_path && !Str::startsWith($prototype->cover_image_path, 'http') && File::exists(public_path($prototype->cover_image_path))) {
+                File::delete(public_path($prototype->cover_image_path));
+            }
             $image = $request->file('cover_image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            // Pindahkan file ke public/uploads/prototypes
             $image->move(public_path('uploads/prototypes'), $imageName);
-            // Simpan path relatifnya ke database
             $validatedData['cover_image_path'] = 'uploads/prototypes/' . $imageName;
+        } elseif ($request->filled('cover_image_url')) {
+            // Hapus gambar lokal lama jika user beralih menggunakan URL
+            if ($prototype->cover_image_path && !Str::startsWith($prototype->cover_image_path, 'http') && File::exists(public_path($prototype->cover_image_path))) {
+                File::delete(public_path($prototype->cover_image_path));
+            }
+            $validatedData['cover_image_path'] = $request->input('cover_image_url');
         }
-        // =================================================================
-        // [BAGIAN KRUSIAL] Hapus key 'cover_image' dari array data.
-        // Ini mencegah Laravel mencoba menyimpannya ke kolom yang tidak ada.
-        unset($validatedData['cover_image']);
+
+        unset($validatedData['cover_image'], $validatedData['cover_image_url']);
 
         if (!empty($validatedData['tech_stack'])) {
             $validatedData['tech_stack'] = array_map('trim', explode(',', $validatedData['tech_stack']));
@@ -168,7 +171,7 @@ class PrototypeController extends Controller
 
         $prototype->update($validatedData);
 
-        return redirect()->route('prototypes.index')->with('success', 'Prototype project successfully updated.');
+        return redirect()->route('prototypes.index')->with('success', 'Prototype dossier successfully updated.');
     }
 
     /**

@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/friends/{friend}', [FriendController::class, 'update'])->name('friends.update');
     Route::delete('/friends/{friend}', [FriendController::class, 'destroy'])->name('friends.destroy');
     Route::get('/friends/{id}/tree', [FriendController::class, 'showTree'])->name('friends.tree');
-    Route::get('/friends/central-tree', [FriendController::class, 'centralTreeGraph'])->name('friends.central-tree');
+    Route::get('/central-tree', [FriendController::class, 'centralTreeGraph'])->name('central-tree');
     Route::post('/connections/sub-asset', [FriendController::class, 'storeSubAsset'])->name('connections.store_sub_asset');
 
     // Rute Profil & Agen

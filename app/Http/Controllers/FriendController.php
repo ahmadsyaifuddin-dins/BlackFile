@@ -226,7 +226,7 @@ class FriendController extends Controller
                 'relationship_type' => $relationshipType, // <-- Gunakan variabel baru
             ]);
 
-            return redirect()->route('friends.central-tree')->with('success', 'Connection established successfully.');
+            return redirect()->route('central-tree')->with('success', 'Connection established successfully.');
         }
 
         return back()->withErrors(['msg' => 'Invalid operation. Please try again.']);
@@ -269,7 +269,7 @@ class FriendController extends Controller
             'target_type' => get_class($target),
         ]);
 
-        return redirect()->route('friends.central-tree')->with('success', 'Sub-asset connection established.');
+        return redirect()->route('central-tree')->with('success', 'Sub-asset connection established.');
     }
 
     /**
@@ -306,7 +306,7 @@ class FriendController extends Controller
         // Update data teman
         $friend->update($data);
 
-        return redirect()->route('friends.central-tree')->with('success', "Agent for asset '{$friend->codename}' has been updated.");
+        return redirect()->route('central-tree')->with('success', "Agent for asset '{$friend->codename}' has been updated.");
     }
 
     /**
@@ -322,7 +322,7 @@ class FriendController extends Controller
         $codename = $friend->codename;
         $friend->delete();
 
-        return redirect()->route('friends.central-tree')->with('success', "Asset '{$codename}' has been terminated.");
+        return redirect()->route('central-tree')->with('success', "Asset '{$codename}' has been terminated.");
     }
 
     // Lihat tree dari teman tertentu (friends of friend)

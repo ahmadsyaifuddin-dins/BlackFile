@@ -21,22 +21,22 @@
             <span>> Friends Network</span>
         </a>
 
-        <a href="{{ route('friends.central-tree') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-           {{ request()->routeIs('friends.central-tree') 
+        <a href="{{ route('central-tree') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('central-tree') 
                 ? 'bg-surface-light text-primary border-l-4 border-primary' 
                 : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> Central Tree</span>
         </a>
 
         <a href="{{ route('agents.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-           {{ request()->routeIs('agents.index') 
+           {{ request()->routeIs('agents.*') 
                 ? 'bg-surface-light text-primary border-l-4 border-primary' 
                 : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> Agents Directory</span>
         </a>
 
         <a href="{{ route('prototypes.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-           {{ request()->routeIs('prototypes.index') 
+           {{ request()->routeIs('prototypes.*') 
                 ? 'bg-surface-light text-primary border-l-4 border-primary' 
                 : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> Prototypes Projects</span>
@@ -58,13 +58,13 @@
 
         <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
            {{ request()->routeIs('logs.*') 
-                ? 'bg-surface-light text-primary border-l-4 border-primary' 
-                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+                ? 'bg-surface-light border-l-4 border-primary' 
+                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50 text-gray-700' }}">
             <span>> Activity Logs</span>
         </a>
 
         <a href="#"
-            class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50">
+            class="flex text-gray-700 items-center space-x-3 px-3 py-2 rounded-r-md transition-colors border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50">
             <span>> Kontak Terenkripsi</span>
         </a>
 

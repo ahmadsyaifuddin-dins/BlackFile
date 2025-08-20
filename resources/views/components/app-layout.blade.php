@@ -5,17 +5,30 @@
     </x-slot>
 
     <div x-data="{ sidebarOpen: false }">
-        <div class="relative min-h-screen flex">
-            {{-- Sidebar dengan lebar tetap dan tidak terpengaruh overflow --}}
-            <div class="sidebar-fixed">
+        {{-- 
+            PERUBAHAN KUNCI #1:
+            - Mengganti 'min-h-screen' menjadi 'h-screen' untuk mengunci tinggi container ke tinggi viewport.
+            - Menambahkan 'overflow-hidden' untuk mencegah scroll di level ini.
+        --}}
+        <div class="relative h-screen flex overflow-hidden bg-base">
+            
+            {{-- Sidebar (Tidak perlu diubah) --}}
+            {{-- 'h-full' di dalam sidebar sekarang akan mengacu pada 'h-screen' dari parent ini --}}
+            <div class="sidebar-fixed whitespace-nowrap">
                 @include('layouts.partials.sidebar')
             </div>
 
-            {{-- Main content area --}}
-            <div class="flex-1 flex flex-col main-content-wrapper">
+            {{-- 
+                PERUBAHAN KUNCI #2:
+                - Menambahkan 'overflow-y-auto' ke wrapper konten utama.
+                - Ini membuat HANYA area ini yang akan memiliki scrollbar jika kontennya panjang.
+            --}}
+            <div class="flex-1 flex flex-col main-content-wrapper overflow-y-auto">
+                
+                {{-- Topbar akan tetap "menempel" di atas karena struktur flex-col --}}
                 @include('layouts.partials.topbar')
                 
-                {{-- Main content with proper overflow handling --}}
+                {{-- Main content akan mengisi sisa ruang dan di-scroll di dalam wrapper-nya --}}
                 <main class="flex-1 p-4 sm:p-6 min-w-0">
                     {{ $slot }}
                 </main>
@@ -25,20 +38,18 @@
         </div>
     </div>
 
-    {{-- Add custom CSS --}}
-    <style>   
-        /* Main content should be able to shrink */
+    {{-- Custom CSS (Tidak perlu diubah) --}}
+    <style>  
         .main-content-wrapper {
             min-width: 0;
             width: 100%;
         }
         
-        /* Table responsive container */
         .table-responsive {
             overflow-x: auto;
             width: 100%;
         }
-           
+            
         @media (max-width: 768px) {
             .sidebar-fixed {
                 position: fixed;

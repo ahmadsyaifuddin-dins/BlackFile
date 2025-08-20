@@ -4,7 +4,7 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <h2 class="text-2xl font-bold text-primary">Entities Database // Index</h2>
             <a href="{{ route('entities.create') }}"
-                class="w-full sm:w-auto text-center bg-primary text-black font-bold py-2 px-4 rounded hover:bg-primary-hover transition-colors">
+                class="w-full sm:w-auto text-center bg-primary text-primary font-bold py-2 px-4 rounded hover:bg-primary-hover transition-colors">
                 > Register New Entity
             </a>
         </div>

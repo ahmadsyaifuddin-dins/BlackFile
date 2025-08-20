@@ -12,7 +12,7 @@
             
             {{-- Bagian Kanan: Grup Tombol Aksi (Responsif) --}}
             <div class="flex flex-col md:flex-row md:items-center gap-3 w-full md:w-auto">
-                <a href="{{ route('entities.index') }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">&lt; BACK</a>
+                <a href="{{ url()->previous() }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">&lt; BACK</a>
                 <a href="{{ route('entities.edit', $entity) }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">> EDIT FILE</a>
                 
                 {{-- Tombol Hapus Baru --}}

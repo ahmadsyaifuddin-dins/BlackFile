@@ -96,7 +96,6 @@ class EntitiesSeeder extends Seeder
                 'weaknesses' => 'Menghindari pusat populasi manusia, diduga sensitif terhadap suara frekuensi tinggi.',
                 'status' => 'ACTIVE',
                 'images' => [
-                    'https://npr.brightspotcdn.com/dims4/default/87b6d53/2147483647/strip/true/crop/565x348+0+3/resize/880x542!/quality/90/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2Ff2%2F91%2F76551511422dbcd917680518a583%2Fscreenshot-2023-07-20-235828.png',
                     'https://static01.nyt.com/images/2024/04/12/multimedia/sasquatch1-wtlc/sasquatch1-wtlc-jumbo.jpg?quality=75&auto=webp',
                 ],
             ],

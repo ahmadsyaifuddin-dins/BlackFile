@@ -30,8 +30,8 @@ return new class extends Migration
             $table->string('cover_image_path')->nullable();
 
             // Kolom tanggal dan jam
-            $table->dateTime('start_date')->nullable()->change();
-            $table->dateTime('completed_date')->nullable()->change();
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('completed_date')->nullable();
             
             // Relasi ke pemilik berkas
             $table->foreignId('user_id')->constrained()->onDelete('cascade');

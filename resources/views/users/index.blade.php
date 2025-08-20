@@ -1,7 +1,13 @@
 <x-app-layout>
     <x-slot:title>Agent Directory</x-slot:title>
 
-    <h2 class="text-2xl font-bold text-primary text-glow mb-6">> [ AGENT DIRECTORY ]</h2>
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-3">
+        <h2 class="text-2xl font-bold text-primary text-glow mb-6">> [ AGENT DIRECTORY ]</h2>
+        <a href="{{ route('register') }}"
+            class="w-full sm:w-auto text-center bg-primary text-primary font-bold py-2 px-4 rounded hover:bg-primary-hover transition-colors">
+            > Register New Agent
+        </a>
+    </div>
 
     <div class="space-y-4">
         @foreach($users as $agent)

@@ -42,29 +42,78 @@
                     <p class="text-yellow-300 text-sm">> All systems clear. No immediate high-threat entities detected.</p>
                 @endif
             </div>
-        </div>
 
-        {{-- Kolom Kanan (Recent Activity) --}}
-        <div class="lg:col-span-2 border border-border-color bg-surface p-4">
-            <h2 class="text-lg font-bold text-primary border-b border-border-color pb-2 mb-3">> RECENT ACTIVITY LOG</h2>
-            <div class="space-y-3 text-sm">
-                @forelse($recentActivities as $activity)
-                    <div class="flex justify-between items-baseline">
-                        <p class="truncate">
-                            <span class="text-secondary mr-2"> > Dossier updated:</span>
-                            <a href="{{ route('entities.show', $activity) }}" class="text-white hover:text-primary transition-colors">
-                                {{ $activity->codename ?? $activity->name }}
-                            </a>
-                        </p>
-                        <span class="text-xs text-gray-500 flex-shrink-0 ml-4">
-                            {{ $activity->updated_at->diffForHumans() }}
-                        </span>
-                    </div>
-                @empty
-                    <p class="text-secondary">> No recent activity in the entity database.</p>
-                @endforelse
+            {{-- Agent Network Status --}}
+            <div class="border border-border-color bg-surface p-4">
+                <h2 class="text-lg font-bold text-primary border-b border-border-color pb-2 mb-3">> AGENT NETWORK STATUS</h2>
+                <div class="space-y-3 text-sm">
+                    @forelse($activeAgents as $agent)
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                @if($agent->last_active_at->diffInMinutes(now()) < 5)
+                                    <span class="w-2 h-2 bg-green-400 rounded-full mr-3 animate-pulse"></span>
+                                @else
+                                    <span class="w-2 h-2 bg-gray-600 rounded-full mr-3"></span>
+                                @endif
+                                <span class="text-white">{{ $agent->codename }}</span>
+                            </div>
+                            <span class="text-xs text-gray-500">
+                                {{ $agent->last_active_at->diffForHumans() }}
+                            </span>
+                        </div>
+                    @empty
+                        <p class="text-secondary">> No other agent activity detected.</p>
+                    @endforelse
+                </div>
             </div>
         </div>
 
+        {{-- Kolom Kanan (Project Status & Recent Activity) --}}
+        <div class="lg:col-span-2 space-y-6">
+            {{-- Project Status Overview --}}
+            <div class="border border-border-color bg-surface p-4">
+                <h2 class="text-lg font-bold text-primary border-b border-border-color pb-2 mb-3">> PROJECT STATUS OVERVIEW</h2>
+                <div class="space-y-4 text-sm">
+                    @forelse($projectStatuses as $status)
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-white">{{ $status->status }}</span>
+                                <span class="text-secondary">{{ $status->total }} / {{ $totalPrototypes }}</span>
+                            </div>
+                            <div class="w-full bg-base border border-border-color h-4">
+                                @php
+                                    $percentage = $totalPrototypes > 0 ? ($status->total / $totalPrototypes) * 100 : 0;
+                                @endphp
+                                <div class="bg-green-700 h-full" style="width: {{ $percentage }}%"></div>
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-secondary">> No project data available to display.</p>
+                    @endforelse
+                </div>
+            </div>
+
+            {{-- Recent Activity Log --}}
+            <div class="border border-border-color bg-surface p-4">
+                <h2 class="text-lg font-bold text-primary border-b border-border-color pb-2 mb-3">> RECENT ACTIVITY LOG</h2>
+                <div class="space-y-3 text-sm">
+                    @forelse($recentActivities as $activity)
+                        <div class="flex justify-between items-baseline">
+                            <p class="truncate">
+                                <span class="text-secondary mr-2"> > Dossier updated:</span>
+                                <a href="{{ route('entities.show', $activity) }}" class="text-white hover:text-primary transition-colors">
+                                    {{ $activity->codename ?? $activity->name }}
+                                </a>
+                            </p>
+                            <span class="text-xs text-gray-500 flex-shrink-0 ml-4">
+                                {{ $activity->updated_at->diffForHumans() }}
+                            </span>
+                        </div>
+                    @empty
+                        <p class="text-secondary">> No recent activity in the entity database.</p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
     </div>
 </x-app-layout>

@@ -32,8 +32,8 @@
 
                 <!-- [DIUBAH] Info Agent sekarang mencakup avatar -->
                 <div class="flex items-center space-x-4">
-                    <img src="{{ $agent->avatar ? asset($agent->avatar) : 'https://ui-avatars.com/api/?name='.urlencode($agent->codename).'&size=64&background=161b22&color=2ea043&bold=true' }}"
-                        alt="Avatar" class="w-12 h-12 rounded-full border-2 border-border-color flex-shrink-0">
+                    <img src="{{ $agent->avatar ? asset($agent->avatar) : 'https://i.postimg.cc/HxS7HmR9/agent-default.jpg' }}"
+                        alt="Avatar" class="w-12 h-12 object-cover rounded-full border-2 border-border-color flex-shrink-0">
                     <div>
                         <a href="{{ route('agents.show', $agent->id) }}">
                             <p class="font-bold text-white text-lg text-glow">{{ $agent->codename }}</p>

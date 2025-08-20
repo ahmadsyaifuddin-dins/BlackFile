@@ -36,8 +36,8 @@
             <div class="space-y-6 text-glow">
                 <!-- [DIUBAH] Bagian Upload Avatar Responsif -->
                 <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
-                    <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->codename) }}" 
-                         alt="Avatar" class="w-20 h-20 rounded-full border-2 border-border-color flex-shrink-0">
+                    <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : 'https://i.postimg.cc/HxS7HmR9/agent-default.jpg' }}" 
+                         alt="Avatar" class="w-20 h-20 object-cover rounded-full border-2 border-border-color flex-shrink-0">
                     <div class="w-full sm:w-auto">
                         <label for="avatar" class="block text-primary/25 text-sm">> UPLOAD NEW AVATAR</label>
                         <input type="file" id="avatar" name="avatar" class="mt-1 text-sm text-secondary

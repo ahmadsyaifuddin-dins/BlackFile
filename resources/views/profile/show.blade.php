@@ -11,8 +11,8 @@
         
         <!-- Avatar -->
         <div class="flex-shrink-0 mx-auto sm:mx-0">
-            <img src="{{ $user->avatar ? asset($user->avatar) : 'https://ui-avatars.com/api/?name='.urlencode($user->codename).'&size=128&background=041607&color=00ff88&bold=true' }}" 
-                 alt="Avatar" class="w-32 h-32 rounded-full border-4 border-border-color shadow-lg">
+            <img src="{{ $user->avatar ? asset($user->avatar) : 'https://i.postimg.cc/HxS7HmR9/agent-default.jpg' }}" 
+                 alt="Avatar" class="w-32 h-32 object-cover rounded-full border-4 border-border-color shadow-lg">
         </div>
         
         <!-- Detail Teks -->

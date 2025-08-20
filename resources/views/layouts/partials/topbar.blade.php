@@ -18,8 +18,10 @@
             <span class="hidden sm:block text-sm text-secondary group-hover:text-primary transition-colors truncate">
                 {{ Auth::user()->role->alias }} — {{ Auth::user()->codename }}
             </span>
-            <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->codename).'&background=0d1117&color=2ea043&bold=true' }}"
-                class="w-8 h-8 rounded-full border-2 border-border-color">
+            <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : 'https://i.postimg.cc/HxS7HmR9/agent-default.jpg' }}"
+                class="w-8 h-8 object-cover rounded-full border-2 border-border-color">
+            {{-- <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->codename).'&background=0d1117&color=2ea043&bold=true' }}"
+                class="w-8 h-8 rounded-full border-2 border-border-color"> --}}
         </a>
     </div>
 </header>

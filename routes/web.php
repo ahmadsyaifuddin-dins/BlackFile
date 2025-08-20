@@ -11,6 +11,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PrototypeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,13 +75,36 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// Rute untuk proxy avatar (tetap di luar middleware)
+// [DISEMPURNAKAN] Rute untuk proxy avatar dengan Caching
 Route::get('/avatar-proxy/{name}', function (string $name) {
-    $response = Http::get('https://ui-avatars.com/api/', [
-        'name' => $name, 'background' => '0d1117', 'color' => '2ea043', 'bold' => 'true',
-    ]);
-    if ($response->successful()) {
-        return response($response->body())->header('Content-Type', $response->header('Content-Type'));
+    // Kunci unik untuk cache
+    $cacheKey = 'avatar.proxy.' . Str::slug($name);
+
+    // Coba ambil dari cache, jika tidak ada, jalankan fungsi untuk mengambilnya
+    $imageData = Cache::remember($cacheKey, now()->addHours(24), function () use ($name) {
+        $response = Http::get('https://i.postimg.cc/HxS7HmR9/agent-default.jpg', [
+            'name' => $name,
+            'background' => '0d1117',
+            'color' => '2ea043',
+            'bold' => 'true',
+        ]);
+
+        if ($response->successful()) {
+            // Simpan body dan header ke dalam cache
+            return [
+                'body' => $response->body(),
+                'content_type' => $response->header('Content-Type')
+            ];
+        }
+        return null; // Jika gagal, cache akan menyimpan null
+    });
+
+    // Jika data tidak ada (baik di cache maupun dari request baru)
+    if (!$imageData) {
+        abort(404, 'Avatar not found.');
     }
-    abort(404, 'Avatar not found.');
+
+    // Kirimkan gambar dari data yang sudah di-cache
+    return response($imageData['body'])->header('Content-Type', $imageData['content_type']);
+
 })->name('avatar.proxy');

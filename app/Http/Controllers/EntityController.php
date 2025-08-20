@@ -25,18 +25,28 @@ class EntityController extends Controller
         if ($request->filled('search')) {
             // Menyiapkan kata kunci dengan wildcard '%' agar bisa mencari bagian kata.
             $searchTerm = '%' . $request->search . '%';
-            
+
             // Menambahkan kondisi WHERE untuk mencari di beberapa kolom sekaligus.
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'like', $searchTerm)
-                  ->orWhere('codename', 'like', $searchTerm)
-                  ->orWhere('description', 'like', $searchTerm);
+                    ->orWhere('codename', 'like', $searchTerm)
+                    ->orWhere('description', 'like', $searchTerm);
             });
         }
 
         // 3. Menerapkan filter KATEGORI jika ada input 'category' dari form.
         if ($request->filled('category')) {
             $query->where('category', $request->category);
+        }
+
+        // --- FILTER BARU: RANK ---
+        if ($request->filled('rank')) {
+            $query->where('rank', $request->rank);
+        }
+
+        // --- FILTER BARU: ORIGIN ---
+        if ($request->filled('origin')) {
+            $query->where('origin', $request->origin);
         }
 
         // 4. Setelah semua filter diterapkan, baru kita atur urutan dan paginasi.
@@ -74,28 +84,28 @@ class EntityController extends Controller
             'image_url' => 'nullable|url', // Memastikan input adalah URL yang valid
         ]);
 
-         // Buat entitas tanpa data gambar terlebih dahulu
-         $entityData = $request->except(['images', 'image_url']);
-         $entity = Entity::create($entityData);
- 
-         // Proses upload file (jika ada)
-         if ($request->hasFile('images')) {
-             foreach ($request->file('images') as $imageFile) {
-                 $path = $imageFile->store('entity_images', 'public_uploads');
-                 $entity->images()->create([
-                     'path' => $path,
-                     'caption' => 'Uploaded Evidence',
-                 ]);
-             }
-         }
-         
-         // --- LOGIKA BARU: Proses input URL gambar (jika ada) ---
-         if ($request->filled('image_url')) {
-             $entity->images()->create([
-                 'path' => $request->input('image_url'),
-                 'caption' => 'Linked Evidence',
-             ]);
-         }
+        // Buat entitas tanpa data gambar terlebih dahulu
+        $entityData = $request->except(['images', 'image_url']);
+        $entity = Entity::create($entityData);
+
+        // Proses upload file (jika ada)
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $imageFile) {
+                $path = $imageFile->store('entity_images', 'public_uploads');
+                $entity->images()->create([
+                    'path' => $path,
+                    'caption' => 'Uploaded Evidence',
+                ]);
+            }
+        }
+
+        // --- LOGIKA BARU: Proses input URL gambar (jika ada) ---
+        if ($request->filled('image_url')) {
+            $entity->images()->create([
+                'path' => $request->input('image_url'),
+                'caption' => 'Linked Evidence',
+            ]);
+        }
         return redirect()->route('entities.index')->with('success', 'Entity created successfully.');
     }
 
@@ -152,7 +162,7 @@ class EntityController extends Controller
                 // Hanya hapus file fisik jika itu bukan URL
                 if (!filter_var($image->path, FILTER_VALIDATE_URL)) {
                     Storage::disk('public_uploads')->delete($image->path);
-                }                
+                }
                 // 2. Hapus record dari database
                 $image->delete();
             }

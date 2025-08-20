@@ -12,16 +12,16 @@ return [
         'Sahabat',
         'Teman',
         'Keluarga',
-        
+
         // Lingkaran Akademis
         'Teman Kelas',
         'Rekan Kelompok',
         'Senior / Junior',
-        
+
         // Lingkaran Profesional
         'Rekan Kerja',
         'Kontak Profesional',
-        
+
         // Lingkaran Operasional
         'Informan',
         'Aset',
@@ -55,36 +55,44 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Entity Classifications
+    | Entity Classifications (Refactored)
     |--------------------------------------------------------------------------
+    |
+    | Defines the standardized lists for entity attributes. Grouped logically
+    | to ensure clarity and proper placement of terms.
+    |
     */
 
     'entity_categories' => [
-        // General & Project Specific
-        '[B.F] Anomaly',
+        // --- Biological & Cryptids ---
+        'Humanoid',
         'Cryptid',
         'Mutant',
-        'Humanoid',
-        'Extradimensional',
         'Unidentified Biological Entity (UBE)',
+        'Geological Anomaly', // Natural but anomalous
 
-        // Fictional & Mythological Universes
-        'SCP Anomaly',
-        'Cthulhu Mythos',
+        // --- Extraterrestrial & Dimensional ---
+        'Extraterrestrial',
+        'Extradimensional',
+
+        // --- Mythological & Supernatural ---
         'Mythological Being',
+        'Folklore Creature',
         'Angelic Hierarchy',
         'Demonic Hierarchy',
-        'Folklore Creature',
-        'Extraterrestrial',
-        
-        // Technical
+        'Metaphysical Concept', // Abstract, non-physical beings/ideas
+
+        // --- Faction & Project Specific ---
+        '[B.F] Anomaly', // Anomalies specific to BlackFile's findings
+        'SCP Anomaly',
+        'Cthulhu Mythos',
+
+        // --- Technological ---
         'Artificial Intelligence',
-        'Metaphysical Concept',
-        'Geological Anomaly',
     ],
 
     'entity_ranks' => [
-        // General Threat Levels
+        // --- General Threat Levels (BlackFile Standard) ---
         'Unclassified',
         'Benign',
         'Class-C (Low Threat)',
@@ -93,30 +101,30 @@ return [
         'Omega (Global Threat)',
         'Cosmic (Existential Threat)',
 
-        // SCP Foundation Ranks
+        // --- SCP Foundation Object Classes ---
         'Safe',
         'Euclid',
         'Keter',
         'Thaumiel',
         'Apollyon',
-        'Neutralized',
+        'Neutralized', // A status, but used as a final classification
 
-        // Mythological & Divine Tiers
+        // --- Mythological & Divine Tiers ---
         'Primordial',
         'Titan',
         'God / Deity',
         'Demigod',
         'Legendary Hero',
 
-        // Angelic & Demonic Tiers
+        // --- Angelic & Demonic Tiers ---
         'Archangel',
         'Seraphim / Cherubim',
         'Principalities',
         'Nine Lords (Demon)',
         'Archdevil',
         'Pit Fiend',
-        
-        // Cthulhu Mythos Tiers
+
+        // --- Cthulhu Mythos Tiers ---
         'Outer God',
         'Great Old One',
         'Elder Thing',
@@ -124,35 +132,35 @@ return [
     ],
 
     'entity_origins' => [
-        // General & Terrestrial
+        // --- Terrestrial & General ---
         'Unknown',
         'Earth',
         'Remote/Unexplored Region',
         'The Abyss (Oceanic)',
         'Subterranean',
         'Antarctica',
-        
-        // Project & Agency Specific
+
+        // --- Faction & Agency Specific ---
         '[B.F] Laboratory Creation',
-        '[REDACTED]',
+        '[REDACTED]', // For classified origins
         'Site-19 (SCP)',
-        'Area 51 (GOI)',
-        
-        // Mythological & Folklore Realms
+        'Area 51 (GOI)', // Government of Interest
+
+        // --- Mythological & Folklore Realms ---
         'Norse Mythology (Asgard/Yggdrasil)',
         'Greek Mythology (Olympus/Underworld)',
         'Egyptian Mythology (Duat)',
         'Japanese Folklore (Yomi)',
         'Abrahamic Lore',
         'Celtic Otherworld',
-        
-        // Cosmic & Extradimensional
+
+        // --- Cosmic & Extradimensional ---
         'Alternate Dimension',
         'The Void',
         'Zeta Reticuli Star System',
         'Andromeda Galaxy',
-        'Cthulhu Mythos',
-        'The Dreamlands',
-        'Beyond the Wall of Sleep',
+        'The Dreamlands', // Specific to Cthulhu Mythos
+        'Beyond the Wall of Sleep', // Specific to Cthulhu Mythos
+        'Cthulhu Mythos', // General term for this origin
     ],
 ];

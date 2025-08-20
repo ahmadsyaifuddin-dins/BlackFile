@@ -2,8 +2,19 @@
            fixed inset-y-0 left-0 -translate-x-full md:relative md:translate-x-0 z-20 w-64"
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'">
 
-    <div class="p-4 text-2xl font-bold border-b border-border-color text-primary tracking-[.25em] flex-shrink-0">
-        [B.F]
+    {{-- 
+        PERUBAHAN:
+        - Menambahkan 'relative flex justify-between items-center' untuk memposisikan tombol close.
+    --}}
+    <div class="relative p-4 text-2xl font-bold border-b border-border-color text-primary tracking-[.25em] flex-shrink-0 flex justify-between items-center">
+        <span>[B.F]</span>
+        
+        {{-- Tombol Close Baru untuk Mobile --}}
+        <button @click="sidebarOpen = false" class="md:hidden text-secondary hover:text-white focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
     </div>
 
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto text-green-700">

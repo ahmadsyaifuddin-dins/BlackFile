@@ -93,43 +93,44 @@ return [
 
     'entity_ranks' => [
         // --- General Threat Levels (BlackFile Standard) ---
-        'Unclassified',
         'Benign',
+        'Unclassified',
         'Class-C (Low Threat)',
         'Class-B (Moderate Threat)',
         'Class-A (High Threat)',
         'Omega (Global Threat)',
         'Cosmic (Existential Threat)',
 
-        // --- SCP Foundation Object Classes ---
+        // --- SCP Foundation Object Classes (Ordered by difficulty/danger) ---
+        'Neutralized', // Represents a former threat, now inert.
         'Safe',
         'Euclid',
         'Keter',
-        'Thaumiel',
-        'Apollyon',
-        'Neutralized', // A status, but used as a final classification
+        'Thaumiel', // Special class, high power but controlled.
+        'Apollyon', // Uncontainable, world-ending threat.
 
-        // --- Mythological & Divine Tiers ---
-        'Primordial',
-        'Titan',
-        'God / Deity',
-        'Demigod',
+        // --- Mythological & Divine Tiers (Ordered by power scale) ---
         'Legendary Hero',
+        'Demigod',
+        'God / Deity',
+        'Titan',
+        'Primordial',
 
-        // --- Angelic & Demonic Tiers ---
-        'Archangel',
-        'Seraphim / Cherubim',
+        // --- Angelic & Demonic Tiers (Ordered by hierarchy) ---
+        'Pit Fiend',
+        'Archdevil',
         'Principalities',
         'Nine Lords (Demon)',
-        'Archdevil',
-        'Pit Fiend',
+        'Seraphim / Cherubim',
+        'Archangel',
 
-        // --- Cthulhu Mythos Tiers ---
-        'Outer God',
-        'Great Old One',
-        'Elder Thing',
+        // --- Cthulhu Mythos Tiers (Ordered by cosmic scale) ---
         'Servitor Race',
+        'Elder Thing',
+        'Great Old One',
+        'Outer God',
     ],
+
 
     'entity_origins' => [
         // --- Terrestrial & General ---

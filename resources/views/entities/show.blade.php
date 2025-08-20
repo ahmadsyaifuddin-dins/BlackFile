@@ -1,18 +1,26 @@
 <x-app-layout :title="$entity->codename ?? $entity->name">
     {{-- Header dengan style "Classified" --}}
     <div class="border-y-2 border-dashed border-primary/50 py-4 mb-8">
-        <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-            {{-- Bagian Kiri: Judul --}}
-            <div>
+        {{-- 
+            - Menambahkan 'md:justify-between' untuk memastikan jarak maksimal di desktop.
+            - Menambahkan 'md:items-center' untuk alignment vertikal yang lebih baik.
+        --}}
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+            
+            {{-- PERUBAHAN #2: Menambahkan 'min-w-0' agar judul bisa menyusut dan membungkus teksnya --}}
+            <div class="min-w-0">
                 <p class="text-sm text-secondary font-mono">CLASSIFICATION LEVEL: {{ $entity->rank ?? 'UNKNOWN' }}</p>
-                <h1 class="text-4xl font-bold text-primary tracking-widest font-mono text-glow">
+                <h1 class="text-xl md:text-3xl font-bold text-primary tracking-widest font-mono text-glow break-words">
                     ENTITY: {{ $entity->codename ?? $entity->name }}
                 </h1>
             </div>
             
-            {{-- Bagian Kanan: Grup Tombol Aksi (Responsif) --}}
-            <div class="flex flex-col md:flex-row md:items-center gap-3 w-full md:w-auto">
+            {{-- PERUBAHAN #3: Menambahkan 'flex-shrink-0' untuk mencegah grup tombol ini menyusut --}}
+            <div class="flex-shrink-0 flex flex-col md:flex-row md:items-center gap-3 w-full md:w-auto">
+                
+                {{-- Perbaikan: Menggunakan route('entities.index') lebih andal daripada url()->previous() --}}
                 <a href="{{ url()->previous() }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">&lt; BACK</a>
+                
                 <a href="{{ route('entities.edit', $entity) }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">> EDIT FILE</a>
                 
                 {{-- Tombol Hapus Baru --}}

@@ -15,9 +15,21 @@
         <header class="absolute top-0 left-0 right-0 z-10 p-4">
             <div class="container mx-auto flex justify-between items-center">
                 <span class="text-2xl font-bold text-primary tracking-[.25em]">[B.F]</span>
-                <a href="{{ route('login') }}" class="px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-base transition-colors font-bold text-sm">
-                    > AUTHENTICATE
-                </a>
+                
+                {{-- ================================================================ --}}
+                {{-- == PERUBAHAN: Tombol Header Pintar == --}}
+                {{-- ================================================================ --}}
+                @auth
+                    {{-- Tombol ini tampil JIKA pengguna SUDAH LOGIN --}}
+                    <a href="{{ route('dashboard') }}" class="px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-base transition-colors font-bold text-sm">
+                        > ENTER DASHBOARD
+                    </a>
+                @else
+                    {{-- Tombol ini tampil JIKA pengguna BELUM LOGIN --}}
+                    <a href="{{ route('login') }}" class="px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-base transition-colors font-bold text-sm">
+                        > AUTHENTICATE
+                    </a>
+                @endauth
             </div>
         </header>
 
@@ -62,9 +74,21 @@
                 <div class="container mx-auto">
                     <h2 class="text-2xl font-bold text-white">Your mission, should you choose to accept it, begins here.</h2>
                     <p class="mt-4 mb-8 max-w-xl mx-auto">This terminal is the gateway. Verify your identity to proceed.</p>
-                    <a href="{{ route('login') }}" class="px-8 py-4 bg-primary text-base text-primary-hover transition-colors font-bold tracking-widest text-lg">
-                        > ACCESS TERMINAL
-                    </a>
+                    
+                    {{-- ================================================================ --}}
+                    {{-- == PERUBAHAN: Tombol CTA Pintar == --}}
+                    {{-- ================================================================ --}}
+                    @auth
+                        {{-- Tombol ini tampil JIKA pengguna SUDAH LOGIN --}}
+                        <a href="{{ route('dashboard') }}" class="px-8 py-4 bg-primary text-black transition-colors font-bold tracking-widest text-lg hover:bg-primary-hover">
+                            > PROCEED TO DASHBOARD
+                        </a>
+                    @else
+                        {{-- Tombol ini tampil JIKA pengguna BELUM LOGIN --}}
+                        <a href="{{ route('login') }}" class="px-8 py-4 bg-primary text-black transition-colors font-bold tracking-widest text-lg hover:bg-primary-hover">
+                            > ACCESS TERMINAL
+                        </a>
+                    @endauth
                 </div>
             </section>
         </main>

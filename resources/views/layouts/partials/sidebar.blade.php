@@ -68,8 +68,8 @@
             <span>> Kontak Terenkripsi</span>
         </a>
 
-        {{-- Tampilkan menu ini HANYA jika role user adalah Director --}}
-        @if(strtolower(Auth::user()->role->name) === 'director')
+        {{-- Tampilkan menu ini HANYA jika role user adalah Director dan Technician --}}
+        @if(strtolower(Auth::user()->role->name) === 'director' || strtolower(Auth::user()->role->name) === 'technician')
         <a href="{{ route('register') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
         {{ request()->routeIs('register') 
             ? 'bg-surface-light text-primary border-l-4 border-primary' 

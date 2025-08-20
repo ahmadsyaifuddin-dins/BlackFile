@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             ConnectionSeeder::class,
             PrototypesSeeder::class,
             EntitiesSeeder::class,
+            EntityImagesSeeder::class,
         ]);
     }
 }

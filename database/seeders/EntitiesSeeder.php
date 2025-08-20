@@ -231,6 +231,22 @@ class EntitiesSeeder extends Seeder
                     'https://upload.wikimedia.org/wikipedia/commons/f/f6/Prometheus_Bound_Louvre_Ma711.jpg',
                 ],
             ],
+
+             [
+                'name' => 'Reptilian',
+                'codename' => 'SERPENTIS',
+                'category' => 'Extradimensional',
+                'rank' => 'Class-B (Moderate Threat)',
+                'origin' => 'Subterranean',
+                'description' => 'Reptilian adalah entitas humanoid berpenampilan mirip reptil (sisik hijau/cokelat, mata vertikal, tinggi ±2–3 meter). Laporan intelijen menyebutkan mereka mampu menyamar sebagai manusia biasa melalui manipulasi biologis dan teknologi ilusi. Fenomena keberadaan mereka sering dikaitkan dengan infiltrasi ke pemerintahan, struktur kekuasaan, serta eksperimen genetika pada manusia. Walaupun bukti fisik jarang ditemukan, pola aktivitas global menunjukkan konsistensi yang mengarah pada entitas ini.',
+                'abilities' => 'Shapeshifting (Mimicry): Dapat mengubah penampilan fisik menjadi manusia, termasuk suara, bahasa, bahkan perilaku sosial. Enhanced Physiology: Kekuatan fisik jauh di atas manusia normal. Ketahanan tubuh tinggi terhadap penyakit, racun, dan suhu ekstrem. Psionic Control: Beberapa laporan menyebut adanya kemampuan mind influence, berupa sugesti hipnotis atau kontrol pikiran dalam jangkauan terbatas. Advanced Technology Access: Kendaraan udara (UFO) berteknologi stealth. Senjata energi berbasis plasma. Sistem penyamaran holografik. Longevity: Umur panjang (ratusan tahun), dengan proses regenerasi sel lambat tapi stabil.',
+                'weaknesses' => 'Energy Instability: Teknologi penyamaran mereka membutuhkan energi tinggi → bisa terganggu dengan frekuensi elektromagnetik tertentu (EMP / gelombang sonik). Thermal Vulnerability: Sebagai makhluk berdarah dingin, mereka sensitif terhadap perubahan suhu ekstrem. Suhu sangat rendah → memperlambat pergerakan & metabolisme. Suhu sangat tinggi → menyebabkan dehidrasi cepat. Psionic Feedback: Upaya mereka mengendalikan pikiran manusia bisa berbalik jika target memiliki mental fortitude atau proteksi psionik (contoh: latihan meditasi, perangkat neuro-shield). Limited Numbers: Tidak tersebar luas → keberadaan kelompok yang diketahui relatif sedikit. Mengisolasi satu individu bisa sangat melemahkan jaringan infiltrasi mereka.',
+                'status' => 'ACTIVE',
+                'images' => [
+                    'https://example.com/reptilian1.jpg', // Ganti dengan URL gambar yang sesuai
+                    'https://example.com/reptilian2.jpg', // Ganti dengan URL gambar yang sesuai
+                ],
+            ],
         ];
         // Looping untuk membuat entitas dan gambarnya
         foreach ($entitiesData as $data) {

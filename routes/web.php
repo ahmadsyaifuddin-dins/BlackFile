@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthManual\LoginController;
 use App\Http\Controllers\AuthManual\RegisterController;
 use App\Http\Controllers\AuthManual\LogoutController;
 use App\Http\Controllers\CodexController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\ProfileController;
@@ -34,9 +35,7 @@ Route::middleware('guest')->group(function () {
 // Grup rute yang HANYA bisa diakses oleh pengguna yang SUDAH LOGIN
 Route::middleware('auth')->group(function () {
     // Rute dasar setelah login
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 

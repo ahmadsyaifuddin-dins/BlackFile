@@ -169,8 +169,11 @@
                             ? $thumbnail->path
                             : asset('uploads/' . $thumbnail->path);
                             @endphp
+                           <div class="aspect-square">
                             <img src="{{ $imagePath }}" alt="{{ $entity->codename }}"
-                                class="w-full h-32 object-cover grayscale group-hover:grayscale-0 transition-all duration-300">
+                                 class="w-full h-full sm:h-28 object-cover object-center grayscale group-hover:grayscale-0 transition-all duration-300"
+                                 loading="lazy">
+                          </div>
                             @else
                             <div
                                 class="w-full h-32 bg-base flex items-center justify-center border border-dashed border-border-color">

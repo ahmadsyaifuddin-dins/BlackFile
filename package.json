@@ -6,6 +6,7 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@tailwindcss/aspect-ratio": "^0.4.2",
         "alpinejs": "^3.14.9",
         "axios": "^1.6.4",
         "laravel-vite-plugin": "^1.0.0",
@@ -15,7 +16,6 @@
         "@tailwindcss/vite": "^4.1.12",
         "cytoscape": "^3.33.1",
         "raphael": "^2.3.0",
-        "tailwindcss": "^4.1.12",
-        "treant-js": "^1.0.1"
+        "tailwindcss": "^4.1.12"
     }
 }

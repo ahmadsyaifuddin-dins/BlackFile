@@ -59,9 +59,9 @@
                                                 <th
                                                     class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[100px]">
                                                     Status</th>
-                                                <th
+                                                {{-- <th
                                                     class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[120px]">
-                                                    Last Update</th>
+                                                    Last Update</th> --}}
                                                 <th
                                                     class="px-4 py-3 text-center text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-32">
                                                     Actions</th>
@@ -85,7 +85,7 @@
                                                         {{-- Placeholder jika tidak ada ikon --}}
                                                         <div
                                                             class="h-10 w-10 rounded-md bg-gray-700 flex items-center justify-center text-green-400 font-bold text-lg">
-                                                            {{ substr($prototype->codename, 0, 1) }}
+                                                            {{ substr($prototype->name, 0, 1) }}
                                                         </div>
                                                         @endif
                                                     </div>
@@ -108,9 +108,9 @@
                                                         {{ $prototype->status }}
                                                     </span>
                                                 </td>
-                                                <td class="px-4 py-4 whitespace-nowrap text-sm leading-5 text-gray-400">
+                                                {{-- <td class="px-4 py-4 whitespace-nowrap text-sm leading-5 text-gray-400">
                                                     {{ $prototype->updated_at->format('Y-m-d H:i') }}
-                                                </td>
+                                                </td> --}}
                                                 <td class="px-4 py-4 whitespace-nowrap text-center text-sm font-medium">
                                                     <div class="flex justify-center gap-1">
                                                         <a href="{{ route('prototypes.show', $prototype) }}"
@@ -147,7 +147,7 @@
                                             @else
                                             <div
                                                 class="h-10 w-10 rounded-md bg-gray-700 flex items-center justify-center text-green-400 font-bold text-lg">
-                                                {{ substr($prototype->codename, 0, 1) }}
+                                                {{ substr($prototype->name, 0, 1) }}
                                             </div>
                                             @endif
                                         </div>

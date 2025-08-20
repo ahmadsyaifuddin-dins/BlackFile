@@ -33,7 +33,6 @@ class RegisterController extends Controller
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|min:6|confirmed',
             'role_id' => 'required|exists:roles,id',
-            // 'parent_id' => 'required|exists:users,id',
         ]);
 
         User::create([
@@ -46,6 +45,6 @@ class RegisterController extends Controller
             'parent_id' => Auth::id(),
         ]);
 
-        return redirect('/dashboard')->with('success', 'Akun berhasil dibuat.');
+        return redirect('/agents')->with('success', 'Agent berhasil dibuat.');
     }
 }

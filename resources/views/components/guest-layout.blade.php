@@ -9,7 +9,7 @@
         <div>
             {{-- Menggunakan named route lebih baik daripada hardcoded '/' --}}
             <a href="{{ route('welcome') }}">
-                <h1 class="text-5xl font-bold text-primary">[B.F]</h1>
+                <h1 class="text-5xl font-bold text-secondary">[B.F]</h1>
             </a>
         </div>
 

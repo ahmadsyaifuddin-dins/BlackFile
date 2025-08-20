@@ -8,6 +8,7 @@ export default function prototypesCRUD() {
         formAction: '',
         formSubmitButton: '',
         uploadMethod: 'file',
+        iconUploadMethod: 'file',
         formData: {
             name: '',
             codename: '',
@@ -19,6 +20,8 @@ export default function prototypesCRUD() {
             live_url: '',
             cover_image_path: '',
             cover_image_url: '',
+            icon_path: '',
+            icon_url: '', 
             start_date: '',
             completed_date: ''
         },
@@ -63,11 +66,17 @@ export default function prototypesCRUD() {
             this.formAction = `/prototypes/${prototype.id}`; // Build the update URL
             this.formSubmitButton = 'UPDATE PROJECT';
 
-             // [LOGIKA BARU] Tentukan metode upload default saat edit
              if (prototype.cover_image_path && prototype.cover_image_path.startsWith('http')) {
                 this.uploadMethod = 'url';
             } else {
                 this.uploadMethod = 'file';
+            }
+
+            // [BARU] Tentukan metode upload default untuk ikon
+            if (prototype.icon_path && prototype.icon_path.startsWith('http')) {
+                this.iconUploadMethod = 'url';
+            } else {
+                this.iconUploadMethod = 'file';
             }
 
             this.formData = {
@@ -81,6 +90,8 @@ export default function prototypesCRUD() {
                 live_url: prototype.live_url,
                 cover_image_path: prototype.cover_image_path,
                 cover_image_url: this.uploadMethod === 'url' ? prototype.cover_image_path : '', // Isi jika tipenya URL
+                icon_path: prototype.icon_path, // [BARU]
+                icon_url: this.iconUploadMethod === 'url' ? prototype.icon_path : '', // [BARU]
                 start_date: this.formatDbTimeToInput(prototype.start_date),
                 completed_date: this.formatDbTimeToInput(prototype.completed_date)
             };

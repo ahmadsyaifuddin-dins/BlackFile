@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot:title>
-        Prototipe: {{ $prototype->codename }}
+        Prototype: {{ $prototype->codename }}
     </x-slot:title>
 
     <x-slot name="header">
@@ -11,7 +11,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="mb-3">
                 <h2 class="font-semibold text-xl text-gray-200 leading-tight">
-                    <span class="text-gray-500">Prototipe //</span> {{ $prototype->codename }}
+                    <span class="text-gray-500">Prototype //</span> {{ $prototype->codename }}
                 </h2>
                 <a href="{{ route('prototypes.index') }}"
                     class="text-gray-400 hover:text-white transition duration-300 font-mono text-sm">
@@ -32,28 +32,38 @@
 
                     {{-- Kolom Kiri: Deskripsi & Briefing --}}
                     <div class="md:col-span-2 text-gray-300">
-                        <h3 class="text-2xl text-green-400 mb-2">[ {{ $prototype->name }} ]</h3>
-
-                        <div class="prose prose-invert prose-sm max-w-none text-gray-400">
-                            <p>
-                                {{ $prototype->description }}
-                            </p>
+                        
+                        {{-- [PERBAIKAN] Blok ini menggabungkan Ikon dan Judul --}}
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="flex-shrink-0">
+                                @if($prototype->icon_path)
+                                    <img class="h-14 w-14 rounded-lg object-cover border-2 border-gray-700" src="{{ asset($prototype->icon_path) }}" alt="{{ $prototype->codename }} icon">
+                                @else
+                                    {{-- Placeholder jika tidak ada ikon --}}
+                                    <div class="h-14 w-14 rounded-lg bg-gray-700 flex items-center justify-center text-green-400 font-bold text-2xl border-2 border-gray-600">
+                                        {{ substr($prototype->codename, 0, 1) }}
+                                    </div>
+                                @endif
+                            </div>
+                            <h3 class="text-2xl text-green-400">[ {{ $prototype->name }} ]</h3>
                         </div>
 
+                        <div class="prose prose-invert prose-sm max-w-none text-gray-400">
+                            <p>{{ $prototype->description }}</p>
+                        </div>
+                        
                         <div class="mt-6 pt-4 border-t border-gray-700">
                             <h4 class="text-lg text-cyan-400 mb-3">> TECH ARSENAL</h4>
                             <div class="flex flex-wrap gap-2">
                                 @forelse($prototype->tech_stack as $tech)
-                                <span
-                                    class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">{{
-                                    $tech }}</span>
+                                    <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">{{ $tech }}</span>
                                 @empty
-                                <span class="text-gray-500 text-sm">// No tech stack specified</span>
+                                    <span class="text-gray-500 text-sm">// No tech stack specified</span>
                                 @endforelse
                             </div>
                         </div>
                     </div>
-
+                    
                     {{-- Kolom Kanan: Data Sheet --}}
                     <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 h-fit">
                         <h4 class="text-lg text-cyan-400 mb-3 border-b border-gray-600 pb-2">> DATA SHEET</h4>

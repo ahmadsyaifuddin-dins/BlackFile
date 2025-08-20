@@ -103,7 +103,53 @@
                     </div>
                 </div>
 
-                {{-- [BARU] Input untuk upload gambar --}}
+                {{-- [BLOK BARU] Input untuk upload ikon dengan dua opsi --}}
+                <div class="mb-4">
+                    <label class="block text-gray-400 text-sm mb-2">> App Icon / Logo</label>
+
+                    {{-- Tombol Pilihan Metode Upload --}}
+                    <div class="flex border border-gray-700 rounded-md p-1 mb-3 max-w-xs">
+                        <button type="button" @click="iconUploadMethod = 'file'"
+                            :class="{ 'bg-green-600 text-white': iconUploadMethod === 'file', 'text-gray-400 hover:bg-gray-700': iconUploadMethod !== 'file' }"
+                            class="flex-1 py-1 px-2 text-sm rounded-md transition">
+                            Upload File
+                        </button>
+                        <button type="button" @click="iconUploadMethod = 'url'"
+                            :class="{ 'bg-green-600 text-white': iconUploadMethod === 'url', 'text-gray-400 hover:bg-gray-700': iconUploadMethod !== 'url' }"
+                            class="flex-1 py-1 px-2 text-sm rounded-md transition">
+                            From URL
+                        </button>
+                    </div>
+
+                    {{-- Opsi 1: Upload File --}}
+                    <div x-show="iconUploadMethod === 'file'">
+                        <input type="file" name="icon" id="icon"
+                            class="form-input-dark file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-800 file:text-green-300 hover:file:bg-green-700">
+                        {{-- Tampilkan pratinjau ikon LOKAL saat edit --}}
+                        <template x-if="isEditMode && formData.icon_path && !formData.icon_path.startsWith('http')">
+                            <div class="mt-2">
+                                <img x-bind:src="'/' + formData.icon_path" alt="Current Icon"
+                                    class="h-16 w-16 rounded-md object-cover">
+                                <p class="text-xs text-gray-500 mt-1">Current icon. Upload a new file to replace it.</p>
+                            </div>
+                        </template>
+                    </div>
+
+                    {{-- Opsi 2: Dari URL --}}
+                    <div x-show="iconUploadMethod === 'url'">
+                        <input type="url" name="icon_url" x-model="formData.icon_url" class="form-input-dark"
+                            placeholder="https://example.com/icon.png">
+                        {{-- Tampilkan pratinjau ikon URL saat edit --}}
+                        <template x-if="isEditMode && formData.icon_path && formData.icon_path.startsWith('http')">
+                            <div class="mt-2">
+                                <img x-bind:src="formData.icon_path" alt="Current Icon"
+                                    class="h-16 w-16 rounded-md object-cover">
+                                <p class="text-xs text-gray-500 mt-1">Current icon. Enter a new URL to replace it.</p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
                 {{-- [BLOK BARU] Input untuk upload gambar dengan dua opsi --}}
                 <div class="mb-4">
                     <label class="block text-gray-400 text-sm mb-2">> Cover Image</label>

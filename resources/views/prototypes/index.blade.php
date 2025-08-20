@@ -41,24 +41,60 @@
                                     <table class="min-w-full font-mono divide-y divide-gray-700">
                                         <thead class="bg-gray-800">
                                             <tr>
-                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-16">#</th>
-                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[200px]">Codename</th>
-                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[150px]">Develop By</th>
-                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[120px]">Project Type</th>
-                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[100px]">Status</th>
-                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[120px]">Last Update</th>
-                                                <th class="px-4 py-3 text-center text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-32">Actions</th>
+                                                <th
+                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-16">
+                                                    #</th>
+                                                <th
+                                                    class="px-6 py-3 border-b-2 border-gray-700 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider">
+                                                    Icon</th>
+                                                <th
+                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[200px]">
+                                                    Codename</th>
+                                                <th
+                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[150px]">
+                                                    Develop By</th>
+                                                <th
+                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[120px]">
+                                                    Project Type</th>
+                                                <th
+                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[100px]">
+                                                    Status</th>
+                                                <th
+                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[120px]">
+                                                    Last Update</th>
+                                                <th
+                                                    class="px-4 py-3 text-center text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-32">
+                                                    Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody class="bg-gray-900 divide-y divide-gray-700">
                                             @foreach ($prototypes as $prototype)
                                             <tr class="hover:bg-gray-800 transition-colors">
                                                 <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-400">
-                                                    {{ ($prototypes->currentPage() - 1) * $prototypes->perPage() + $loop->iteration }}
+                                                    {{ ($prototypes->currentPage() - 1) * $prototypes->perPage() +
+                                                    $loop->iteration }}
+                                                </td>
+                                                {{-- [BARU] Kolom Data untuk Ikon --}}
+                                                <td class="px-6 py-4 whitespace-nowrap border-b border-gray-700">
+                                                    <div class="flex-shrink-0 h-10 w-10">
+                                                        @if($prototype->icon_path)
+                                                        <img class="h-10 w-10 rounded-md object-cover"
+                                                            src="{{ asset($prototype->icon_path) }}"
+                                                            alt="{{ $prototype->codename }} icon">
+                                                        @else
+                                                        {{-- Placeholder jika tidak ada ikon --}}
+                                                        <div
+                                                            class="h-10 w-10 rounded-md bg-gray-700 flex items-center justify-center text-green-400 font-bold text-lg">
+                                                            {{ substr($prototype->codename, 0, 1) }}
+                                                        </div>
+                                                        @endif
+                                                    </div>
                                                 </td>
                                                 <td class="px-4 py-4 whitespace-nowrap">
-                                                    <div class="text-sm leading-5 text-green-400">{{ $prototype->codename }}</div>
-                                                    <div class="text-xs leading-5 text-gray-400">{{ $prototype->name }}</div>
+                                                    <div class="text-sm leading-5 text-green-400">{{
+                                                        $prototype->codename }}</div>
+                                                    <div class="text-xs leading-5 text-gray-400">{{ $prototype->name }}
+                                                    </div>
                                                 </td>
                                                 <td class="px-4 py-4 whitespace-nowrap text-sm leading-5 text-gray-300">
                                                     {{ $prototype->user->name }}
@@ -67,7 +103,8 @@
                                                     {{ $prototype->project_type }}
                                                 </td>
                                                 <td class="px-4 py-4 whitespace-nowrap">
-                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-cyan-900 text-cyan-300">
+                                                    <span
+                                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-cyan-900 text-cyan-300">
                                                         {{ $prototype->status }}
                                                     </span>
                                                 </td>
@@ -76,9 +113,14 @@
                                                 </td>
                                                 <td class="px-4 py-4 whitespace-nowrap text-center text-sm font-medium">
                                                     <div class="flex justify-center gap-1">
-                                                        <a href="{{ route('prototypes.show', $prototype) }}" class="text-indigo-400 hover:text-indigo-600 transition text-xs px-1">View</a>
-                                                        <button type="button" @click="openEditModal({{ json_encode($prototype) }})" class="text-yellow-400 hover:text-yellow-600 transition appearance-none bg-transparent border-none cursor-pointer text-xs mr-1">Edit</button>
-                                                        <button type="button" @click="$dispatch('open-delete-modal', { actionUrl: '{{ route('prototypes.destroy', $prototype) }}', itemName: '{{ $prototype->codename }}' })" class="text-red-400 hover:text-red-600 transition appearance-none bg-transparent border-none cursor-pointer text-xs">Delete</button>
+                                                        <a href="{{ route('prototypes.show', $prototype) }}"
+                                                            class="text-indigo-400 hover:text-indigo-600 transition text-xs px-1">View</a>
+                                                        <button type="button"
+                                                            @click="openEditModal({{ json_encode($prototype) }})"
+                                                            class="text-yellow-400 hover:text-yellow-600 transition appearance-none bg-transparent border-none cursor-pointer text-xs mr-1">Edit</button>
+                                                        <button type="button"
+                                                            @click="$dispatch('open-delete-modal', { actionUrl: '{{ route('prototypes.destroy', $prototype) }}', itemName: '{{ $prototype->codename }}' })"
+                                                            class="text-red-400 hover:text-red-600 transition appearance-none bg-transparent border-none cursor-pointer text-xs">Delete</button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -95,13 +137,28 @@
                             <div class="bg-gray-800 border border-gray-700 rounded-lg p-4">
                                 {{-- Card Header --}}
                                 <div class="flex justify-between items-start mb-3">
-                                    <div class="flex-1 min-w-0">
-                                        {{-- [BARU] Penomoran di mobile --}}
-                                        <div class="text-sm text-gray-500 mb-1">#{{ ($prototypes->currentPage() - 1) *
-                                            $prototypes->perPage() + $loop->iteration }}</div>
-                                        <div class="text-lg leading-5 text-green-400 font-bold truncate">{{ $prototype->codename
-                                            }}</div>
-                                        <div class="text-xs leading-5 text-gray-400 truncate">{{ $prototype->name }}</div>
+                                    <div class="flex items-start gap-4 flex-1 min-w-0">
+                                        {{-- [BARU] Ikon di mobile --}}
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            @if($prototype->icon_path)
+                                            <img class="h-10 w-10 rounded-md object-cover"
+                                                src="{{ asset($prototype->icon_path) }}"
+                                                alt="{{ $prototype->codename }} icon">
+                                            @else
+                                            <div
+                                                class="h-10 w-10 rounded-md bg-gray-700 flex items-center justify-center text-green-400 font-bold text-lg">
+                                                {{ substr($prototype->codename, 0, 1) }}
+                                            </div>
+                                            @endif
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="text-sm text-gray-500">#{{ ($prototypes->currentPage() - 1) *
+                                                $prototypes->perPage() + $loop->iteration }}</div>
+                                            <div class="text-lg leading-5 text-green-400 font-bold truncate">{{
+                                                $prototype->codename }}</div>
+                                            <div class="text-xs leading-5 text-gray-400 truncate">{{ $prototype->name }}
+                                            </div>
+                                        </div>
                                     </div>
                                     <span
                                         class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-cyan-900 text-cyan-300 flex-shrink-0 ml-2">
@@ -112,12 +169,16 @@
                                 {{-- Card Body --}}
                                 <div class="text-sm space-y-2 text-gray-300 border-t border-gray-700 pt-3">
                                     {{-- [BARU] Develop By di mobile --}}
-                                    <p class="flex"><span class="text-gray-500 w-24 flex-shrink-0">Develop By</span>: <span class="truncate ml-1">{{
-                                        $prototype->user->name }}</span></p>
-                                    <p class="flex"><span class="text-gray-500 w-24 flex-shrink-0">TYPE</span>: <span class="truncate ml-1">{{
-                                        $prototype->project_type }}</span></p>
-                                    <p class="flex"><span class="text-gray-500 w-24 flex-shrink-0">UPDATED</span>: <span class="truncate ml-1">{{
-                                        $prototype->updated_at->format('Y-m-d H:i') }}</span></p>
+                                    <p class="flex"><span class="text-gray-500 w-24 flex-shrink-0">Develop By</span>:
+                                        <span class="truncate ml-1">{{
+                                            $prototype->user->name }}</span>
+                                    </p>
+                                    <p class="flex"><span class="text-gray-500 w-24 flex-shrink-0">TYPE</span>: <span
+                                            class="truncate ml-1">{{
+                                            $prototype->project_type }}</span></p>
+                                    <p class="flex"><span class="text-gray-500 w-24 flex-shrink-0">UPDATED</span>: <span
+                                            class="truncate ml-1">{{
+                                            $prototype->updated_at->format('Y-m-d H:i') }}</span></p>
                                 </div>
 
                                 {{-- Card Footer --}}

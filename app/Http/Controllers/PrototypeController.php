@@ -83,6 +83,8 @@ class PrototypeController extends Controller
             'live_url' => 'nullable|url',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'cover_image_url' => 'nullable|url', // [BARU] Validasi untuk URL
+            'icon' => 'nullable|image|mimes:png,jpg,jpeg,svg,webp,gif|max:1024',
+            'icon_url' => 'nullable|url', // [BARU] Validasi untuk URL ikon
             'start_date' => 'nullable|date_format:Y-m-d\TH:i',
             'completed_date' => 'nullable|date_format:Y-m-d\TH:i|after_or_equal:start_date',
         ]);
@@ -97,8 +99,18 @@ class PrototypeController extends Controller
             $validatedData['cover_image_path'] = $request->input('cover_image_url');
         }
 
-        // Unset input sementara
-        unset($validatedData['cover_image'], $validatedData['cover_image_url']);
+        // [BARU] Logika untuk handle dua opsi ikon
+        if ($request->hasFile('icon')) {
+            $icon = $request->file('icon');
+            $iconName = 'icon_' . time() . '.' . $icon->getClientOriginalExtension();
+            $icon->move(public_path('uploads/prototypes/icons'), $iconName);
+            $validatedData['icon_path'] = 'uploads/prototypes/icons/' . $iconName;
+        } elseif ($request->filled('icon_url')) {
+            $validatedData['icon_path'] = $request->input('icon_url');
+        }
+
+        // Unset semua input sementara
+        unset($validatedData['cover_image'], $validatedData['cover_image_url'], $validatedData['icon'], $validatedData['icon_url']);
 
         if (!empty($validatedData['tech_stack'])) {
             $validatedData['tech_stack'] = array_map('trim', explode(',', $validatedData['tech_stack']));
@@ -107,7 +119,7 @@ class PrototypeController extends Controller
         $validatedData['user_id'] = Auth::id();
         Prototype::create($validatedData);
 
-        return redirect()->route('prototypes.index')->with('success', 'Prototype dossier successfully filed.');
+        return redirect()->route('prototypes.index')->with('success', 'Prototype project successfully filed.');
     }
 
     /**
@@ -139,6 +151,8 @@ class PrototypeController extends Controller
             'live_url' => 'nullable|url',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // [BARU] Validasi gambar
             'cover_image_url' => 'nullable|url', // [BARU]
+            'icon' => 'nullable|image|mimes:png,jpg,jpeg,svg,webp,gif|max:1024',
+            'icon_url' => 'nullable|url', // [BARU] Validasi untuk URL ikon
             'start_date' => 'nullable|date_format:Y-m-d\TH:i',
             'completed_date' => 'nullable|date_format:Y-m-d\TH:i|after_or_equal:start_date',
         ]);
@@ -161,7 +175,23 @@ class PrototypeController extends Controller
             $validatedData['cover_image_path'] = $request->input('cover_image_url');
         }
 
-        unset($validatedData['cover_image'], $validatedData['cover_image_url']);
+        // [BARU] Logika untuk handle update ikon
+        if ($request->hasFile('icon')) {
+            if ($prototype->icon_path && !Str::startsWith($prototype->icon_path, 'http') && File::exists(public_path($prototype->icon_path))) {
+                File::delete(public_path($prototype->icon_path));
+            }
+            $icon = $request->file('icon');
+            $iconName = 'icon_' . time() . '.' . $icon->getClientOriginalExtension();
+            $icon->move(public_path('uploads/prototypes/icons'), $iconName);
+            $validatedData['icon_path'] = 'uploads/prototypes/icons/' . $iconName;
+        } elseif ($request->filled('icon_url')) {
+            if ($prototype->icon_path && !Str::startsWith($prototype->icon_path, 'http') && File::exists(public_path($prototype->icon_path))) {
+                File::delete(public_path($prototype->icon_path));
+            }
+            $validatedData['icon_path'] = $request->input('icon_url');
+        }
+
+        unset($validatedData['cover_image'], $validatedData['cover_image_url'], $validatedData['icon'], $validatedData['icon_url']);
 
         if (!empty($validatedData['tech_stack'])) {
             $validatedData['tech_stack'] = array_map('trim', explode(',', $validatedData['tech_stack']));
@@ -171,7 +201,7 @@ class PrototypeController extends Controller
 
         $prototype->update($validatedData);
 
-        return redirect()->route('prototypes.index')->with('success', 'Prototype dossier successfully updated.');
+        return redirect()->route('prototypes.index')->with('success', 'Prototype project successfully updated.');
     }
 
     /**
@@ -187,6 +217,11 @@ class PrototypeController extends Controller
         // Hapus gambar dari folder public jika ada
         if ($prototype->cover_image_path && File::exists(public_path($prototype->cover_image_path))) {
             File::delete(public_path($prototype->cover_image_path));
+        }
+
+        // Hapus ikon dari folder public jika ada
+        if ($prototype->icon_path && File::exists(public_path($prototype->icon_path))) {
+            File::delete(public_path($prototype->icon_path));
         }
 
         // Hapus record dari database

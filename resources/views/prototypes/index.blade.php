@@ -37,7 +37,7 @@
                         <div class="hidden sm:block">
                             {{-- [FIX] Table container that respects sidebar layout --}}
                             <div class="rounded-lg border border-gray-700">
-                                <div class="overflow-x-auto">
+                                <div class="overflow-x-auto rounded-md">
                                     <table class="min-w-full font-mono divide-y divide-gray-700">
                                         <thead class="bg-gray-800">
                                             <tr>

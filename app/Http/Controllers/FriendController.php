@@ -18,50 +18,46 @@ class FriendController extends Controller
     public function index()
     {
         $currentUser = Auth::user();
-
         $nodes = [];
         $edges = [];
-
-        // 1. Tambahkan user yang login sebagai node utama (root)
         $rootNodeId = 'u' . $currentUser->id;
+
         $nodes[] = [
             'data' => [
-                'id'     => $rootNodeId,
-                'label'  => $currentUser->codename,
-                'role'   => $currentUser->role->alias,
-                'name'   => $currentUser->name,
-                'avatar' => $currentUser->avatar ? asset($currentUser->avatar) : route('avatar.proxy', ['name' => $currentUser->codename]),
+                'id'             => $rootNodeId,
+                'raw_id'         => $currentUser->id, // [PENTING] Tambahkan ID asli
+                'label'          => $currentUser->codename,
+                'role'           => $currentUser->role->alias,
+                'name'           => $currentUser->name,
+                'avatar'         => $currentUser->avatar ? asset($currentUser->avatar) : route('avatar.proxy', ['name' => $currentUser->codename]),
                 'specialization' => $currentUser->specialization,
             ]
         ];
 
-        // 2. Ambil HANYA koneksi langsung dari user ini
         $directConnections = Connection::where('source_type', User::class)
             ->where('source_id', $currentUser->id)
             ->with('target')
             ->get();
 
-        // 3. Proses setiap koneksi langsung
         foreach ($directConnections as $connection) {
             $target = $connection->target;
             if ($target) {
                 $isUser = $target instanceof User;
                 $targetId = ($isUser ? 'u' : 'f') . $target->id;
 
-                // Tambahkan target sebagai node
                 $nodes[] = [
                     'data' => [
-                        'id'     => $targetId,
-                        'label'  => $target->codename,
-                        'name'   => $target->name,
-                        'role'   => $isUser ? $target->role->alias : 'Asset',
-                        'avatar' => $isUser ? ($target->avatar ? asset($target->avatar) : route('avatar.proxy', ['name' => $target->codename])) : null,
-                        'category' => !$isUser ? $target->category : null,
+                        'id'             => $targetId,
+                        'raw_id'         => $target->id, // [PENTING] Tambahkan ID asli
+                        'label'          => $target->codename,
+                        'name'           => $target->name,
+                        'role'           => $isUser ? $target->role->alias : 'Asset',
+                        'avatar'         => $isUser ? ($target->avatar ? asset($target->avatar) : route('avatar.proxy', ['name' => $target->codename])) : null,
+                        'category'       => !$isUser ? $target->category : null,
                         'specialization' => $isUser ? $target->specialization : null,
                     ]
                 ];
 
-                // Tambahkan garis (edge) dari root ke target
                 $edges[] = [
                     'data' => [
                         'source' => $rootNodeId,
@@ -72,10 +68,10 @@ class FriendController extends Controller
         }
 
         return view('friends.index', [
-            'pageTitle' => __('My Network'), // Terjemahkan di sini
+            'pageTitle'  => __('My Network'),
             'rootNodeId' => $rootNodeId,
-            'nodes' => $nodes,
-            'edges' => $edges
+            'nodes'      => $nodes,
+            'edges'      => $edges
         ]);
     }
 

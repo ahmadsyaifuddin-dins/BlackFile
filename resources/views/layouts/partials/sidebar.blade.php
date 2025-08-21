@@ -62,8 +62,10 @@
             <span>> {{ __('Codex') }}</span>
         </a>
 
-        <a href="#"
-            class="flex text-gray-700 items-center space-x-3 px-3 py-2 rounded-r-md transition-colors border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50">
+        <a href="{{ route('encrypted-contacts.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+            {{ request()->routeIs('encrypted-contacts.*') 
+        ? 'bg-surface-light text-primary border-l-4 border-primary' 
+        : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Kontak Terenkripsi') }}</span>
         </a>
 

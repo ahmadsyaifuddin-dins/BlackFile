@@ -6,8 +6,10 @@ use App\Http\Controllers\AuthManual\RegisterController;
 use App\Http\Controllers\AuthManual\LogoutController;
 use App\Http\Controllers\CodexController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EncryptedContactController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\FriendController;
+use App\Http\Controllers\MasterPasswordController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PrototypeController;
 use App\Http\Controllers\SettingController;
@@ -49,7 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('entities', EntityController::class);
     Route::resource('prototypes', PrototypeController::class);
     Route::get('/codex', [CodexController::class, 'index'])->name('codex.index');
-    
+
     // Rute Friends Network
     Route::get('/friends', [FriendController::class, 'index'])->name('friends.index');
     Route::get('/friends/create', [FriendController::class, 'create'])->name('friends.create');
@@ -67,6 +69,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/agents', [UserController::class, 'index'])->name('agents.index');
     Route::get('/agents/{user}', [UserController::class, 'show'])->name('agents.show');
+
+    // --- RUTE BARU UNTUK SETUP MASTER PASSWORD ---
+    Route::get('/master-password/setup', [MasterPasswordController::class, 'create'])->name('master-password.setup');
+    Route::post('/master-password/setup', [MasterPasswordController::class, 'store'])->name('master-password.store');
+
+    // --- RUTE BARU UNTUK BRANKAS KONTAK TERENKRIPSI ---
+    Route::resource('encrypted-contacts', EncryptedContactController::class);
+    Route::post('/encrypted-contacts/{encryptedContact}/unlock', [EncryptedContactController::class, 'unlock'])->name('encrypted-contacts.unlock');
 
     // Grup rute yang dilindungi oleh role tertentu (Director atau Technician)
     // Menggunakan 'role' middleware kustom Anda
@@ -111,5 +121,4 @@ Route::get('/avatar-proxy/{name}', function (string $name) {
 
     // Kirimkan gambar dari data yang sudah di-cache
     return response($imageData['body'])->header('Content-Type', $imageData['content_type']);
-
 })->name('avatar.proxy');

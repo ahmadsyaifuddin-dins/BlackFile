@@ -199,18 +199,17 @@
                 {{-- Footer Aksi dengan Tombol Hapus --}}
                 <div class="px-4 py-2 border-t-2 border-border-color flex items-center justify-end gap-4">
                     <a href="{{ route('entities.edit', $entity) }}"
-                        class="text-secondary hover:text-primary text-sm font-mono">> EDIT</a>
+                        class="text-secondary hover:text-primary text-sm font-mono whitespace-nowrap">EDIT</a>
 
                     <form action="{{ route('entities.destroy', $entity) }}" method="POST"
                         onsubmit="return confirm('WARNING: Are you sure you want to terminate this entity record? This action cannot be undone.');">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="text-red-500 hover:text-red-400 text-sm font-mono">>
-                            TERMINATE</button>
+                        <button type="submit" class="text-red-500 hover:text-red-400 text-sm font-mono whitespace-nowrap">TERMINATE</button>
                     </form>
 
                     <a href="{{ route('entities.show', $entity) }}"
-                        class="text-primary hover:text-white text-sm font-bold font-mono">> ACCESS ENTITY</a>
+                        class="text-primary hover:text-white text-sm font-bold font-mono whitespace-nowrap">ACCESS ENTITY</a>
                 </div>
             </div>
             @empty

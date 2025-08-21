@@ -1,0 +1,23 @@
+// vite.config.js
+import { defineConfig } from "file:///D:/AHMAD_SYAIFUDDIN/WebApp/BlackFile/node_modules/vite/dist/node/index.js";
+import laravel from "file:///D:/AHMAD_SYAIFUDDIN/WebApp/BlackFile/node_modules/laravel-vite-plugin/dist/index.js";
+import tailwindcss from "file:///D:/AHMAD_SYAIFUDDIN/WebApp/BlackFile/node_modules/@tailwindcss/vite/dist/index.mjs";
+import aspectRatio from "file:///D:/AHMAD_SYAIFUDDIN/WebApp/BlackFile/node_modules/@tailwindcss/aspect-ratio/src/index.js";
+var vite_config_default = defineConfig({
+  plugins: [
+    tailwindcss({
+      plugins: [
+        // [PERBAIKAN] Gunakan variabel yang sudah di-impor
+        aspectRatio
+      ]
+    }),
+    laravel({
+      input: ["resources/css/app.css", "resources/js/app.js", "resources/js/graph-controls.js", "resources/js/pages/friends-index.js"],
+      refresh: true
+    })
+  ]
+});
+export {
+  vite_config_default as default
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsidml0ZS5jb25maWcuanMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImNvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9kaXJuYW1lID0gXCJEOlxcXFxBSE1BRF9TWUFJRlVERElOXFxcXFdlYkFwcFxcXFxCbGFja0ZpbGVcIjtjb25zdCBfX3ZpdGVfaW5qZWN0ZWRfb3JpZ2luYWxfZmlsZW5hbWUgPSBcIkQ6XFxcXEFITUFEX1NZQUlGVURESU5cXFxcV2ViQXBwXFxcXEJsYWNrRmlsZVxcXFx2aXRlLmNvbmZpZy5qc1wiO2NvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9pbXBvcnRfbWV0YV91cmwgPSBcImZpbGU6Ly8vRDovQUhNQURfU1lBSUZVRERJTi9XZWJBcHAvQmxhY2tGaWxlL3ZpdGUuY29uZmlnLmpzXCI7Ly8gdml0ZS5jb25maWcuanMgKEtvZGUgQmFydSAmIEJlbmFyKVxuXG5pbXBvcnQgeyBkZWZpbmVDb25maWcgfSBmcm9tICd2aXRlJztcbmltcG9ydCBsYXJhdmVsIGZyb20gJ2xhcmF2ZWwtdml0ZS1wbHVnaW4nO1xuaW1wb3J0IHRhaWx3aW5kY3NzIGZyb20gJ0B0YWlsd2luZGNzcy92aXRlJztcblxuLy8gW1BFUkJBSUtBTl0gSW1wb3IgcGx1Z2luIGRpIGJhZ2lhbiBhdGFzIG1lbmdndW5ha2FuIHNpbnRha3MgRVNNXG5pbXBvcnQgYXNwZWN0UmF0aW8gZnJvbSAnQHRhaWx3aW5kY3NzL2FzcGVjdC1yYXRpbyc7XG5cbmV4cG9ydCBkZWZhdWx0IGRlZmluZUNvbmZpZyh7XG4gIHBsdWdpbnM6IFtcbiAgICB0YWlsd2luZGNzcyh7XG4gICAgICAgIHBsdWdpbnM6IFtcbiAgICAgICAgICAgIC8vIFtQRVJCQUlLQU5dIEd1bmFrYW4gdmFyaWFiZWwgeWFuZyBzdWRhaCBkaS1pbXBvclxuICAgICAgICAgICAgYXNwZWN0UmF0aW8sXG4gICAgICAgIF1cbiAgICB9KSxcbiAgICBsYXJhdmVsKHtcbiAgICAgIGlucHV0OiBbJ3Jlc291cmNlcy9jc3MvYXBwLmNzcycsICdyZXNvdXJjZXMvanMvYXBwLmpzJywgJ3Jlc291cmNlcy9qcy9ncmFwaC1jb250cm9scy5qcycsJ3Jlc291cmNlcy9qcy9wYWdlcy9mcmllbmRzLWluZGV4LmpzJyBdLFxuICAgICAgcmVmcmVzaDogdHJ1ZSxcbiAgICB9KSxcbiAgXSxcbn0pOyJdLAogICJtYXBwaW5ncyI6ICI7QUFFQSxTQUFTLG9CQUFvQjtBQUM3QixPQUFPLGFBQWE7QUFDcEIsT0FBTyxpQkFBaUI7QUFHeEIsT0FBTyxpQkFBaUI7QUFFeEIsSUFBTyxzQkFBUSxhQUFhO0FBQUEsRUFDMUIsU0FBUztBQUFBLElBQ1AsWUFBWTtBQUFBLE1BQ1IsU0FBUztBQUFBO0FBQUEsUUFFTDtBQUFBLE1BQ0o7QUFBQSxJQUNKLENBQUM7QUFBQSxJQUNELFFBQVE7QUFBQSxNQUNOLE9BQU8sQ0FBQyx5QkFBeUIsdUJBQXVCLGtDQUFpQyxxQ0FBc0M7QUFBQSxNQUMvSCxTQUFTO0FBQUEsSUFDWCxDQUFDO0FBQUEsRUFDSDtBQUNGLENBQUM7IiwKICAibmFtZXMiOiBbXQp9Cg==

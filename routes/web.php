@@ -10,6 +10,7 @@ use App\Http\Controllers\EntityController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PrototypeController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -36,6 +37,9 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     // Rute dasar setelah login
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings/language', [SettingController::class, 'updateLanguage'])->name('settings.updateLanguage');
 
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 

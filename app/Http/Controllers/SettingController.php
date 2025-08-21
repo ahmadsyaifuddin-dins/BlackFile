@@ -29,4 +29,18 @@ class SettingController extends Controller
 
         return back()->with('success', 'Language has been updated.');
     }
+
+    /**
+     * [BARU] Memperbarui pengaturan paginasi dan menyimpannya di session.
+     */
+    public function updatePagination(Request $request)
+    {
+        $request->validate([
+            'per_page' => 'required|integer|in:6,9,18,27', // Hanya izinkan nilai ini
+        ]);
+
+        Session::put('per_page', $request->per_page);
+
+        return back()->with('success', 'Pagination setting has been updated.');
+    }
 }

@@ -49,9 +49,12 @@ class EntityController extends Controller
             $query->where('origin', $request->origin);
         }
 
+        // --- FILTER BARU: PAGINATION ---
+        $perPage = session('per_page', 9);
+
         // 4. Setelah semua filter diterapkan, baru kita atur urutan dan paginasi.
         //    Hasilnya akan sesuai dengan permintaan Anda: data lama (ID kecil) di atas.
-        $entities = $query->orderBy('id', 'asc')->paginate(9);
+        $entities = $query->orderBy('id', 'asc')->paginate($perPage);
 
         // 5. Mengirim data yang sudah difilter dan diurutkan ke view.
         return view('entities.index', compact('entities'));

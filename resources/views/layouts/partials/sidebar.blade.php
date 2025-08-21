@@ -62,16 +62,16 @@
             <span>> {{ __('Codex') }}</span>
         </a>
 
+        <a href="#"
+            class="flex text-gray-700 items-center space-x-3 px-3 py-2 rounded-r-md transition-colors border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50">
+            <span>> {{ __('Kontak Terenkripsi') }}</span>
+        </a>
+
         <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
            {{ request()->routeIs('logs.*') 
                 ? 'bg-surface-light border-l-4 border-primary' 
                 : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50 text-gray-700' }}">
             <span>> {{ __('Activity Logs') }}</span>
-        </a>
-
-        <a href="#"
-            class="flex text-gray-700 items-center space-x-3 px-3 py-2 rounded-r-md transition-colors border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50">
-            <span>> {{ __('Kontak Terenkripsi') }}</span>
         </a>
 
         {{-- Tampilkan menu ini HANYA jika role user adalah Director dan Technician --}}

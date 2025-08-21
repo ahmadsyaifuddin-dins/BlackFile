@@ -29,9 +29,10 @@
     "Prototypes Projects": "Proyek Prototipe",
     "Entities Database": "Database Entitas",
     "Codex": "Kodeks",
-    "Settings": "Pengaturan",
     "Register Agent": "Daftarkan Agen",
     "Terminate Session": "Akhiri Sesi",
+
+    "Settings": "Pengaturan",
     "General application configuration.": "Konfigurasi Aplikasi Umum",
     "System Settings": "Pengaturan Sistem",
     "Language Setting": "Pengaturan Bahasa",
@@ -62,5 +63,9 @@
     "SELECT TARGET": "PILIH TARGET",
     "-- Select Entity --": "-- Pilih Agen/Friend --",
     "OPERATIVES (USERS)": "AGEN (USER)",
-    "EXISTING ASSETS (FRIENDS)": "ASSET YANG SUDAH ADA (FRIEND)"
+    "EXISTING ASSETS (FRIENDS)": "ASSET YANG SUDAH ADA (FRIEND)",   
+
+    "A centralized glossary of classified terminology.": "Kamus terpusat untuk istilah yang terklasifikasi.",
+    "NO CODEX ENTRIES FOUND IN CONFIGURATION": "TIDAK ADA ENTRI KODEKS DITEMUKAN DALAM KONFIGURASI"
+
 }

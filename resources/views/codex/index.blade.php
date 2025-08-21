@@ -4,7 +4,7 @@
         <h1 class="text-4xl font-bold text-primary tracking-widest font-mono text-glow">
             > BLACKFILE CODEX
         </h1>
-        <p class="text-sm text-secondary font-mono mt-1">A centralized glossary of classified terminology.</p>
+        <p class="text-sm text-secondary font-mono mt-1"> {{ __('A centralized glossary of classified terminology.') }}</p>
     </div>
 
     {{-- Konten Codex --}}
@@ -31,7 +31,7 @@
             </section>
         @empty
             <div class="text-center py-12 border-2 border-dashed border-border-color">
-                <p class="text-secondary font-mono text-lg">[ NO CODEX ENTRIES FOUND IN CONFIGURATION ]</p>
+                <p class="text-secondary font-mono text-lg">{{ __('NO CODEX ENTRIES FOUND IN CONFIGURATION') }}</p>
             </div>
         @endforelse
     </div>

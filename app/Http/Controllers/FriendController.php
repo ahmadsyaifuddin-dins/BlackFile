@@ -72,7 +72,7 @@ class FriendController extends Controller
         }
 
         return view('friends.index', [
-            'pageTitle' => 'My Network',
+            'pageTitle' => __('My Network'), // Terjemahkan di sini
             'rootNodeId' => $rootNodeId,
             'nodes' => $nodes,
             'edges' => $edges
@@ -92,7 +92,7 @@ class FriendController extends Controller
 
         $graphData = $this->buildGraphData($director);
 
-        $graphData['pageTitle'] = 'Central Command Network';
+        $graphData['pageTitle'] = __(   'Central Command Network');
         $graphData['rootNodeId'] = 'u' . $director->id;
         
         return view('friends.index', $graphData);

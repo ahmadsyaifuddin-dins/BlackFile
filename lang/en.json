@@ -1,5 +1,13 @@
 {
     "Dashboard": "Dashboard",
+    "SYSTEM COMMAND DASHBOARD": "SYSTEM COMMAND DASHBOARD",
+    "Welcome": "Welcome",
+    "SYSTEM TIME": "SYSTEM TIME",
+    "KEY METRICS": "KEY METRICS",
+    "AGENTS ROSTER": "AGENTS ROSTER",
+    "ENTITIES DATABASE": "ENTITIES DATABASE",
+    "PROJECT PIPELINE": "PROJECT PIPELINE",
+
     "Friends Network": "Friends Network",
     "Central Tree": "Central Tree",
     "Agents Directory": "Agents Directory",

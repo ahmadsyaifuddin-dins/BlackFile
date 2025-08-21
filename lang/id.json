@@ -1,5 +1,28 @@
 {
     "Dashboard": "Dasbor",
+    "SYSTEM COMMAND DASHBOARD": "DASHBOR PERINTAH SISTEM",
+    "Welcome": "Selamat Datang",
+    "SYSTEM TIME": "WAKTU SISTEM",
+
+    "KEY METRICS": "METRIK UTAMA",
+    "AGENTS ROSTER": "DAFTAR AGENT",
+    "ENTITIES DATABASE": "DATABASE ENTITAS",
+    "PROJECTS PIPELINE": "JUMLAH PROYEK",
+
+    "SYSTEM ALERT": "PEMBERITAHUAN SISTEM",
+    "High-threat entity detected": "ENTITAS TINGKAT TINGGI TERDETEKSI",
+    "Classification": "Klasifikasi",
+
+    "AGENT NETWORK STATUS": "STATUS AKTIF AGENT",
+    "No other agent activity detected.": "Tidak ada aktivitas agen lain terdeteksi.",
+
+    "PROJECT STATUS OVERVIEW": "RINGKASAN STATUS PROYEK",
+    "No project data available to display.": "Tidak ada data proyek yang tersedia untuk ditampilkan.",
+
+    "RECENT ACTIVITY LOG": "LOG AKTIVITAS TERKINI",
+    "Entities updated:": "Entititas Diperbarui:",
+    "No recent activity in the entity database.": "Tidak ada aktivitas terkini di database entitas.",
+
     "Friends Network": "Jaringan Teman",
     "Central Tree": "Pohon Terpusat",
     "Agents Directory": "Direktori Agen",

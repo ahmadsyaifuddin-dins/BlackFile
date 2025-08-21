@@ -30,7 +30,7 @@
                     </div>
                     <div class="flex justify-end">
                         <button type="submit" class="bg-primary text-primary font-bold py-2 px-6 hover:bg-primary-hover transition-colors cursor-pointer">
-                            {{ __('SAVE CHANGES') }}
+                            [ {{ __('SAVE CHANGES') }} ]
                         </button>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                     </div>
                     <div class="flex justify-end">
                         <button type="submit" class="bg-primary text-primary font-bold py-2 px-6 hover:bg-primary-hover transition-colors cursor-pointer">
-                            {{ __('SAVE CHANGES') }}
+                            [ {{ __('SAVE CHANGES') }} ]
                         </button>
                     </div>
                 </div>

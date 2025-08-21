@@ -22,9 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     'background-image': function(ele) {
                         return ele.data('avatar') || 'none';
                     },
-                    // [PERBAIKAN CORS] Tambahkan properti ini
                     'background-image-crossorigin': 'anonymous',
-                    
                     'background-color': function(ele) {
                         return ele.data('avatar') ? 'transparent' : '#00ff88';
                     },
@@ -41,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             },
             {
-                // [PERBAIKAN BUG] Gunakan template literal JavaScript, bukan Blade
                 selector: `node[id = "${rootNodeId}"]`,
                 style: {
                     'width': 80,
@@ -53,19 +50,40 @@ document.addEventListener("DOMContentLoaded", function() {
                 selector: 'edge',
                 style: { 'width': 2, 'line-color': '#00ff88', 'target-arrow-color': '#90ee90', 'target-arrow-shape': 'triangle-backcurve', 'curve-style': 'segments' }
             },
+            // Style untuk hover dan search
+            { selector: '.highlighted', style: { 'min-zoomed-font-size': 12, 'font-weight': 'bold', 'background-color': '#2ea043', 'border-color': '#fff', 'border-width': 2, 'z-index': 9999 }},
+            { selector: '.faded', style: { 'opacity': 0.25 }},
+            { selector: '.hover-highlighted', style: { 'border-color': '#ffffff', 'border-width': 3, 'box-shadow': '0 0 15px #00ff88' }},
+            { selector: '.hover-faded', style: { 'opacity': 0.4 }}
         ],
         layout: {
             name: 'concentric',
             concentric: function(node){ return node.id() === rootNodeId ? 100 : 50; },
             levelWidth: function(nodes){ return 10; },
-            spacingFactor: 1.1, // Jarak antara garis node ke pusat
+            spacingFactor: 1.1,
             animate: true
         }
     });
 
     // --- INTERAKTIVITAS GRAPH ---
-    cy.on('mouseover', 'node', function(evt){ /* ... logika hover ... */ });
-    cy.on('mouseout', 'node', function(evt){ /* ... logika hover ... */ });
+
+    // [DIISI] Logika hover sekarang sudah lengkap
+    cy.on('mouseover', 'node', function(evt){
+        const selectedNode = evt.target;
+        const neighborhood = selectedNode.neighborhood(); // Dapatkan semua elemen yang terhubung langsung
+
+        cy.elements().addClass('hover-faded'); // Buat semua elemen lain meredup
+        
+        // Buat node yang dipilih dan tetangganya menonjol
+        selectedNode.removeClass('hover-faded').addClass('hover-highlighted');
+        neighborhood.removeClass('hover-faded');
+    });
+
+    cy.on('mouseout', 'node', function(evt){
+        // Hapus semua class hover saat mouse keluar
+        cy.elements().removeClass('hover-faded hover-highlighted');
+    });
+
     cy.on('tap', 'node', function(evt) {
         const nodeData = evt.target.data();
         window.dispatchEvent(new CustomEvent('open-node-modal', { detail: nodeData }));

@@ -19,12 +19,6 @@
     |--------------------------------------------------------------------------
     | Variabel Warna CSS (Root Variables)
     |--------------------------------------------------------------------------
-    |
-    | Variabel ini mendefinisikan palet warna utama untuk aplikasi.
-    | Di Tailwind v4, warna kustom ini dapat diintegrasikan melalui
-    | plugin CSS-in-JS di dalam `vite.config.js` untuk membuat utility
-    | class seperti `bg-primary` atau `text-primary` berfungsi secara native.
-    |
     */
     :root {
         --color-base: #0d1117;
@@ -44,12 +38,25 @@
         font-family: var(--font-default);
     }
 
-    [x-cloak] {
-        display: none !important;
+    /*
+    |--------------------------------------------------------------------------
+    | [KODE DIKEMBALIKAN] Kelas Warna Kustom
+    |--------------------------------------------------------------------------
+    |
+    | Kelas-kelas ini didefinisikan secara manual untuk memastikan
+    | kompatibilitas dengan setup Anda saat ini.
+    |
+    */
+    .text-primary {
+        color: var(--color-primary);
     }
 
-    .text-primary {
-      color: var(--color-primary)
+    .text-primary-hover:hover {
+        color: var(--color-primary-hover);
+    }
+
+    [x-cloak] {
+        display: none !important;
     }
 
     /*
@@ -70,11 +77,6 @@
 /* ========================================================================== */
 
 @layer components {
-    /*
-    |--------------------------------------------------------------------------
-    | Kelas Komponen Kustom
-    |--------------------------------------------------------------------------
-    */
     .form-input-dark {
         @apply w-full bg-gray-800 border border-gray-600 rounded-md text-gray-300 focus:ring-green-500 focus:border-green-500;
     }
@@ -98,11 +100,6 @@
 /* ========================================================================== */
 
 @layer utilities {
-    /*
-    |--------------------------------------------------------------------------
-    | Kelas Utility Kustom
-    |--------------------------------------------------------------------------
-    */
     .text-glow {
         color: rgba(128, 255, 128, 0.8);
         text-shadow:

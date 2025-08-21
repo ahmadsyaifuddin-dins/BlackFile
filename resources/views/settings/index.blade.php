@@ -80,10 +80,10 @@
                     <div>
                         <label for="theme" class="block text-sm text-secondary mb-2">{{ __('Select UI Theme:') }}</label>
                         <select name="theme" id="theme" class="w-full bg-base border-2 border-border-color focus:border-primary focus:ring-0 text-white p-2">
-                            <option class="text-black" value="default" @selected(session('theme', 'default') == 'default')>{{ __('Default Theme') }}</option>
-                            <option class="text-black" value="amber" @selected(session('theme', 'default') == 'amber')>{{ __('Amber Fallout Theme') }}</option>
-                            <option class="text-black" value="arctic" @selected(session('theme', 'default') == 'arctic')>{{ __('Arctic Blue Theme') }}</option>
-                            <option class="text-black" value="red" @selected(session('theme', 'default') == 'red')>{{ __('Code Red Theme') }}</option>
+                            <option class="text-green-700" value="default" @selected(session('theme', 'default') == 'default')>{{ __('Default Theme') }}</option>
+                            <option class="text-yellow-700" value="amber" @selected(session('theme', 'default') == 'amber')>{{ __('Amber Fallout Theme') }}</option>
+                            <option class="text-cyan-700" value="arctic" @selected(session('theme', 'default') == 'arctic')>{{ __('Arctic Blue Theme') }}</option>
+                            <option class="text-red-700" value="red" @selected(session('theme', 'default') == 'red')>{{ __('Code Red Theme') }}</option>
                         </select>
                     </div>
                     <div class="flex justify-end">

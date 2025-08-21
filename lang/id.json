@@ -20,7 +20,7 @@
     "No project data available to display.": "Tidak ada data proyek yang tersedia untuk ditampilkan.",
 
     "RECENT ACTIVITY LOG": "LOG AKTIVITAS TERKINI",
-    "Entities updated:": "Entititas Diperbarui:",
+    "Entities updated:": "Entitas Diperbarui:",
     "No recent activity in the entity database.": "Tidak ada aktivitas terkini di database entitas.",
 
     "Friends Network": "Jaringan Teman",
@@ -29,6 +29,7 @@
     "Prototypes Projects": "Proyek Prototipe",
     "Entities Database": "Database Entitas",
     "Codex": "Kodeks",
+    "Activity Logs": "Log Aktivitas",
     "Register Agent": "Daftarkan Agen",
     "Terminate Session": "Akhiri Sesi",
 

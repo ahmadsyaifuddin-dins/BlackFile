@@ -42,7 +42,7 @@
             </div>
         </div>
 
-        <div id="cy" class="w-full h-[70vh] bg-base border-2 border-border-color rounded-lg" data-nodes='@json($nodes)'
+        <div id="cy" class="w-full h-[90vh] sm:h-[110vh] bg-base border-2 border-border-color rounded-lg" data-nodes='@json($nodes)'
             data-edges='@json($edges)' data-rootnodeid='{{ $rootNodeId }}'></div>
     </div>
 

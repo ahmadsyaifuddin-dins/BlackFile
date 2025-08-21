@@ -51,14 +51,14 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             {
                 selector: 'edge',
-                style: { 'width': 2, 'line-color': '#00ff88', 'target-arrow-color': '#00ff88', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier' }
+                style: { 'width': 2, 'line-color': '#00ff88', 'target-arrow-color': '#90ee90', 'target-arrow-shape': 'triangle-backcurve', 'curve-style': 'segments' }
             },
         ],
         layout: {
             name: 'concentric',
             concentric: function(node){ return node.id() === rootNodeId ? 100 : 50; },
             levelWidth: function(nodes){ return 10; },
-            spacingFactor: 1.5,
+            spacingFactor: 1.1, // Jarak antara garis node ke pusat
             animate: true
         }
     });

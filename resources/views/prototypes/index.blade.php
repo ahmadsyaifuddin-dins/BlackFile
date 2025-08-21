@@ -12,7 +12,7 @@
             <div class="w-full px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-end mb-4">
                     <button @click="openCreateModal()"
-                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300 w-full sm:w-auto">
+                        class="border-primary border hover:border-primary-hover text-white font-bold py-2 px-4 rounded transition duration-300 w-full sm:w-auto cursor-pointer">
                         [ + FILE NEW PROTOTYPE ]
                     </button>
                 </div>
@@ -84,14 +84,14 @@
                                                         @else
                                                         {{-- Placeholder jika tidak ada ikon --}}
                                                         <div
-                                                            class="h-10 w-10 rounded-md bg-gray-700 flex items-center justify-center text-green-400 font-bold text-lg">
+                                                            class="h-10 w-10 rounded-md bg-gray-700 flex items-center justify-center text-primary font-bold text-lg">
                                                             {{ substr($prototype->name, 0, 1) }}
                                                         </div>
                                                         @endif
                                                     </div>
                                                 </td>
                                                 <td class="px-4 py-4 whitespace-nowrap">
-                                                    <div class="text-sm leading-5 text-green-400">{{
+                                                    <div class="text-sm leading-5 text-primary">{{
                                                         $prototype->codename }}</div>
                                                     <div class="text-xs leading-5 text-gray-400">{{ $prototype->name }}
                                                     </div>
@@ -146,7 +146,7 @@
                                                 alt="{{ $prototype->codename }} icon">
                                             @else
                                             <div
-                                                class="h-10 w-10 rounded-md bg-gray-700 flex items-center justify-center text-green-400 font-bold text-lg">
+                                                class="h-10 w-10 rounded-md bg-gray-700 flex items-center justify-center text-primary font-bold text-lg">
                                                 {{ substr($prototype->name, 0, 1) }}
                                             </div>
                                             @endif
@@ -154,7 +154,7 @@
                                         <div class="flex-1 min-w-0">
                                             <div class="text-sm text-gray-500">#{{ ($prototypes->currentPage() - 1) *
                                                 $prototypes->perPage() + $loop->iteration }}</div>
-                                            <div class="text-lg leading-5 text-green-400 font-bold truncate">{{
+                                            <div class="text-lg leading-5 text-primary font-bold truncate">{{
                                                 $prototype->codename }}</div>
                                             <div class="text-xs leading-5 text-gray-400 truncate">{{ $prototype->name }}
                                             </div>

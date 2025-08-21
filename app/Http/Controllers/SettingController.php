@@ -43,4 +43,18 @@ class SettingController extends Controller
 
         return back()->with('success', 'Pagination setting has been updated.');
     }
+
+     /**
+     * [BARU] Memperbarui tema UI aplikasi.
+     */
+    public function updateTheme(Request $request)
+    {
+        $request->validate([
+            'theme' => 'required|string|in:default,amber,arctic,red',
+        ]);
+
+        Session::put('theme', $request->theme);
+
+        return back()->with('success', 'UI theme has been updated.');
+    }
 }

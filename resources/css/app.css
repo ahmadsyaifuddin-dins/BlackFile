@@ -17,25 +17,53 @@
 @layer base {
     /*
     |--------------------------------------------------------------------------
-    | Variabel Warna CSS (Root Variables)
+    | Definisi Tema Warna
     |--------------------------------------------------------------------------
     */
-    :root {
+    :root { /* Tema Default: Green Phosphorus */
         --color-base: #0d1117;
         --color-surface: #161b22;
         --color-surface-light: #21262d;
         --color-primary: #2ea043;
         --color-primary-hover: #36d351;
+        --border-color-primary: #2ea043;
+        --border-primary-hover: #36d351;
         --color-secondary: #8b949e;
         --color-border: #30363d;
         --color-text-default: var(--color-secondary);
         --font-default: "Roboto Mono", monospace; 
     }
 
+    /* [BARU] Definisi untuk tema Amber Fallout */
+    body[data-theme='amber'] {
+        --color-primary: #ffb86c;
+        --color-primary-hover: #f1fa8c;
+        --border-color-primary: #ffb86c;
+        --border-primary-hover: #f1fa8c;
+    }
+
+    /* [BARU] Definisi untuk tema Arctic Blue */
+    body[data-theme='arctic'] {
+        --color-primary: #8be9fd;
+        --color-primary-hover: #a4ffff;
+        --border-color-primary: #8be9fd;
+        --border-primary-hover: #a4ffff;
+    }
+
+    /* [BARU] Definisi untuk tema Code Red */
+    body[data-theme='red'] {
+        --color-primary: #ff5555;
+        --color-primary-hover: #ff6e67;
+        --border-color-primary: #ff5555;
+        --border-primary-hover: #ff6e67;
+    }
+
+    /* ... sisa kode CSS Anda (html, body, .text-primary, dll.) tetap sama ... */
     html, body {
         background-color: var(--color-base);
         color: var(--color-text-default);
         font-family: var(--font-default);
+        transition: color 0.3s, background-color 0.3s; /* Transisi halus saat tema berubah */
     }
 
     /*
@@ -53,6 +81,14 @@
 
     .text-primary-hover:hover {
         color: var(--color-primary-hover);
+    }
+
+    .border-primary {
+        border-color: var(--border-color-primary);
+    }
+
+    .border-primary-hover:hover {
+        border-color: var(--border-primary-hover);
     }
 
     [x-cloak] {

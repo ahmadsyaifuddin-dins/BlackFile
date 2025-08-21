@@ -40,12 +40,12 @@
                                     <img class="h-14 w-14 rounded-lg object-cover border-2 border-gray-700" src="{{ asset($prototype->icon_path) }}" alt="{{ $prototype->codename }} icon">
                                 @else
                                     {{-- Placeholder jika tidak ada ikon --}}
-                                    <div class="h-14 w-14 rounded-lg bg-gray-700 flex items-center justify-center text-green-400 font-bold text-2xl border-2 border-gray-600">
+                                    <div class="h-14 w-14 rounded-lg bg-gray-700 flex items-center justify-center text-primary font-bold text-2xl border-2 border-gray-600">
                                         {{ substr($prototype->codename, 0, 1) }}
                                     </div>
                                 @endif
                             </div>
-                            <h3 class="text-2xl text-green-400">[ {{ $prototype->name }} ]</h3>
+                            <h3 class="text-2xl text-primary">[ {{ $prototype->name }} ]</h3>
                         </div>
 
                         <div class="prose prose-invert prose-sm max-w-none text-gray-400">

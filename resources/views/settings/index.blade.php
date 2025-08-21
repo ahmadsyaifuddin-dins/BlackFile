@@ -67,5 +67,32 @@
                 </div>
             </form>
         </div>
+
+        {{-- ================================================================ --}}
+        {{-- == PANEL BARU: PENGATURAN TAMPILAN UI == --}}
+        {{-- ================================================================ --}}
+        <div class="bg-surface border border-border-color p-6 font-mono">
+            <h2 class="text-lg font-bold text-primary border-b border-border-color pb-2 mb-4">> {{ __('UI Display Setting') }}</h2>
+            
+            <form action="{{ route('settings.updateTheme') }}" method="POST">
+                @csrf
+                <div class="space-y-4">
+                    <div>
+                        <label for="theme" class="block text-sm text-secondary mb-2">{{ __('Select UI Theme:') }}</label>
+                        <select name="theme" id="theme" class="w-full bg-base border-2 border-border-color focus:border-primary focus:ring-0 text-white p-2">
+                            <option class="text-black" value="default" @selected(session('theme', 'default') == 'default')>{{ __('Default Theme') }}</option>
+                            <option class="text-black" value="amber" @selected(session('theme', 'default') == 'amber')>{{ __('Amber Fallout Theme') }}</option>
+                            <option class="text-black" value="arctic" @selected(session('theme', 'default') == 'arctic')>{{ __('Arctic Blue Theme') }}</option>
+                            <option class="text-black" value="red" @selected(session('theme', 'default') == 'red')>{{ __('Code Red Theme') }}</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="submit" class="bg-primary text-primary font-bold py-2 px-6 hover:bg-primary-hover transition-colors cursor-pointer">
+                            [ {{ __('SAVE CHANGES') }} ]
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </x-app-layout>

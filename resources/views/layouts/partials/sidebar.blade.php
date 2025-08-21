@@ -12,7 +12,7 @@
         </button>
     </div>
 
-    <nav class="flex-1 p-4 space-y-2 overflow-y-auto text-green-700">
+    <nav class="flex-1 p-4 space-y-2 overflow-y-auto text-primary">
         <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
            {{ request()->routeIs('dashboard') 
                 ? 'bg-surface-light text-primary border-l-4 border-primary' 

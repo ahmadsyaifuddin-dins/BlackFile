@@ -1,118 +1,143 @@
-/* Mengimpor fungsionalitas inti Tailwind */
+/*
+|--------------------------------------------------------------------------
+| Tailwind CSS v4 Import
+|--------------------------------------------------------------------------
+|
+| Menggunakan @import 'tailwindcss' sesuai dengan standar Tailwind v4.
+| Semua konfigurasi, termasuk path file untuk pemindaian kelas,
+| sekarang ditangani langsung di dalam file `vite.config.js`.
+|
+*/
 @import 'tailwindcss';
 
-/* Memberitahu Tailwind di mana harus memindai class */
-@source "../**/*.blade.php", "../**/*.js";
-
 /* ========================================================================== */
-/* == BAGIAN 1: TEMA DASAR (DARK MODE STANDAR) =============================== */
+/* == BAGIAN 1: TEMA DASAR & KONFIGURASI VARIABEL ============================ */
 /* ========================================================================== */
-
-[x-cloak] {
-  display: none !important;
-}
 
 @layer base {
+    /*
+    |--------------------------------------------------------------------------
+    | Variabel Warna CSS (Root Variables)
+    |--------------------------------------------------------------------------
+    |
+    | Variabel ini mendefinisikan palet warna utama untuk aplikasi.
+    | Di Tailwind v4, warna kustom ini dapat diintegrasikan melalui
+    | plugin CSS-in-JS di dalam `vite.config.js` untuk membuat utility
+    | class seperti `bg-primary` atau `text-primary` berfungsi secara native.
+    |
+    */
     :root {
-      --color-base: #0d1117;
-      --color-surface: #161b22;
-      --color-surface-light: #21262d;
-      --color-primary: #2ea043;
-      --color-primary-hover: #36d351;
-      --color-secondary: #8b949e;
-      --color-border: #30363d;
-      --color-text-default: var(--color-secondary);
-      /* Diperbarui agar konsisten dengan layout.blade.php */
-      --font-default: "Roboto Mono", monospace; 
+        --color-base: #0d1117;
+        --color-surface: #161b22;
+        --color-surface-light: #21262d;
+        --color-primary: #2ea043;
+        --color-primary-hover: #36d351;
+        --color-secondary: #8b949e;
+        --color-border: #30363d;
+        --color-text-default: var(--color-secondary);
+        --font-default: "Roboto Mono", monospace; 
     }
- 
+
     html, body {
-      background-color: var(--color-base);
-      color: var(--color-text-default);
-      font-family: var(--font-default);
+        background-color: var(--color-base);
+        color: var(--color-text-default);
+        font-family: var(--font-default);
+    }
+
+    [x-cloak] {
+        display: none !important;
     }
 
     .text-primary {
-      color: var(--color-primary);
+      color: var(--color-primary)
     }
 
-    .text-primary-hover:hover { 
-       color: var(--color-primary-hover); 
+    /*
+    |--------------------------------------------------------------------------
+    | Tema Terminal Khusus
+    |--------------------------------------------------------------------------
+    */
+    .theme-terminal {
+        background-color: #000000;
+        background-image: radial-gradient(#11581efa, #041607), url("https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif");
+        background-size: cover;
+        font-family: 'Inconsolata', monospace;
     }
 }
 
 /* ========================================================================== */
-/* == BAGIAN 2: KOMPONEN CUSTOM (CYTOSCAPE, DLL.) ============================ */
+/* == BAGIAN 2: KOMPONEN CUSTOM ============================================== */
 /* ========================================================================== */
 
 @layer components {
-  .form-input-dark {
-    @apply w-full bg-gray-800 border border-gray-600 rounded-md text-gray-300 focus:ring-green-500 focus:border-green-500;
-  }
-  .highlighted {
-      min-zoomed-font-size: 12px;
-      font-weight: bold;
-      background-color: var(--color-primary);
-      border-color: #fff;
-      border-width: 2px;
-      z-index: 9999;
-  }
-  .faded {
-      opacity: 0.25;
-  }
+    /*
+    |--------------------------------------------------------------------------
+    | Kelas Komponen Kustom
+    |--------------------------------------------------------------------------
+    */
+    .form-input-dark {
+        @apply w-full bg-gray-800 border border-gray-600 rounded-md text-gray-300 focus:ring-green-500 focus:border-green-500;
+    }
+
+    .highlighted {
+        min-zoomed-font-size: 12px;
+        font-weight: bold;
+        background-color: var(--color-primary);
+        border-color: #fff;
+        border-width: 2px;
+        z-index: 9999;
+    }
+
+    .faded {
+        opacity: 0.25;
+    }
 }
 
 /* ========================================================================== */
-/* == BAGIAN 3: TEMA TERMINAL (HANYA AKTIF JIKA ADA CLASS .theme-terminal) ==== */
+/* == BAGIAN 3: UTILITIES & ANIMASI CUSTOM =================================== */
 /* ========================================================================== */
 
-@layer base {
-  /* Style ini hanya akan berlaku pada body jika memiliki class .theme-terminal */
-  .theme-terminal {
-    background-color: #000000;
-    /* Menggabungkan gradient hijau dengan background GIF noise */
-    background-image: radial-gradient(#11581efa, #041607), url("https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif");
-    background-size: cover;
-    font-family: 'Inconsolata', monospace; /* Mengganti font khusus di tema ini */
-  }
-}
-
-/* Keyframes untuk animasi scanline */
-@keyframes scan {
-  0% { background-position: 0 -100vh; }
-  35%, 100% { background-position: 0 100vh; }
-}
-
-/* Overlay scanline, hanya aktif di dalam .theme-terminal */
-.theme-terminal .scan-overlay::before {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  display: block;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  background-image: linear-gradient(0deg,
-      transparent 0%,
-      rgba(32, 128, 32, 0.2) 2%,
-      rgba(32, 128, 32, 0.8) 3%,
-      rgba(32, 128, 32, 0.2) 3%,
-      transparent 100%);
-  background-repeat: no-repeat;
-  animation: scan 7.5s linear 0s infinite;
-}
-
-/* Utility class untuk teks glowing */
 @layer utilities {
-  .text-glow {
-    color: rgba(128, 255, 128, 0.8);
-    text-shadow:
-      0 0 2px rgba(51, 255, 51, 0.6),
-      0 0 5px rgba(255, 255, 255, 0.4);
-  }
+    /*
+    |--------------------------------------------------------------------------
+    | Kelas Utility Kustom
+    |--------------------------------------------------------------------------
+    */
+    .text-glow {
+        color: rgba(128, 255, 128, 0.8);
+        text-shadow:
+            0 0 2px rgba(51, 255, 51, 0.6),
+            0 0 5px rgba(255, 255, 255, 0.4);
+    }
 }
 
+/*
+|--------------------------------------------------------------------------
+| Animasi Kustom
+|--------------------------------------------------------------------------
+*/
+@keyframes scan {
+    0% { background-position: 0 -100vh; }
+    35%, 100% { background-position: 0 100vh; }
+}
 
+.theme-terminal .scan-overlay::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(0deg,
+        transparent 0%,
+        rgba(32, 128, 32, 0.2) 2%,
+        rgba(32, 128, 32, 0.8) 3%,
+        rgba(32, 128, 32, 0.2) 3%,
+        transparent 100%);
+    background-repeat: no-repeat;
+    animation: scan 7.5s linear 0s infinite;
+}

@@ -1,10 +1,10 @@
 <x-app-layout theme="terminal">
     <x-slot:title>
-        My Agent
+        {{ __('My Profile') }}
     </x-slot:title>
 
     <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-primary text-glow">> [ PERSONAL AGENT ]</h2>
+        <h2 class="text-2xl font-bold text-primary text-glow">> [ {{ __('PERSONAL AGENT') }} ]</h2>
     </div>
 
     <div class="bg-surface/50 border border-border-color rounded-lg p-6 text-glow flex flex-col sm:flex-row items-start gap-6">
@@ -17,18 +17,18 @@
         
         <!-- Detail Teks -->
         <div class="space-y-4 w-full">
-            <p><span class="text-primary/25">> REAL NAME:</span> {{ $user->name }}</p>
-            <p><span class="text-primary/25">> CODENAME:</span> {{ $user->codename }}</p>
-            <p><span class="text-primary/25">> DESIGNATION:</span> {{ $user->role->alias }}</p>
-            <p><span class="text-primary/25">> SPECIALIZATION:</span> {{ $user->specialization ?? 'N/A' }}</p>
-            <p><span class="text-primary/25">> QUOTES:</span> "{{ $user->quotes ?? '...' }}"</p>
+            <p><span class="text-primary/25">> {{ __('REAL NAME') }}:</span> {{ $user->name }}</p>
+            <p><span class="text-primary/25">> {{ __('CODENAME') }}:</span> {{ $user->codename }}</p>
+            <p><span class="text-primary/25">> {{ __('DESIGNATION') }}:</span> {{ $user->role->alias }}</p>
+            <p><span class="text-primary/25">> {{ __('SPECIALIZATION') }}:</span> {{ $user->specialization ?? 'N/A' }}</p>
+            <p><span class="text-primary/25">> {{ __('QUOTES') }}:</span> "{{ $user->quotes ?? '...' }}"</p>
             <p class="border-t border-border-color/50 pt-4 mt-4">
-                <span class="text-primary/25">> LOGIN ID:</span> {{ $user->username }}
+                <span class="text-primary/25">> {{ __('LOGIN ID') }}:</span> {{ $user->username }}
             </p>
-            <p><span class="text-primary/25">> HANDLER:</span> {{ $user->parent->codename ?? '[ DIRECTORATE ]' }}</p>
-            <p><span class="text-primary/25">> LAST ACTIVITY:</span> {{ $user->last_active_at ? $user->last_active_at->diffForHumans() : 'Never' }}</p>
-            <p><span class="text-primary/25">> RECOVERY EMAIL:</span> {{ $user->email }}</p>
-            <p><span class="text-primary/25">> REGISTERED ON:</span> {{ $user->created_at->format('Y-m-d H:i:s') }}</p>
+            <p><span class="text-primary/25">> {{ __('HANDLER') }}:</span> {{ $user->parent->codename ?? '[ DIRECTORATE ]' }}</p>
+            <p><span class="text-primary/25">> {{ __('LAST ACTIVITY') }}:</span> {{ $user->last_active_at ? $user->last_active_at->diffForHumans() : 'Never' }}</p>
+            <p><span class="text-primary/25">> {{ __('RECOVERY EMAIL') }}:</span> {{ $user->email }}</p>
+            <p><span class="text-primary/25">> {{ __('REGISTERED ON') }}:</span> {{ $user->created_at->format('Y-m-d H:i:s') }}</p>
         </div>
     </div>
 

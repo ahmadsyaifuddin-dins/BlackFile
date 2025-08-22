@@ -5,7 +5,7 @@
 
     <div class="p-4 md:p-6 bg-surface/50 border border-border-color rounded-lg">
         <div class="mb-6">
-            <h2 class="text-2xl font-bold text-primary text-glow"> > [ UPDATE PERSONAL ] </h2>
+            <h2 class="text-xl sm:text-2xl font-bold text-primary text-glow"> > [ UPDATE PERSONAL ] </h2>
             <div class="mt-3 sm:mt-2 flex sm:justify-end">
                 <a href="{{ route('profile.show') }}"
                     class="text-secondary hover:text-primary transition-colors text-sm text-glow">&lt; Cancel Update</a>
@@ -35,17 +35,26 @@
 
             <div class="space-y-6 text-glow">
                 <!-- [DIUBAH] Bagian Upload Avatar Responsif -->
-                <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6" 
+                     x-data="{ fileName: '' }">
                     <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : 'https://i.postimg.cc/HxS7HmR9/agent-default.jpg' }}" 
                          alt="Avatar" class="w-20 h-20 object-cover rounded-full border-2 border-border-color flex-shrink-0">
+                    
                     <div class="w-full sm:w-auto">
-                        <label for="avatar" class="block text-primary/25 text-sm">> UPLOAD NEW AVATAR</label>
-                        <input type="file" id="avatar" name="avatar" class="mt-1 text-sm text-secondary
-                            file:mr-4 file:py-2 file:px-4
-                            file:rounded-full file:border-0
-                            file:text-sm file:font-semibold
-                            file:bg-primary/20 file:text-primary-hover
-                            hover:file:bg-primary/40">
+                        <label for="avatar" class="block text-primary text-sm">> UPLOAD NEW AVATAR</label>
+                        <div class="mt-1 flex items-center space-x-3">
+                            <!-- Input file asli yang disembunyikan -->
+                            <input type="file" id="avatar" name="avatar" class="hidden"
+                                   @change="fileName = $event.target.files.length > 0 ? $event.target.files[0].name : ''">
+                            
+                            <!-- Tombol palsu yang diklik pengguna -->
+                            <label for="avatar" class="cursor-pointer px-3 py-1.5 bg-primary/20 text-primary-hover hover:bg-primary/40 font-bold text-xs rounded transition-colors">
+                                [ CHOOSE FILE ]
+                            </label>
+
+                            <!-- Tampilan nama file yang dipilih -->
+                            <span x-text="fileName || 'No file selected'" class="text-sm text-secondary truncate"></span>
+                        </div>
                     </div>
                 </div>
 

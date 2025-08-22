@@ -9,10 +9,18 @@
                 setTimeout(() => { status = 'idle' }, 3000)
             }
         })"
+        {{-- [DIUBAH] Jadikan container ini 'relative' untuk menjadi jangkar bagi animasi --}}
+        class="relative min-h-[380px]"
     >
-    <div x-show="status === 'idle'" x-transition x-cloak>
-        <h2 class="text-2xl text-primary font-bold mb-6 text-center">[ AGENT LOGIN ]</h2>
-        <form @submit.prevent="
+        <!-- Form Login -->
+        {{-- [DIUBAH] Form sekarang menjadi transparan saat status berubah, bukan menghilang --}}
+        <div 
+            :class="{ 'opacity-0 invisible': status !== 'idle' }"
+            class="transition-opacity duration-300"
+            x-cloak
+        >
+            <h2 class="text-2xl text-primary font-bold mb-6 text-center">[ AGENT LOGIN ]</h2>
+            <form @submit.prevent="
                 status = 'loading';
                 fetch('{{ route('login') }}', {
                     method: 'POST',
@@ -24,7 +32,7 @@
                     body: JSON.stringify({
                         username: $event.target.username.value,
                         password: $event.target.password.value,
-                        remember: $event.target.remember.checked // <-- [BARU] Kirim status checkbox
+                        remember: $event.target.remember.checked
                     })
                 })
                 .then(response => response.json().then(data => ({status: response.status, body: data})))
@@ -66,33 +74,32 @@
 
                 <div class="flex items-center justify-end mt-6">
                     <button type="submit"
-                        class="w-full px-4 py-2 text-base text-primary-hover font-bold tracking-widest cursor-pointer">
+                        class="w-full px-4 py-2 text-primary text-base hover:bg-primary-hover font-bold tracking-widest cursor-pointer">
                         > INITIATE CONNECTION
                     </button>
                 </div>
             </form>
         </div>
 
-        {{-- [PERBAIKAN] Ganti div x-show menjadi template x-if --}}
-        <template x-if="status === 'loading'">
-            <div class="text-center text-primary" x-transition>
+        <!-- [DIUBAH] Container untuk semua animasi, diposisikan absolut di tengah -->
+        <div x-show="status !== 'idle'" x-transition x-cloak 
+             class="absolute inset-0 flex items-center justify-center">
+            
+            <!-- Animasi Loading -->
+            <div x-show="status === 'loading'" class="text-center text-primary">
                 <p class="text-2xl animate-pulse">ESTABLISHING SECURE LINK...</p>
             </div>
-        </template>
-
-        {{-- [PERBAIKAN] Ganti div x-show menjadi template x-if --}}
-        <template x-if="status === 'granted'">
-            <div class="text-center text-green-600" x-transition>
-                <p class="text-2xl sm:text-4xl text- font-bold">[ ACCESS GRANTED ]</p>
+    
+            <!-- Animasi Granted -->
+            <div x-show="status === 'granted'" class="text-center text-green-600">
+                <p class="text-2xl sm:text-4xl font-bold">[ ACCESS GRANTED ]</p>
             </div>
-        </template>
-
-        {{-- [PERBAIKAN] Ganti div x-show menjadi template x-if --}}
-        <template x-if="status === 'denied'">
-            <div class="text-center text-red-500" x-transition>
+    
+            <!-- Animasi Denied -->
+            <div x-show="status === 'denied'" class="text-center text-red-500">
                 <p class="text-2xl sm:text-4xl font-bold">[ ACCESS DENIED ]</p>
                 <p class="mt-4 text-sm text-secondary" x-text="errorMessage"></p>
             </div>
-        </template>
+        </div>
     </div>
 </x-guest-layout>

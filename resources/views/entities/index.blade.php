@@ -145,10 +145,18 @@
         </div>
 
 
+        {{-- Grid Kartu Dossier --}}
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             @forelse($entities as $entity)
-            <div
-                class="bg-surface border-2 border-border-color hover:border-primary transition-colors duration-300 rounded-none group">
+            {{--
+            [PERUBAHAN #1]
+            - Menambahkan 'x-data="{ inView: false }"' untuk melacak status visibilitas.
+            - Menambahkan 'x-intersect:enter="inView = true"' -> Saat elemen masuk layar, set inView jadi true.
+            - Menambahkan 'x-intersect:leave="inView = false"' -> Saat elemen keluar layar, set inView jadi false.
+            - Menambahkan class 'entity-card' sebagai target untuk JavaScript.
+            --}}
+            <div x-data="{ inView: false }" x-intersect:enter="inView = true" x-intersect:leave="inView = false"
+                class="entity-card bg-surface border-2 border-border-color hover:border-primary transition-colors duration-300 rounded-none group">
                 <div class="px-4 py-2 border-b-2 border-border-color flex justify-between items-center">
                     <h3
                         class="font-bold text-lg text-primary group-hover:text-white tracking-widest font-mono truncate">
@@ -169,11 +177,12 @@
                             ? $thumbnail->path
                             : asset('uploads/' . $thumbnail->path);
                             @endphp
-                           <div class="aspect-square">
-                            <img src="{{ $imagePath }}" alt="{{ $entity->codename }}"
-                                 class="w-full h-full sm:h-28 object-cover object-center grayscale group-hover:grayscale-0 transition-all duration-300"
-                                 loading="lazy">
-                          </div>
+                            <div class="aspect-square">
+                                <img src="{{ $imagePath }}" alt="{{ $entity->codename }}"
+                                    :class="{ 'grayscale': !inView }"
+                                    class="w-full h-full object-cover transition-all duration-500 ease-in-out"
+                                    loading="lazy">
+                            </div>
                             @else
                             <div
                                 class="w-full h-32 bg-base flex items-center justify-center border border-dashed border-border-color">
@@ -205,11 +214,13 @@
                         onsubmit="return confirm('WARNING: Are you sure you want to terminate this entity record? This action cannot be undone.');">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="text-red-500 hover:text-red-400 text-sm font-mono whitespace-nowrap">TERMINATE</button>
+                        <button type="submit"
+                            class="text-red-500 hover:text-red-400 text-sm font-mono whitespace-nowrap">TERMINATE</button>
                     </form>
 
                     <a href="{{ route('entities.show', $entity) }}"
-                        class="text-primary hover:text-white text-sm font-bold font-mono whitespace-nowrap">ACCESS ENTITY</a>
+                        class="text-primary hover:text-white text-sm font-bold font-mono whitespace-nowrap">ACCESS
+                        ENTITY</a>
                 </div>
             </div>
             @empty

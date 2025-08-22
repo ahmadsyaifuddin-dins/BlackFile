@@ -55,6 +55,7 @@
                 position: fixed;
                 z-index: 50;
                 height: 100vh;
+                height: 100dvh;                
                 top: 0;
                 left: 0;
             }

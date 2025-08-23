@@ -20,10 +20,20 @@ class EncryptedContactController extends Controller
         // [PERUBAHAN] Logika untuk Director
         if (strtolower($user->role->name) === 'director') {
             // Ambil semua kontak dan kelompokkan berdasarkan user_id (pemiliknya)
-            $contactsByUser = EncryptedContact::with('user')->get()->groupBy('user_id');
+            $allContacts = EncryptedContact::with('user')->orderBy('codename', 'asc')->get();
 
-            // Kirim data ke view baru yang dirancang untuk Director
-            return view('encrypted_contacts.director_index', compact('contactsByUser'));
+            // Pisahkan koleksi menjadi dua: satu untuk Director, satu untuk yang lain
+            list($directorContacts, $agentContacts) = $allContacts->partition(function ($contact) {
+                return $contact->user_id === Auth::id();
+            });
+
+            // Kelompokkan kontak agen lain berdasarkan pemiliknya
+            $agentContactsByUser = $agentContacts->groupBy('user_id');
+
+            return view('encrypted_contacts.director_index', [
+                'directorContacts' => $directorContacts,
+                'agentContactsByUser' => $agentContactsByUser,
+            ]);
         }
 
         // Logika untuk agen biasa (tidak berubah)

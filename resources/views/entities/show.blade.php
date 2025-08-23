@@ -1,13 +1,7 @@
 <x-app-layout :title="$entity->codename ?? $entity->name">
     {{-- Header dengan style "Classified" --}}
     <div class="border-y-2 border-dashed border-primary/50 py-4 mb-8">
-        {{-- 
-            - Menambahkan 'md:justify-between' untuk memastikan jarak maksimal di desktop.
-            - Menambahkan 'md:items-center' untuk alignment vertikal yang lebih baik.
-        --}}
         <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-            
-            {{-- PERUBAHAN #2: Menambahkan 'min-w-0' agar judul bisa menyusut dan membungkus teksnya --}}
             <div class="min-w-0">
                 <p class="text-sm text-secondary font-mono">CLASSIFICATION LEVEL: {{ $entity->rank ?? 'UNKNOWN' }}</p>
                 <h1 class="text-xl md:text-3xl font-bold text-primary tracking-widest font-mono text-glow break-words">
@@ -15,15 +9,10 @@
                 </h1>
             </div>
             
-            {{-- PERUBAHAN #3: Menambahkan 'flex-shrink-0' untuk mencegah grup tombol ini menyusut --}}
             <div class="flex-shrink-0 flex flex-col md:flex-row md:items-center gap-3 w-full md:w-auto">
-                
-                {{-- Perbaikan: Menggunakan route('entities.index') lebih andal daripada url()->previous() --}}
                 <a href="{{ url()->previous() }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">&lt; BACK</a>
-                
                 <a href="{{ route('entities.edit', $entity) }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">> EDIT FILE</a>
                 
-                {{-- Tombol Hapus Baru --}}
                 <form action="{{ route('entities.destroy', $entity) }}" method="POST" class="w-full md:w-auto" onsubmit="return confirm('WARNING: Are you sure you want to terminate this entity record? This action cannot be undone.');">
                     @csrf
                     @method('DELETE')
@@ -44,14 +33,20 @@
                 <p class="text-secondary whitespace-pre-wrap leading-relaxed">{{ $entity->description }}</p>
             </div>
             
-            <div class="grid grid-cols-2 gap-4 font-mono">
+            {{-- 
+                [PERBAIKAN]
+                - Mengubah 'grid-cols-2' menjadi 'grid-cols-1 sm:grid-cols-2'.
+                - Ini akan membuat kolom-kolom ini bertumpuk di layar kecil.
+            --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono">
                 <div class="bg-surface border-l-2 border-border-color p-3">
                     <p class="text-xs text-secondary">SUBJECT_CATEGORY</p>
                     <p class="font-bold">{{ $entity->category }}</p>
                 </div>
                  <div class="bg-surface border-l-2 border-border-color p-3">
                     <p class="text-xs text-secondary">POINT_OF_ORIGIN</p>
-                    <p class="font-bold">{{ $entity->origin ?? 'Unknown' }}</p>
+                    {{-- [PERBAIKAN] Menambahkan 'break-words' untuk memecah teks panjang --}}
+                    <p class="font-bold break-words">{{ $entity->origin ?? 'Unknown' }}</p>
                 </div>
             </div>
 

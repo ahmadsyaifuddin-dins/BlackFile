@@ -3,7 +3,7 @@
     <div class="border-y-2 border-dashed border-primary/50 py-4 mb-8">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
             <div>
-                <h1 class="text-4xl font-bold text-primary tracking-widest font-mono text-glow">
+                <h1 class="text-base sm:text-4xl font-bold text-primary tracking-widest font-mono text-glow">
                     > ENCRYPTED VAULT
                 </h1>
                 <p class="text-sm text-secondary font-mono mt-1">Personal encrypted contact directory.</p>

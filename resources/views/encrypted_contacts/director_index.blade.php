@@ -1,7 +1,7 @@
 <x-app-layout title="Directorate Vault Oversight">
     {{-- Header Halaman --}}
     <div class="border-y-2 border-dashed border-primary/50 py-4 mb-8">
-        <h1 class="text-4xl font-bold text-primary tracking-widest font-mono text-glow">
+        <h1 class="text-base sm:text-4xl font-bold text-primary tracking-widest font-mono text-glow">
             > DIRECTORATE VAULT OVERSIGHT
         </h1>
         <p class="text-sm text-secondary font-mono mt-1">Full access to all encrypted contact files across the network.</p>
@@ -20,16 +20,16 @@
                         <thead class="border-b-2 border-border-color text-sm text-secondary">
                             <tr>
                                 <th class="p-3">CODENAME</th>
-                                <th class="p-3">CREATED AT</th>
-                                <th class="p-3 text-right">ACTIONS</th>
+                                <th class="p-3 whitespace-nowrap">CREATED AT</th>
+                                <th class="p-3 text-right whitespace-nowrap">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($contacts as $contact)
                                 <tr class="border-b border-border-color">
-                                    <td class="p-3 text-white font-bold">{{ $contact->codename }}</td>
-                                    <td class="p-3">{{ $contact->created_at->format('d-m-Y H:i') }}</td>
-                                    <td class="p-3 text-right">
+                                    <td class="p-3 text-white font-bold whitespace-nowrap">{{ $contact->codename }}</td>
+                                    <td class="p-3 whitespace-nowrap">{{ $contact->created_at->format('d-m-Y H:i') }}</td>
+                                    <td class="p-3 text-right whitespace-nowrap">
                                         {{-- Link ini akan langsung menampilkan data karena Director tidak perlu Master Password --}}
                                         <a href="{{ route('encrypted-contacts.show', $contact) }}" class="text-primary hover:text-white text-sm font-bold">VIEW FILE</a>
                                     </td>

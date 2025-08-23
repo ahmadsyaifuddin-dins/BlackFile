@@ -75,25 +75,29 @@ class EncryptedContactController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * [UPDATED] Display the specified resource with encrypted snippet.
      */
     public function show(EncryptedContact $encryptedContact)
     {
-        // Otorisasi: Pastikan pengguna adalah pemilik atau seorang Director.
         if (Auth::id() !== $encryptedContact->user_id && strtolower(Auth::user()->role->name) !== 'director') {
             abort(403, 'UNAUTHORIZED ACCESS');
         }
 
         $isDecrypted = false;
-        // Jika Director, data selalu terdekripsi.
-        // Jika agen, cek apakah sesi untuk kontak ini sudah "terbuka".
+        $encryptedSnippet = null;
+
         if (strtolower(Auth::user()->role->name) === 'director' || Session::get('decrypted_contact_' . $encryptedContact->id) === true) {
             $isDecrypted = true;
+            // [BARU] Ambil data mentah yang terenkripsi dari database
+            $rawEncryptedString = $encryptedContact->getRawOriginal('encrypted_payload');
+            // Buat cuplikan singkat untuk ditampilkan
+            $encryptedSnippet = substr($rawEncryptedString, 20, 50) . '...';
         }
 
         return view('encrypted_contacts.show', [
             'contact' => $encryptedContact,
             'isDecrypted' => $isDecrypted,
+            'encryptedSnippet' => $encryptedSnippet, // Kirim cuplikan ke view
         ]);
     }
 

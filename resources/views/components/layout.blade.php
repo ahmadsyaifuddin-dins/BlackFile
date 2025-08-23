@@ -17,7 +17,7 @@
 @props(['title', 'theme' => 'default']) {{-- [BARU] Menerima prop 'theme' dengan nilai default --}}
 
 <body class="font-mono antialiased text-secondary bg-base @if($theme === 'terminal') theme-terminal @endif"
-    data-theme="{{ session('theme', 'default') }}">
+    data-theme="{{ Auth::user()->settings['theme'] ?? 'default' }}">
 
     {{-- [BARU] Div untuk efek scanline hanya muncul jika tema adalah 'terminal' --}}
     @if($theme === 'terminal')

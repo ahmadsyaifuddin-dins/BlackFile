@@ -24,11 +24,13 @@ class User extends Authenticatable
         'codename',
         'email',
         'password',
+        'master_password',
         'role_id',
         'avatar',
         'specialization',
         'quotes',
         'last_active_at',
+        'settings', // <-- [BARU] Tambahkan ini
     ];
 
     /**
@@ -39,6 +41,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'master_password' => 'hashed',
     ];
 
     /**
@@ -49,6 +52,8 @@ class User extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
         'last_active_at' => 'datetime',
+        'master_password' => 'hashed',
+        'settings' => 'array',
     ];
 
     public function role()

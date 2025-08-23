@@ -41,9 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-    Route::post('/settings/language', [SettingController::class, 'updateLanguage'])->name('settings.updateLanguage');
-    Route::post('/settings/pagination', [SettingController::class, 'updatePagination'])->name('settings.updatePagination');
-    Route::post('/settings/theme', [SettingController::class, 'updateTheme'])->name('settings.updateTheme');
+    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 

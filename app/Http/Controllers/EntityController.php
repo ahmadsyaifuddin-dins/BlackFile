@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use App\Models\EntityImage; // <-- PENTING: Import EntityImage
+use Illuminate\Support\Facades\Auth;
 
 class EntityController extends Controller
 {
@@ -50,7 +51,7 @@ class EntityController extends Controller
         }
 
         // --- FILTER BARU: PAGINATION ---
-        $perPage = session('per_page', 9);
+        $perPage = Auth::user()->settings['per_page'] ?? 9;
 
         // 4. Setelah semua filter diterapkan, baru kita atur urutan dan paginasi.
         //    Hasilnya akan sesuai dengan permintaan Anda: data lama (ID kecil) di atas.

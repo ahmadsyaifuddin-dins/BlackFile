@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class SettingController extends Controller
@@ -36,7 +37,7 @@ class SettingController extends Controller
     public function updatePagination(Request $request)
     {
         $request->validate([
-            'per_page' => 'required|integer|in:6,9,18,27', // Hanya izinkan nilai ini
+            'per_page' => 'required|integer|in:6,9,18,27,54', // Hanya izinkan nilai ini
         ]);
 
         Session::put('per_page', $request->per_page);
@@ -44,17 +45,33 @@ class SettingController extends Controller
         return back()->with('success', 'Pagination setting has been updated.');
     }
 
-     /**
-     * [BARU] Memperbarui tema UI aplikasi.
+    /**
+     * [BARU & DISATUKAN] Memperbarui semua pengaturan pengguna.
      */
-    public function updateTheme(Request $request)
+    public function update(Request $request)
     {
         $request->validate([
+            'locale' => 'required|in:en,id',
+            'per_page' => 'required|integer|in:6,9,18,27,54',
             'theme' => 'required|string|in:default,amber,arctic,red',
         ]);
 
-        Session::put('theme', $request->theme);
+        $user = Auth::user();
+        
+        // Ambil pengaturan yang ada, atau buat array kosong jika belum ada
+        $settings = $user->settings ?? [];
 
-        return back()->with('success', 'UI theme has been updated.');
+        // Gabungkan pengaturan lama dengan yang baru dari form
+        $settings['locale'] = $request->locale;
+        $settings['per_page'] = $request->per_page;
+        $settings['theme'] = $request->theme;
+        
+        // Simpan kembali ke database
+        $user->settings = $settings;
+                
+        /** @var \App\Models\User $user */
+        $user->save();
+
+        return back()->with('success', 'Settings have been saved to your profile.');
     }
 }

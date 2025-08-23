@@ -31,6 +31,9 @@ class PrototypeController extends Controller
             });
         }
 
+        // --- FILTER BARU: PAGINATION ---
+        $perPage = Auth::user()->settings['per_page'] ?? 9;
+
         // Terapkan filter STATUS jika ada input 'status'
         if ($request->filled('status')) {
             $query->where('status', $request->input('status'));
@@ -50,7 +53,7 @@ class PrototypeController extends Controller
         $prototypes = $query->with('user')
             ->orderBy('created_at', 'desc') // [PERBAIKAN] Urutkan berdasarkan tanggal (terbaru dulu)
             ->orderBy('id', 'desc') // [PERBAIKAN] Jika ada tanggal yang sama, urutkan berdasarkan ID (terbaru dulu)
-            ->paginate(10);
+            ->paginate($perPage);
 
         // Kirim data ke view
         return view('prototypes.index', [

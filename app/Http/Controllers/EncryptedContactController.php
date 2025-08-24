@@ -88,29 +88,40 @@ class EncryptedContactController extends Controller
     }
 
     /**
-     * [UPDATED] Display the specified resource with encrypted snippet.
+     * [UPDATED] Display the specified resource with new Director logic.
      */
     public function show(EncryptedContact $encryptedContact)
     {
-        if (Auth::id() !== $encryptedContact->user_id && strtolower(Auth::user()->role->name) !== 'director') {
+        $currentUser = Auth::user();
+        
+        // Otorisasi awal (tidak berubah)
+        if ($currentUser->id !== $encryptedContact->user_id && strtolower($currentUser->role->name) !== 'director') {
             abort(403, 'UNAUTHORIZED ACCESS');
         }
 
         $isDecrypted = false;
         $encryptedSnippet = null;
 
-        if (strtolower(Auth::user()->role->name) === 'director' || Session::get('decrypted_contact_' . $encryptedContact->id) === true) {
+        // --- LOGIKA BARU UNTUK DIRECTOR ---
+        $isDirector = strtolower($currentUser->role->name) === 'director';
+        $isOwnContact = $currentUser->id === $encryptedContact->user_id;
+
+        // Kondisi untuk mendekripsi data:
+        // 1. Jika pengguna adalah Director DAN melihat kontak agen lain.
+        // 2. ATAU jika kontak (milik siapa pun, termasuk Director) sudah dibuka di session.
+        if (($isDirector && !$isOwnContact) || Session::get('decrypted_contact_' . $encryptedContact->id) === true) {
             $isDecrypted = true;
-            // [BARU] Ambil data mentah yang terenkripsi dari database
+        }
+
+        if ($isDecrypted) {
             $rawEncryptedString = $encryptedContact->getRawOriginal('encrypted_payload');
-            // Buat cuplikan singkat untuk ditampilkan
             $encryptedSnippet = substr($rawEncryptedString, 20, 50) . '...';
         }
 
         return view('encrypted_contacts.show', [
             'contact' => $encryptedContact,
             'isDecrypted' => $isDecrypted,
-            'encryptedSnippet' => $encryptedSnippet, // Kirim cuplikan ke view
+            'encryptedSnippet' => $encryptedSnippet,
         ]);
     }
 
@@ -137,14 +148,22 @@ class EncryptedContactController extends Controller
         return back()->with('error', 'Invalid Master Password. Access denied.');
     }
 
+    /**
+     * [UPDATED] Show the form for editing the specified resource with new Director logic.
+     */
     public function edit(EncryptedContact $encryptedContact)
     {
-        if (Auth::id() !== $encryptedContact->user_id && strtolower(Auth::user()->role->name) !== 'director') {
+        $currentUser = Auth::user();
+
+        if ($currentUser->id !== $encryptedContact->user_id && strtolower($currentUser->role->name) !== 'director') {
             abort(403, 'UNAUTHORIZED ACCESS');
         }
 
         $isDecrypted = false;
-        if (strtolower(Auth::user()->role->name) === 'director' || Session::get('decrypted_contact_' . $encryptedContact->id) === true) {
+        $isDirector = strtolower($currentUser->role->name) === 'director';
+        $isOwnContact = $currentUser->id === $encryptedContact->user_id;
+
+        if (($isDirector && !$isOwnContact) || Session::get('decrypted_contact_' . $encryptedContact->id) === true) {
             $isDecrypted = true;
         }
 

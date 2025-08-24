@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\File; // [PENTING] Tambahkan ini
 
 class EncryptedContactController extends Controller
 {
@@ -62,12 +63,24 @@ class EncryptedContactController extends Controller
 
         $request->validate([
             'codename' => 'required|string|max:255',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'payload' => 'nullable|array'
         ]);
+
+        $dbPath = null;
+        if ($request->hasFile('profile_photo')) {
+            $webRoot = dirname(base_path());
+            $destinationPath = $webRoot . '/uploads/contact_photos';
+            $imageFile = $request->file('profile_photo');
+            $imageName = uniqid() . '.' . $imageFile->extension();
+            $imageFile->move($destinationPath, $imageName);
+            $dbPath = 'uploads/contact_photos/' . $imageName;
+        }
 
         EncryptedContact::create([
             'user_id' => $user->id,
             'codename' => $request->codename,
+            'profile_photo_path' => $dbPath,
             'encrypted_payload' => $request->payload
         ]);
 
@@ -146,28 +159,39 @@ class EncryptedContactController extends Controller
      */
     public function update(Request $request, EncryptedContact $encryptedContact)
     {
-        // Otorisasi: Hanya pemilik yang bisa mengupdate. Director hanya bisa melihat.
-        if (Auth::id() !== $encryptedContact->user_id) {
-            abort(403);
-        }
+        if (Auth::id() !== $encryptedContact->user_id) { abort(403); }
 
         $request->validate([
             'codename' => 'required|string|max:255',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'payload' => 'nullable|array'
         ]);
 
-        $payload = $request->payload;
+        $dbPath = $encryptedContact->profile_photo_path;
+        if ($request->hasFile('profile_photo')) {
+            $webRoot = dirname(base_path());
+            
+            if ($dbPath && File::exists($webRoot . '/' . $dbPath)) {
+                File::delete($webRoot . '/' . $dbPath);
+            }
 
-        // Logika khusus untuk password: jangan simpan jika kosong
+            $destinationPath = $webRoot . '/uploads/contact_photos';
+            $imageFile = $request->file('profile_photo');
+            $imageName = uniqid() . '.' . $imageFile->extension();
+            $imageFile->move($destinationPath, $imageName);
+            $dbPath = 'uploads/contact_photos/' . $imageName;
+        }
+
+        $payload = $request->payload;
         if (empty($payload['sia_password'])) {
-            // Ambil password lama dari data yang sudah ada
             $oldPayload = $encryptedContact->encrypted_payload;
             $payload['sia_password'] = $oldPayload['sia_password'] ?? null;
         }
 
         $encryptedContact->update([
             'codename' => $request->codename,
-            'encrypted_payload' => $payload // Otomatis dienkripsi ulang oleh model
+            'profile_photo_path' => $dbPath,
+            'encrypted_payload' => $payload
         ]);
 
         return redirect()->route('encrypted-contacts.show', $encryptedContact)->with('success', 'Encrypted contact has been updated.');
@@ -178,13 +202,17 @@ class EncryptedContactController extends Controller
      */
     public function destroy(EncryptedContact $encryptedContact)
     {
-        // Otorisasi: Hanya pemilik yang bisa menghapus.
-        if (Auth::id() !== $encryptedContact->user_id) {
-            abort(403);
+        if (Auth::id() !== $encryptedContact->user_id) { abort(403); }
+
+        if ($encryptedContact->profile_photo_path) {
+            $webRoot = dirname(base_path());
+            $fullPath = $webRoot . '/' . $encryptedContact->profile_photo_path;
+            if (File::exists($fullPath)) {
+                File::delete($fullPath);
+            }
         }
 
         $encryptedContact->delete();
-
         return redirect()->route('encrypted-contacts.index')->with('success', 'Encrypted contact has been terminated.');
     }
 }

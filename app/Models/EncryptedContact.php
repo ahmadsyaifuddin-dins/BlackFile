@@ -18,6 +18,7 @@ class EncryptedContact extends Model
     protected $fillable = [
         'user_id',
         'codename',
+        'profile_photo_path',
         'encrypted_payload',
     ];
 

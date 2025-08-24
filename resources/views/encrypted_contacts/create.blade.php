@@ -14,10 +14,17 @@
     </div>
 
     <div class="bg-surface border border-border-color p-6 font-mono">
-        <form action="{{ route('encrypted-contacts.store') }}" method="POST" class="space-y-8">
+        <form action="{{ route('encrypted-contacts.store') }}" enctype="multipart/form-data" method="POST" class="space-y-8">
             @csrf
 
             {{-- Data Tidak Terenkripsi --}}
+
+            <div class="pt-6 border-t border-dashed border-border-color">
+                <label for="profile_photo" class="text-primary text-lg">> PROFILE PHOTO (OPTIONAL)</label>
+                <p class="text-xs text-secondary mb-2">Main visual identifier for this contact.</p>
+                <input type="file" name="profile_photo" id="profile_photo" class="block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary hover:file:bg-primary-hover cursor-pointer">
+            </div>
+
             <div>
                 <label for="codename" class="flex-shrink-0 text-primary text-lg">> CODENAME:</label>
                 <p class="text-xs text-secondary mb-2">This is the only unencrypted field, used for identification in lists.</p>

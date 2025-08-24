@@ -26,13 +26,34 @@
     @if($isDecrypted)
     {{-- TAMPILAN FORM EDIT --}}
     <div class="bg-surface border border-border-color p-6 font-mono">
-        <form action="{{ route('encrypted-contacts.update', $contact) }}" method="POST" class="space-y-8">
+        <form action="{{ route('encrypted-contacts.update', $contact) }}" enctype="multipart/form-data" method="POST"
+            class="space-y-8">
             @csrf
             @method('PUT')
 
             @php $payload = $contact->encrypted_payload; @endphp
 
             {{-- Data Tidak Terenkripsi --}}
+            {{-- ================================================================ --}}
+            {{-- == BAGIAN BARU: MANAJEMEN FOTO PROFIL == --}}
+            {{-- ================================================================ --}}
+            <div class="pt-6 border-t border-dashed border-border-color">
+                <h2 class="text-lg font-bold text-primary">> PROFILE PHOTO</h2>
+                @if($contact->profile_photo_path)
+                <div class="my-4">
+                    <p class="text-sm text-secondary mb-2">Current Photo:</p>
+                    <img src="{{ asset($contact->profile_photo_path) }}" alt="{{ $contact->codename }}"
+                        class="w-32 h-32 object-cover border-2 border-border-color">
+                </div>
+                @endif
+                <div>
+                    <label for="profile_photo" class="block text-sm text-secondary mb-2">{{ $contact->profile_photo_path
+                        ? 'Replace Photo (Optional):' : 'Upload Photo (Optional):' }}</label>
+                    <input type="file" name="profile_photo" id="profile_photo"
+                        class="block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary hover:file:bg-primary-hover cursor-pointer">
+                </div>
+            </div>
+
             <div>
                 <label for="codename" class="flex-shrink-0 text-primary text-lg">> CODENAME:</label>
                 <input type="text" name="codename" id="codename" required
@@ -57,12 +78,15 @@
                         <label for="payload_gender" class="block text-sm text-secondary mb-1">Gender:</label>
                         <select name="payload[gender]" id="payload_gender"
                             class="w-full bg-base border-2 border-border-color focus:border-primary focus:ring-0 text-white p-2">
-                            <option class="text-black" value="" @selected(empty($payload['gender']))>-- Select --</option>
-                            <option class="text-black" value="Male" @selected(old('payload.gender', $payload['gender'] ?? '' )=='Male' )>
+                            <option class="text-black" value="" @selected(empty($payload['gender']))>-- Select --
+                            </option>
+                            <option class="text-black" value="Male" @selected(old('payload.gender', $payload['gender']
+                                ?? '' )=='Male' )>
                                 Male</option>
-                            <option class="text-black" value="Female" @selected(old('payload.gender', $payload['gender'] ?? '' )=='Female'
-                                )>Female</option>
-                            <option class="text-black" value="Other" @selected(old('payload.gender', $payload['gender'] ?? '' )=='Other' )>
+                            <option class="text-black" value="Female" @selected(old('payload.gender', $payload['gender']
+                                ?? '' )=='Female' )>Female</option>
+                            <option class="text-black" value="Other" @selected(old('payload.gender', $payload['gender']
+                                ?? '' )=='Other' )>
                                 Other</option>
                         </select>
                     </div>

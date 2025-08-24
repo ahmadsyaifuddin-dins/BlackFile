@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArchiveController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthManual\LoginController;
 use App\Http\Controllers\AuthManual\RegisterController;
@@ -75,6 +76,8 @@ Route::middleware('auth')->group(function () {
     // --- RUTE BARU UNTUK BRANKAS KONTAK TERENKRIPSI ---
     Route::resource('encrypted-contacts', EncryptedContactController::class);
     Route::post('/encrypted-contacts/{encryptedContact}/unlock', [EncryptedContactController::class, 'unlock'])->name('encrypted-contacts.unlock');
+
+    Route::resource('archives', ArchiveController::class);
 
     // Grup rute yang dilindungi oleh role tertentu (Director atau Technician)
     // Menggunakan 'role' middleware kustom Anda

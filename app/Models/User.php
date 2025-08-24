@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Connection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -105,6 +106,11 @@ class User extends Authenticatable
     public function friends()
     {
         return $this->hasMany(Friend::class);
+    }
+
+    public function archives(): HasMany
+    {
+        return $this->hasMany(Archive::class);
     }
 
 

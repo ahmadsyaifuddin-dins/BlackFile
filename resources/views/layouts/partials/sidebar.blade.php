@@ -1,12 +1,14 @@
 <aside class="h-full bg-surface border-r bg-black border-border-color flex flex-col transition-transform duration-300 ease-in-out
            fixed inset-y-0 left-0 -translate-x-full md:relative md:translate-x-0 z-20 w-64"
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'">
-    <div class="relative p-4 text-2xl font-bold border-b border-border-color text-primary tracking-[.25em] flex-shrink-0 flex justify-between items-center">
+    <div
+        class="relative p-4 text-2xl font-bold border-b border-border-color text-primary tracking-[.25em] flex-shrink-0 flex justify-between items-center">
         <span>[B.F]</span>
-        
+
         {{-- Tombol Close Baru untuk Mobile --}}
         <button @click="sidebarOpen = false" class="md:hidden text-secondary hover:text-white focus:outline-none">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
         </button>
@@ -54,7 +56,7 @@
         : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Entities Database') }}</span>
         </a>
-        
+
         <a href="{{ route('encrypted-contacts.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
             {{ request()->routeIs('encrypted-contacts.*') 
         ? 'bg-surface-light text-primary border-l-4 border-primary' 
@@ -62,6 +64,12 @@
             <span>> {{ __('Kontak Terenkripsi') }}</span>
         </a>
 
+        <a href="{{ route('archives.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+         {{ request()->routeIs('archives.*') 
+             ? 'bg-surface-light text-primary border-l-4 border-primary' 
+             : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+            <span>> {{ __('Archives Vault') }}</span>
+        </a>
 
         <a href="{{ route('codex.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
             {{ request()->routeIs('codex.index') 
@@ -71,7 +79,8 @@
         </a>
 
         {{-- Tampilkan menu ini HANYA jika role user adalah Director dan Technician --}}
-        @if(strtolower(Auth::user()->role->name) === 'director' || strtolower(Auth::user()->role->name) === 'technician')
+        @if(strtolower(Auth::user()->role->name) === 'director' || strtolower(Auth::user()->role->name) ===
+        'technician')
         <a href="{{ route('register') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
         {{ request()->routeIs('register') 
             ? 'bg-surface-light text-primary border-l-4 border-primary' 
@@ -80,7 +89,7 @@
         </a>
         @endif
 
-         <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
            {{ request()->routeIs('logs.*') 
                 ? 'bg-surface-light border-l-4 border-primary' 
                 : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50 text-gray-700' }}">

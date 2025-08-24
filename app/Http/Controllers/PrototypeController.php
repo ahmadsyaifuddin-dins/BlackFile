@@ -74,23 +74,36 @@ class PrototypeController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validasi data yang masuk
-        $validatedData = $request->validate([
+        // Definisikan aturan validasi dan pesan kustom dalam dua array terpisah
+        $rules = [
             'name' => 'required|string|max:255',
             'codename' => 'required|string|max:50|unique:prototypes,codename',
-            'project_type' => 'required|string|max:255',
-            'status' => 'required|string|max:255',
+            'project_type' => 'required|string',
+            'status' => 'required|string',
             'description' => 'required|string',
-            'tech_stack' => 'nullable|string', // Validasi sebagai string, akan di-handle di bawah
+            'tech_stack' => 'nullable|string',
             'repository_url' => 'nullable|url',
             'live_url' => 'nullable|url',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'cover_image_url' => 'nullable|url', // [BARU] Validasi untuk URL
+            'cover_image_url' => 'nullable|url',
             'icon' => 'nullable|image|mimes:png,jpg,jpeg,svg,webp,gif|max:1024',
-            'icon_url' => 'nullable|url', // [BARU] Validasi untuk URL ikon
+            'icon_url' => 'nullable|url',
             'start_date' => 'nullable|date_format:Y-m-d\TH:i',
             'completed_date' => 'nullable|date_format:Y-m-d\TH:i|after_or_equal:start_date',
-        ]);
+        ];
+
+        // [PERBAIKAN] Definisikan pesan error yang lebih ramah pengguna
+        $messages = [
+            'codename.unique' => 'The codename has already been taken.', // [PERBAIKAN 3] Tambahkan pesan kustom untuk unique
+            'cover_image.max' => 'Ukuran file cover tidak boleh melebihi 2MB (2048 KB).',
+            'icon.max'        => 'Ukuran file ikon tidak boleh melebihi 1.5MB (1524 KB).',
+            '*.image'         => 'File yang diunggah harus gambar.',
+            '*.mimes'         => 'Format gambar tidak didukung.',
+            '*.url'           => 'Format URL tidak valid.',
+        ];
+
+        // Jalankan validasi dengan aturan dan pesan kustom
+        $validatedData = $request->validate($rules, $messages);
 
         // [LOGIKA BARU] Handle dua opsi gambar
         if ($request->hasFile('cover_image')) {
@@ -134,31 +147,37 @@ class PrototypeController extends Controller
         return view('prototypes.show', compact('prototype'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Prototype $prototype)
     {
-        // Otorisasi (opsional, tapi sangat direkomendasikan)
-        // $this->authorize('update', $prototype);
-
-        $validatedData = $request->validate([
+        // [PERBAIKAN 1] Validasi harus menjadi langkah PERTAMA di dalam method.
+        $rules = [
             'name' => 'required|string|max:255',
-            // Pastikan codename unik, KECUALI untuk dirinya sendiri
+            // [PERBAIKAN 2] Tambahkan ID prototipe agar aturan 'unique' mengabaikan dirinya sendiri.
             'codename' => 'required|string|max:50|unique:prototypes,codename,' . $prototype->id,
-            'project_type' => 'required|string|max:255',
-            'status' => 'required|string|max:255',
+            'project_type' => 'required|string',
+            'status' => 'required|string',
             'description' => 'required|string',
             'tech_stack' => 'nullable|string',
             'repository_url' => 'nullable|url',
             'live_url' => 'nullable|url',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // [BARU] Validasi gambar
-            'cover_image_url' => 'nullable|url', // [BARU]
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'cover_image_url' => 'nullable|url',
             'icon' => 'nullable|image|mimes:png,jpg,jpeg,svg,webp,gif|max:1024',
-            'icon_url' => 'nullable|url', // [BARU] Validasi untuk URL ikon
+            'icon_url' => 'nullable|url',
             'start_date' => 'nullable|date_format:Y-m-d\TH:i',
             'completed_date' => 'nullable|date_format:Y-m-d\TH:i|after_or_equal:start_date',
-        ]);
+        ];
+
+        $messages = [
+            'codename.unique' => 'The codename has already been taken.', // [PERBAIKAN 3] Tambahkan pesan kustom untuk unique
+            'cover_image.max' => 'Ukuran file cover tidak boleh melebihi 2MB (2048 KB).',
+            'icon.max'        => 'Ukuran file ikon tidak boleh melebihi 1MB (1024 KB).',
+            '*.image'         => 'File yang diunggah harus gambar.',
+            '*.mimes'         => 'Format gambar tidak didukung.',
+            '*.url'           => 'Format URL tidak valid.',
+        ];
+
+        $validatedData = $request->validate($rules, $messages);
 
         // [LOGIKA BARU] Handle update dengan dua opsi gambar
         if ($request->hasFile('cover_image')) {

@@ -17,14 +17,25 @@
                     </button>
                 </div>
 
-                <x-prototypes.filter-section :projectTypes="$projectTypes" :users="$users" />
-
-                @if (session('success'))
-                <div class="bg-green-800 border border-green-600 text-green-200 px-4 py-3 rounded relative mb-4"
+                @if(session('success'))
+                <div class="mb-4 bg-primary/10 border-l-4 border-primary text-primary-hover p-4 rounded-r-lg"
                     role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
+                    <p>{{ session('success') }}</p>
                 </div>
                 @endif
+
+                @if($errors->any())
+                <div class="mb-4 bg-red-900/50 border-l-4 border-red-500 text-red-300 p-4 rounded-r-lg" role="alert">
+                    <p class="font-bold">> Data Input Anomaly Detected:</p>
+                    <ul class="mt-2 list-disc list-inside text-sm">
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
+                <x-prototypes.filter-section :projectTypes="$projectTypes" :users="$users" />
 
                 <div class="bg-gray-800 shadow-sm sm:rounded-lg">
                     <div class="p-2 sm:p-6 bg-gray-900 border-b border-gray-700">
@@ -108,7 +119,8 @@
                                                         {{ $prototype->status }}
                                                     </span>
                                                 </td>
-                                                {{-- <td class="px-4 py-4 whitespace-nowrap text-sm leading-5 text-gray-400">
+                                                {{-- <td
+                                                    class="px-4 py-4 whitespace-nowrap text-sm leading-5 text-gray-400">
                                                     {{ $prototype->updated_at->format('Y-m-d H:i') }}
                                                 </td> --}}
                                                 <td class="px-4 py-4 whitespace-nowrap text-center text-sm font-medium">
@@ -207,7 +219,7 @@
         </div>
 
         {{-- The modal component remains unchanged --}}
-        <x-prototype-form-modal />
+        <x-prototype-form-modal :show-errors="$errors->any()" />
 
         <x-confirmation-modal />
     </div>

@@ -54,14 +54,7 @@
         : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Entities Database') }}</span>
         </a>
-
-        <a href="{{ route('codex.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-            {{ request()->routeIs('codex.index') 
-        ? 'bg-surface-light text-primary border-l-4 border-primary' 
-        : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
-            <span>> {{ __('Codex') }}</span>
-        </a>
-
+        
         <a href="{{ route('encrypted-contacts.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
             {{ request()->routeIs('encrypted-contacts.*') 
         ? 'bg-surface-light text-primary border-l-4 border-primary' 
@@ -69,11 +62,12 @@
             <span>> {{ __('Kontak Terenkripsi') }}</span>
         </a>
 
-        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-           {{ request()->routeIs('logs.*') 
-                ? 'bg-surface-light border-l-4 border-primary' 
-                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50 text-gray-700' }}">
-            <span>> {{ __('Activity Logs') }}</span>
+
+        <a href="{{ route('codex.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+            {{ request()->routeIs('codex.index') 
+        ? 'bg-surface-light text-primary border-l-4 border-primary' 
+        : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+            <span>> {{ __('Codex') }}</span>
         </a>
 
         {{-- Tampilkan menu ini HANYA jika role user adalah Director dan Technician --}}
@@ -85,6 +79,13 @@
             <span>> {{ __('Register Agent') }}</span>
         </a>
         @endif
+
+         <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('logs.*') 
+                ? 'bg-surface-light border-l-4 border-primary' 
+                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50 text-gray-700' }}">
+            <span>> {{ __('Activity Logs') }}</span>
+        </a>
 
         <a href="{{ route('settings.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
         {{ request()->routeIs('settings.index') 

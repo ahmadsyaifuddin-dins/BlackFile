@@ -51,7 +51,7 @@ class PrototypeController extends Controller
 
         // Lanjutkan query dengan eager loading, urutan, dan paginasi
         $prototypes = $query->with('user')
-            ->orderBy('created_at', 'desc') // [PERBAIKAN] Urutkan berdasarkan tanggal (terbaru dulu)
+            ->orderBy('start_date', 'desc') // [PERBAIKAN] Urutkan berdasarkan tanggal (terbaru dulu)
             ->orderBy('id', 'desc') // [PERBAIKAN] Jika ada tanggal yang sama, urutkan berdasarkan ID (terbaru dulu)
             ->paginate($perPage);
 

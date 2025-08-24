@@ -5,73 +5,74 @@
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-xl sm:text-2xl font-bold text-primary">[ EDIT_ENTRY ]</h1>
             <a href="{{ route('archives.index') }}" 
-               class="text-sm text-secondary hover:text-primary">
+               class="text-sm text-secondary hover:text-primary transition-colors duration-200">
                 &lt;-- Back to Vault
             </a>
         </div>
 
-        <div class="bg-surface border border-border rounded-md p-6">
-            {{-- PERUBAHAN PENTING PADA FORM --}}
-            <form action="{{ route('archives.update', $archive) }}" method="POST" class="space-y-6">
+        {{-- Kontainer Form Utama --}}
+        <div class="bg-surface border border-border rounded-md shadow-lg">
+            <form action="{{ route('archives.update', $archive) }}" method="POST">
                 @csrf
-                @method('PUT') {{-- Beritahu Laravel ini adalah request UPDATE --}}
+                @method('PUT')
 
-                {{-- Input Nama --}}
-                <div>
-                    <label for="name" class="block text-sm font-medium text-secondary">> Entry Name</label>
-                    {{-- Isi value dengan data yang ada --}}
-                    <input type="text" name="name" id="name" value="{{ old('name', $archive->name) }}"
-                           class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary"
-                           required>
-                    @error('name') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
-                </div>
+                <div class="p-6 space-y-6">
+                    {{-- Input Nama --}}
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-secondary">> Entry Name</label>
+                        <input type="text" name="name" id="name" value="{{ old('name', $archive->name) }}"
+                               class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary"
+                               required>
+                        @error('name') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
 
-                {{-- Input Deskripsi --}}
-                <div>
-                    <label for="description" class="block text-sm font-medium text-secondary">> Description (Optional)</label>
-                     {{-- Isi value dengan data yang ada --}}
-                    <textarea name="description" id="description" rows="3"
-                              class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary">{{ old('description', $archive->description) }}</textarea>
-                    @error('description') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
-                </div>
+                    {{-- Input Deskripsi --}}
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-secondary">> Description (Optional)</label>
+                        <textarea name="description" id="description" rows="4"
+                                  class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary">{{ old('description', $archive->description) }}</textarea>
+                        @error('description') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-secondary">> Visibility</label>
-                    <div class="mt-2 flex items-center">
-                        <input type="checkbox" name="is_public" id="is_public" value="1"
-                               @checked(old('is_public', $archive->is_public))
-                               class="h-4 w-4 rounded border-border bg-base text-primary focus:ring-primary">
-                        <label for="is_public" class="ml-2 block text-sm text-secondary">
-                            Allow other agents to see this archive
+                    {{-- Input Visibilitas (Desain Baru) --}}
+                    <div class="bg-gray-900 border border-border rounded-md p-4 flex items-center justify-between">
+                        <div>
+                            <label for="is_public" class="font-medium text-primary">Public Access</label>
+                            <p class="text-xs text-secondary mt-1">Allow other agents to see this archive.</p>
+                        </div>
+                        <label for="is_public" class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="is_public" id="is_public" value="1" class="sr-only peer" @checked(old('is_public', $archive->is_public))>
+                            <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary peer-focus:ring-offset-2 peer-focus:ring-offset-surface rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gray-700"></div>
                         </label>
                     </div>
+
+                    {{-- Tampilkan field 'links' atau Info File --}}
+                    @if($archive->type === 'url')
+                        <div>
+                            <label for="links" class="block text-sm font-medium text-secondary">> URL(s)</label>
+                            <textarea name="links" id="links" rows="10"
+                                      class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary"
+                                      placeholder="Satu link per baris untuk tautan multi-bagian...">{{ old('links', implode("\n", $archive->links)) }}</textarea>
+                            <p class="mt-1 text-xs text-secondary">For multi-part links, place each link on a new line.</p>
+                            @error('links') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+                        </div>
+                    @else
+                        {{-- Panel Info File (Desain Baru) --}}
+                        <div>
+                            <label class="block text-sm font-medium text-secondary">> File</label>
+                            <div class="mt-1 flex items-center gap-3 p-3 bg-base border border-border rounded-md text-secondary text-sm">
+                                <svg class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                <span>File cannot be changed. To replace, delete this entry and create a new one.</span>
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
-                {{-- Tampilkan field 'links' hanya jika tipenya 'url' --}}
-                @if($archive->type === 'url')
-                    <div>
-                        <label for="links" class="block text-sm font-medium text-secondary">> URL(s)</label>
-                        {{-- Isi value dengan data yang ada (gabungkan array jadi string) --}}
-                        <textarea name="links" id="links" rows="4"
-                                  class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary"
-                                  placeholder="Satu link per baris untuk tautan multi-bagian...">{{ old('links', implode("\n", $archive->links)) }}</textarea>
-                        <p class="mt-1 text-xs text-secondary">For multi-part links, place each link on a new line.</p>
-                        @error('links') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
-                    </div>
-                @else
-                    {{-- Beri info bahwa file tidak bisa diubah --}}
-                    <div>
-                        <label class="block text-sm font-medium text-secondary">> File</label>
-                        <div class="mt-1 p-3 bg-base border border-border rounded-md text-secondary text-sm">
-                            File tidak bisa diganti. Untuk mengganti file, hapus entri ini dan buat yang baru.
-                        </div>
-                    </div>
-                @endif
-                
-                {{-- Tombol Submit --}}
-                <div class="pt-4 text-right">
+                {{-- Tombol Submit di Footer --}}
+                <div class="bg-surface-light border-t border-border px-6 py-4 text-right rounded-b-md">
                     <button type="submit"
-                            class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-base bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-base">
+                            class="inline-flex items-center justify-center gap-2 py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-base bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-surface-light">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
                         UPDATE_ENTRY
                     </button>
                 </div>

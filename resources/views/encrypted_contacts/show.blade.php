@@ -103,6 +103,30 @@
             </div>
         </div>
 
+        {{-- ================================================================ --}}
+        {{-- == BAGIAN BARU: MENAMPILKAN BIDANG DATA DINAMIS == --}}
+        {{-- ================================================================ --}}
+        @if(!empty($payload['custom_fields']))
+        <div class="pt-4 border-t border-dashed border-border-color">
+            <h3 class="text-md font-bold text-primary">> ADDITIONAL DATA FIELDS</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4 text-sm">
+                @foreach($payload['custom_fields'] as $field)
+                <div>
+                    {{-- Tampilkan label, pastikan tidak error jika label kosong --}}
+                    <span class="text-secondary uppercase">{{ $field['label'] ?? 'CUSTOM FIELD' }}:</span>
+
+                    {{-- Tampilkan nilai yang sudah didekripsi atau disembunyikan --}}
+                    <span x-show="unhidden" class="text-white font-bold break-words">
+                        {{-- Jika tipenya password, tetap tampilkan, karena sudah di-unhide --}}
+                        {{ $field['value'] ?? 'N/A' }}
+                    </span>
+                    <span x-show="!unhidden" class="text-gray-500 font-mono">**********</span>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
         {{-- Tampilan data terenkripsi mentah --}}
         <div x-show="!unhidden" class="pt-4 border-t border-border-color" style="display: none;">
             <p class="text-secondary text-xs">RAW ENCRYPTED DATA SNIPPET:</p>

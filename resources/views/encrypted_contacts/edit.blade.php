@@ -31,7 +31,14 @@
             @csrf
             @method('PUT')
 
-            @php $payload = $contact->encrypted_payload; @endphp
+            {{-- [PERBAIKAN] Variabel didefinisikan di sini, di luar form --}}
+            @php
+            $payload = $contact->encrypted_payload;
+            $customFields = old('payload.custom_fields', $payload['custom_fields'] ?? []);
+            if (!is_array($customFields)) {
+            $customFields = [];
+            }
+            @endphp
 
             {{-- Data Tidak Terenkripsi --}}
             {{-- ================================================================ --}}
@@ -150,15 +157,72 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="flex justify-between items-center pt-4">
-                {{-- Tombol Simpan --}}
-                <button type="submit"
-                    class="bg-primary text-primary font-bold py-3 px-8 hover:bg-primary-hover transition-colors tracking-widest cursor-pointer">
-                    SAVE & RE-ENCRYPT
-                </button>
-            </div>
+                {{-- ================================================================ --}}
+                {{-- == FITUR BARU: BIDANG DATA DINAMIS == --}}
+                {{-- ================================================================ --}}
+                <div x-data="{ customFields: {{ json_encode($customFields) }} }"
+                    class="pt-6 border-t-2 border-dashed border-border-color space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-lg font-bold text-primary">> ADDITIONAL DATA FIELDS</h2>
+                        <button type="button" @click="customFields.push({ type: 'text', label: '', value: '' })"
+                            class="bg-surface-light border border-border-color text-secondary px-3 py-1 text-xs hover:border-primary hover:text-primary">
+                            + ADD FIELD
+                        </button>
+                    </div>
+
+                    <template x-for="(field, index) in customFields" :key="index">
+                        <div
+                            class="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 border border-border-color bg-base items-end">
+                            <!-- Tipe Bidang -->
+                            <div>
+                                <label :for="'field_type_' + index" class="block text-sm text-secondary mb-1">Field
+                                    Type</label>
+                                <select :name="'payload[custom_fields][' + index + '][type]'" x-model="field.type"
+                                    class="w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-0 text-white p-2">
+                                    <option class="text-black" value="text">Text</option>
+                                    <option class="text-black" value="password">Password</option>
+                                    <option class="text-black" value="url">URL</option>
+                                    <option class="text-black" value="date">Date</option>
+                                </select>
+                            </div>
+                            <!-- Label Bidang -->
+                            <div>
+                                <label :for="'field_label_' + index" class="block text-sm text-secondary mb-1">Field
+                                    Label</label>
+                                <input type="text" :name="'payload[custom_fields][' + index + '][label]'"
+                                    x-model="field.label" placeholder="e.g., PIN Koper"
+                                    class="w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-0 text-white p-2">
+                            </div>
+                            <!-- Nilai Bidang -->
+                            <div>
+                                <label :for="'field_value_' + index" class="block text-sm text-secondary mb-1">Field
+                                    Value</label>
+                                <div class="flex items-center gap-2">
+                                    <input
+                                        :type="field.type === 'password' ? 'password' : (field.type === 'date' ? 'date' : 'text')"
+                                        :name="'payload[custom_fields][' + index + '][value]'" x-model="field.value"
+                                        class="w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-0 text-white p-2">
+                                    <button type="button" @click="customFields.splice(index, 1)"
+                                        class="text-red-500 hover:text-red-400 p-2 bg-surface border border-border-color">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="flex justify-between items-center pt-4">
+                    {{-- Tombol Simpan --}}
+                    <button type="submit"
+                        class="bg-primary text-primary font-bold py-3 px-8 hover:bg-primary-hover transition-colors tracking-widest cursor-pointer">
+                        SAVE & RE-ENCRYPT
+                    </button>
+                </div>
         </form>
     </div>
     @else

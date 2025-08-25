@@ -88,7 +88,7 @@
                             @if($prototype->duration_in_days !== null)
                             <div>
                                 <p class="text-gray-500">> DURATION</p>
-                                <p>{{ $prototype->duration_in_days }} Days</p>
+                                <p>{{ $prototype->duration_in_days }} {{ __('Days') }}</p>
                             </div>
                             @endif
 
@@ -100,35 +100,35 @@
                                 @case('legendary')
                                 {{-- Efek Shining/Shimmer untuk tier tertinggi --}}
                                 <p class="font-bold text-transparent bg-clip-text animate-shimmer">
-                                    {{ $prototype->achievement['name'] }}
+                                    {{ __($prototype->achievement['name']) }}
                                 </p>
                                 @break
 
                                 @case('excellent')
                                 {{-- Efek Glow Hijau --}}
                                 <p class="font-bold text-green-400 text-glow-green">
-                                    {{ $prototype->achievement['name'] }}
+                                    {{ __($prototype->achievement['name']) }}
                                 </p>
                                 @break
 
                                 @case('standard')
                                 {{-- Efek Glow Cyan --}}
                                 <p class="font-bold text-cyan-400 text-glow-cyan">
-                                    {{ $prototype->achievement['name'] }}
+                                    {{ __($prototype->achievement['name']) }}
                                 </p>
                                 @break
 
                                 @case('longterm')
                                 {{-- Warna Solid tanpa efek --}}
                                 <p class="font-bold text-indigo-400">
-                                    {{ $prototype->achievement['name'] }}
+                                    {{ __($prototype->achievement['name']) }}
                                 </p>
                                 @break
 
                                 @default
                                 {{-- Tampilan default tanpa efek --}}
                                 <p class="font-bold text-gray-300">
-                                    {{ $prototype->achievement['name'] }}
+                                    {{ __($prototype->achievement['name']) }}
                                 </p>
                                 @endswitch
                             </div>

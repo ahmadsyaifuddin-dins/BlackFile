@@ -55,35 +55,25 @@ class Prototype extends Model
      * Bisa diakses di Blade dengan: $prototype->achievement
      */
     public function getAchievementAttribute(): ?array
-    {
-        $days = $this->duration_in_days;
-    
-        // [PERBAIKAN] Cek apakah status adalah salah satu dari tiga ini
-        $validStatuses = ['COMPLETED', 'ON_HOLD', 'ARCHIVED'];
-        if (is_null($days) || !in_array($this->status, $validStatuses)) {
-            return null;
-        }
-    
-        // [PERBAIKAN] Kembalikan nama dan TIER, bukan kelas spesifik
-        return match (true) {
-            // Tier Legendaris / Sangat Cepat
-            $days <= 3   => ['name' => 'Blitz Operation',       'tier' => 'legendary'],
-            $days <= 5   => ['name' => 'Rapid Deployment',      'tier' => 'legendary'],
-            
-            // Tier Unggul / Cepat
-            $days <= 7   => ['name' => 'Efficient Execution',   'tier' => 'excellent'],
-            $days <= 12  => ['name' => 'Calculated Advance',    'tier' => 'excellent'],
-            
-            // Tier Standar / Efektif
-            $days <= 20  => ['name' => 'Sustained Effort',      'tier' => 'standard'],
-            $days <= 31  => ['name' => 'Month-Long Campaign',   'tier' => 'standard'],
-            
-            // Tier Jangka Panjang / Maraton
-            $days <= 62  => ['name' => 'Strategic Siege',       'tier' => 'longterm'],
-            $days <= 93  => ['name' => 'Generational Strategy', 'tier' => 'longterm'],
-            
-            // Tier Epik / Sangat Lama
-            default      => ['name' => 'The Grand Saga',        'tier' => 'epic'],
-        };
+{
+    $days = $this->duration_in_days;
+
+    $validStatuses = ['COMPLETED', 'ON_HOLD', 'ARCHIVED'];
+    if (is_null($days) || !in_array($this->status, $validStatuses)) {
+        return null;
+    }
+
+    // [PERBAIKAN] Kembalikan KUNCI terjemahan, bukan teks langsung
+    return match (true) {
+        $days <= 3   => ['name' => 'achievements.blitz_operation', 'tier' => 'legendary'],
+        $days <= 5   => ['name' => 'achievements.rapid_deployment', 'tier' => 'legendary'],
+        $days <= 7   => ['name' => 'achievements.efficient_execution', 'tier' => 'excellent'],
+        $days <= 12  => ['name' => 'achievements.calculated_advance', 'tier' => 'excellent'],
+        $days <= 20  => ['name' => 'achievements.sustained_effort', 'tier' => 'standard'],
+        $days <= 31  => ['name' => 'achievements.month_long_campaign', 'tier' => 'standard'],
+        $days <= 62  => ['name' => 'achievements.strategic_siege', 'tier' => 'longterm'],
+        $days <= 93  => ['name' => 'achievements.generational_strategy', 'tier' => 'longterm'],
+        default      => ['name' => 'achievements.the_grand_saga', 'tier' => 'epic'],
+    };
     }
 }

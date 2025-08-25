@@ -10,7 +10,7 @@
             }
         })"
         {{-- [DIUBAH] Jadikan container ini 'relative' untuk menjadi jangkar bagi animasi --}}
-        class="relative min-h-[380px]"
+        class="relative min-h-[250px]"
     >
         <!-- Form Login -->
         {{-- [DIUBAH] Form sekarang menjadi transparan saat status berubah, bukan menghilang --}}

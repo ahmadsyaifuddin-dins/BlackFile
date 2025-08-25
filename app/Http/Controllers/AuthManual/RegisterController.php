@@ -17,7 +17,7 @@ class RegisterController extends Controller
         // Karena seorang Director seharusnya tidak bisa membuat Director lain
         $roles = Role::where('name', '!=', 'Director')->get();
 
-        return view('auth.register-agent', compact('roles'));
+        return view('auth.register', compact('roles'));
     }
 
     public function register(Request $request)

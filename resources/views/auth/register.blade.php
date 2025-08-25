@@ -26,7 +26,7 @@
             </div>
         @endif
         
-        <form method="POST" action="{{ route('register.agent') }}" class="space-y-6">
+        <form method="POST" action="{{ route('register') }}" class="space-y-6">
             @csrf
             
             {{-- Menggunakan Grid untuk layout responsif --}}

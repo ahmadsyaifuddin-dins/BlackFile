@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Connection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany; // Tambahkan jika belum ada
 
 class User extends Authenticatable
 {
@@ -113,6 +114,14 @@ class User extends Authenticatable
         return $this->hasMany(Archive::class);
     }
 
+    /**
+     * The archives that the user has favorited.
+     */
+    public function favorites(): BelongsToMany
+    {
+        return $this->belongsToMany(Archive::class, 'archive_user', 'user_id', 'archive_id')
+            ->withTimestamps();
+    }
 
     /**
      * [BARU & MEMPERBAIKI MASALAH]

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Archive extends Model
 {
@@ -20,6 +21,8 @@ class Archive extends Model
         'name',
         'description',
         'type',
+        'category', // <-- Tambahkan ini
+        'category_other', 
         'is_public', // <-- Tambahkan ini
         'file_path',
         'mime_type',
@@ -43,5 +46,21 @@ class Archive extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * The tags that belong to the Archive.
+     */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
+     /**
+     * The users that have favorited this archive.
+     */
+    public function favoritedBy(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'archive_user', 'archive_id', 'user_id');
     }
 }

@@ -21,15 +21,59 @@
                         <input type="text" name="name" id="name" x-model="formData.name"
                             class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary"
                             required>
-                        <template x-if="errors.name"><p class="mt-1 text-xs text-red-500" x-text="errors.name[0]"></p></template>
+                        <template x-if="errors.name">
+                            <p class="mt-1 text-xs text-red-500" x-text="errors.name[0]"></p>
+                        </template>
                     </div>
 
                     {{-- Input Deskripsi --}}
                     <div>
-                        <label for="description" class="block text-sm font-medium text-secondary">> Description (Optional)</label>
+                        <label for="description" class="block text-sm font-medium text-secondary">> Description
+                            (Optional)</label>
                         <textarea name="description" id="description" rows="4" x-model="formData.description"
                             class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary"></textarea>
-                        <template x-if="errors.description"><p class="mt-1 text-xs text-red-500" x-text="errors.description[0]"></p></template>
+                        <template x-if="errors.description">
+                            <p class="mt-1 text-xs text-red-500" x-text="errors.description[0]"></p>
+                        </template>
+                    </div>
+
+                    {{-- Input Kategori --}}
+                    <div>
+                        <label for="category" class="block text-sm font-medium text-secondary">> Category</label>
+                        <select name="category" id="category" x-model="formData.category"
+                            class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary">
+                            <option value="">-- Select Category --</option>
+                            @foreach($categories as $category)
+                            <option value="{{ $category }}">{{ $category }}</option>
+                            @endforeach
+                        </select>
+                        <template x-if="errors.category">
+                            <p class="mt-1 text-xs text-red-500" x-text="errors.category[0]"></p>
+                        </template>
+                    </div>
+
+                    {{-- Input Kategori Lainnya (Kondisional) --}}
+                    <div x-show="formData.category === 'Other'" x-transition>
+                        <label for="category_other" class="block text-sm font-medium text-secondary">> Specify Other
+                            Category</label>
+                        <input type="text" name="category_other" id="category_other" x-model="formData.category_other"
+                            class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary"
+                            placeholder="e.g., File Konfigurasi Server">
+                        <template x-if="errors.category_other">
+                            <p class="mt-1 text-xs text-red-500" x-text="errors.category_other[0]"></p>
+                        </template>
+                    </div>
+
+                    {{-- Input Tags --}}
+                    <div>
+                        <label for="tags" class="block text-sm font-medium text-secondary">> Tags (pisahkan dengan
+                            koma)</label>
+                        <input type="text" name="tags" id="tags" x-model="formData.tags"
+                            class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary"
+                            placeholder="contoh: laporan, penting, q4">
+                        <template x-if="errors.tags">
+                            <p class="mt-1 text-xs text-red-500" x-text="errors.tags[0]"></p>
+                        </template>
                     </div>
 
                     {{-- Input Visibilitas --}}
@@ -39,8 +83,10 @@
                             <p class="text-xs text-secondary mt-1">Allow other agents to see this archive.</p>
                         </div>
                         <label for="is_public" class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="is_public" id="is_public" value="1" class="sr-only peer" x-model="formData.is_public">
-                            <div class="w-11 h-6 bg-gray-800 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary peer-focus:ring-offset-2 peer-focus:ring-offset-surface rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+                            <input type="checkbox" name="is_public" id="is_public" value="1" class="sr-only peer"
+                                x-model="formData.is_public">
+                            <div
+                                class="w-11 h-6 bg-gray-800 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary peer-focus:ring-offset-2 peer-focus:ring-offset-surface rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
                             </div>
                         </label>
                     </div>
@@ -51,11 +97,14 @@
                             <legend class="block text-sm font-medium text-secondary mb-2">> Entry Type</legend>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {{-- Pilihan File Upload --}}
-                                <label class="relative flex p-4 border rounded-md cursor-pointer transition-colors duration-200"
+                                <label
+                                    class="relative flex p-4 border rounded-md cursor-pointer transition-colors duration-200"
                                     :class="formData.type === 'file' ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'">
-                                    <input type="radio" name="type" value="file" x-model="formData.type" class="sr-only">
+                                    <input type="radio" name="type" value="file" x-model="formData.type"
+                                        class="sr-only">
                                     <div class="flex items-center gap-4">
-                                        <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                         </svg>
@@ -66,11 +115,13 @@
                                     </div>
                                 </label>
                                 {{-- Pilihan URL --}}
-                                <label class="relative flex p-4 border rounded-md cursor-pointer transition-colors duration-200"
+                                <label
+                                    class="relative flex p-4 border rounded-md cursor-pointer transition-colors duration-200"
                                     :class="formData.type === 'url' ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'">
                                     <input type="radio" name="type" value="url" x-model="formData.type" class="sr-only">
                                     <div class="flex items-center gap-4">
-                                        <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                                         </svg>
@@ -85,12 +136,17 @@
 
                         {{-- Input untuk File --}}
                         <div x-show="formData.type === 'file'" x-transition>
-                            <label for="archive_file" class="block text-sm font-medium text-secondary">> Select File</label>
-                            <div class="mt-1 p-4 w-full bg-base border-2 border-dashed border-border rounded-md flex justify-center items-center">
-                                <input type="file" name="archive_file" id="archive_file" @change="handleFileSelect($event)"
+                            <label for="archive_file" class="block text-sm font-medium text-secondary">> Select
+                                File</label>
+                            <div
+                                class="mt-1 p-4 w-full bg-base border-2 border-dashed border-border rounded-md flex justify-center items-center">
+                                <input type="file" name="archive_file" id="archive_file"
+                                    @change="handleFileSelect($event)"
                                     class="block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-base hover:file:bg-primary-hover">
                             </div>
-                            <template x-if="errors.archive_file"><p class="mt-1 text-xs text-red-500" x-text="errors.archive_file[0]"></p></template>
+                            <template x-if="errors.archive_file">
+                                <p class="mt-1 text-xs text-red-500" x-text="errors.archive_file[0]"></p>
+                            </template>
                         </div>
 
                         {{-- Input untuk URL --}}
@@ -99,8 +155,11 @@
                             <textarea name="links" id="links" rows="7" x-model="formData.links"
                                 class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary"
                                 placeholder="Satu link per baris untuk tautan multi-bagian..."></textarea>
-                            <p class="mt-1 text-xs text-secondary">For multi-part links, place each link on a new line.</p>
-                            <template x-if="errors.links"><p class="mt-1 text-xs text-red-500" x-text="errors.links[0]"></p></template>
+                            <p class="mt-1 text-xs text-secondary">For multi-part links, place each link on a new line.
+                            </p>
+                            <template x-if="errors.links">
+                                <p class="mt-1 text-xs text-red-500" x-text="errors.links[0]"></p>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -119,7 +178,7 @@
 
                 {{-- Footer dengan Submit Button --}}
                 <div class="bg-surface-light border-t border-border px-6 py-4 text-right rounded-b-md">
-                    <button type="submit" :disabled="isUploading" 
+                    <button type="submit" :disabled="isUploading"
                         class="inline-flex items-center justify-center gap-2 py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-base bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-surface-light cursor-pointer"
                         :class="{ 'opacity-50 cursor-not-allowed': isUploading }">
                         <span x-show="!isUploading">SAVE_ENTRY</span>

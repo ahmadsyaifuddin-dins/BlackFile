@@ -7,8 +7,11 @@ export default function archiveForm() {
             name: window.archiveFormData?.name || '',
             description: window.archiveFormData?.description || '',
             is_public: window.archiveFormData?.is_public || false,
+            category: window.archiveFormData?.category || '',
+            category_other: window.archiveFormData?.category_other || '',
             type: window.archiveFormData?.type || 'file',
             links: window.archiveFormData?.links || '',
+            tags: window.archiveFormData?.tags || '',
             _token: window.archiveFormData?.csrf_token || ''
         },
         
@@ -47,6 +50,9 @@ export default function archiveForm() {
             // Append form data sesuai dengan yang diharapkan Controller
             data.append('name', this.formData.name || '');
             data.append('description', this.formData.description || '');
+            data.append('category', this.formData.category || '');
+            data.append('category_other', this.formData.category_other || '');
+            data.append('tags', this.formData.tags || '');
             data.append('type', this.formData.type || 'file');
             data.append('_token', this.formData._token);
             
@@ -178,6 +184,9 @@ export default function archiveForm() {
                 name: '',
                 description: '',
                 is_public: false,
+                category: '',
+                category_other: '',
+                tags: '',
                 type: 'file',
                 links: '',
                 _token: window.archiveFormData?.csrf_token || ''

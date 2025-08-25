@@ -77,6 +77,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('encrypted-contacts', EncryptedContactController::class);
     Route::post('/encrypted-contacts/{encryptedContact}/unlock', [EncryptedContactController::class, 'unlock'])->name('encrypted-contacts.unlock');
 
+    // --- [TAMBAHKAN RUTE BARU DI SINI] ---
+    Route::get('favorites/archives', [ArchiveController::class, 'favorites'])->name('favorites.archives');
+    Route::post('archives/{archive}/favorite', [ArchiveController::class, 'toggleFavorite'])->name('archives.favorite.toggle');
+
     Route::resource('archives', ArchiveController::class);
 
     // Grup rute yang dilindungi oleh role tertentu (Director atau Technician)

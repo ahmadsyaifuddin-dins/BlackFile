@@ -1,13 +1,15 @@
-<x-app-layout title="Archives Vault">
+<x-app-layout title="Favorite Archives">
     <div class="space-y-6">
 
         {{-- Header Halaman --}}
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-            <h1 class="text-xl sm:text-2xl font-bold text-primary">[ ARCHIVES_VAULT ]</h1>
-            <a href="{{ route('archives.create') }}"
-                class="px-4 py-2 text-sm border rounded-md transition-colors border-primary text-primary hover:bg-primary hover:text-base">
-                + ADD_NEW_ENTRY
-            </a>
+            <h1 class="text-xl sm:text-2xl font-bold text-primary">[ FAVORITE_ARCHIVES ]</h1>
+            <div class="flex gap-3">
+                <a href="{{ route('archives.index') }}"
+                    class="px-4 py-2 text-sm border rounded-md transition-colors border-secondary text-secondary hover:bg-secondary hover:text-base">
+                    &lt;-- Back to Vault
+                </a>
+            </div>
         </div>
 
         {{-- Notifikasi --}}
@@ -22,20 +24,17 @@
         </div>
         @endif
 
-        {{-- ====================================================== --}}
-        {{-- ============ [BARU] FILTER & SEARCH FORM ============= --}}
-        {{-- ====================================================== --}}
+        {{-- Filter & Search Form --}}
         <div class="bg-surface border border-border rounded-md p-4">
-            <form action="{{ route('archives.index') }}" method="GET">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <form action="{{ route('favorites.archives') }}" method="GET">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 
                     {{-- Search Input --}}
                     <div class="sm:col-span-2 lg:col-span-2">
-                        <label for="search" class="block text-xs font-medium text-secondary">Search (Name, Desc,
-                            Tag)</label>
+                        <label for="search" class="block text-xs font-medium text-secondary">Search Favorites</label>
                         <input type="search" name="search" id="search" value="{{ request('search') }}"
                             class="mt-1 block w-full text-sm bg-base border-border rounded-md focus:ring-primary focus:border-primary text-secondary"
-                            placeholder="e.g., laporan, q4, penting...">
+                            placeholder="Search in your favorites...">
                     </div>
 
                     {{-- Filter Kategori --}}
@@ -62,29 +61,29 @@
                             <option value="url" @selected(request('type')=='url' )>URL</option>
                         </select>
                     </div>
-
-                    {{-- Filter Owner --}}
-                    <div>
-                        <label for="owner" class="block text-xs font-medium text-secondary">Owner</label>
-                        <select name="owner" id="owner"
-                            class="mt-1 block w-full text-sm bg-base border-border rounded-md focus:ring-primary focus:border-primary text-secondary">
-                            <option value="">All Owners</option>
-                            @foreach($owners as $owner)
-                            <option value="{{ $owner->id }}" @selected(request('owner')==$owner->id)>
-                                {{ $owner->name }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
                 </div>
                 <div class="flex items-center justify-end gap-4 mt-4">
-                    <a href="{{ route('archives.index') }}" class="text-sm text-secondary hover:text-primary">Reset</a>
+                    <a href="{{ route('favorites.archives') }}"
+                        class="text-sm text-secondary hover:text-primary">Reset</a>
                     <button type="submit"
                         class="px-4 py-2 text-sm border rounded-md transition-colors border-primary text-primary hover:bg-primary hover:text-base cursor-pointer">
                         Filter
                     </button>
                 </div>
             </form>
+        </div>
+
+        {{-- Stats Info --}}
+        <div class="bg-surface border border-border rounded-md p-4">
+            <div class="flex items-center gap-4">
+                <svg class="h-6 w-6 text-red-500 fill-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.672l1.318-1.354a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z" />
+                </svg>
+                <span class="text-secondary">
+                    Total Favorites: <span class="font-bold text-primary">{{ $favorites->total() }}</span>
+                </span>
+            </div>
         </div>
 
         {{-- ====================================================== --}}
@@ -113,12 +112,12 @@
                                     Type</th>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">
-                                    Date Added</th>
+                                    Favorited Date</th>
                                 <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
                             </tr>
                         </thead>
                         <tbody class="divide-y bg-surface divide-border">
-                            @forelse ($archives as $archive)
+                            @forelse ($favorites as $archive)
                             <tr>
                                 <td class="px-6 py-4 align-top text-sm text-primary font-semibold">
                                     <div>{{ $archive->name }}</div>
@@ -150,12 +149,11 @@
                                 <td class="px-6 py-4 align-top text-sm text-secondary whitespace-nowrap">{{
                                     $archive->type }}</td>
                                 <td class="px-6 py-4 align-top text-sm text-secondary whitespace-nowrap">{{
-                                    $archive->created_at->translatedFormat('d M Y, H:i') }}</td>
-                                <td
-                                    class="px-6 py-4 align-top whitespace-nowrap text-right text-sm font-medium">
+                                    $archive->pivot->created_at->translatedFormat('d M Y, H:i') }}</td>
+                                <td class="px-6 py-4 align-top whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex items-center justify-end space-x-4">
                                         <div x-data="{ 
-                                                isFavorited: {{ $archive->is_favorited ? 'true' : 'false' }},
+                                                isFavorited: true,
                                                 count: {{ $archive->favorited_by_count }}
                                              }" class="inline-flex items-center gap-1">
                                             <button class="cursor-pointer" @click="
@@ -163,12 +161,15 @@
                                                     .then(response => {
                                                         isFavorited = response.data.is_favorited;
                                                         count = response.data.favorited_by_count;
+                                                        if (!isFavorited) {
+                                                            $el.closest('tr').remove();
+                                                        }
                                                     });
                                             ">
-                                                <svg class="h-5 w-5 transition-colors duration-200"
-                                                    :class="isFavorited ? 'text-red-500 fill-current' : 'text-secondary hover:text-red-400'"
+                                                <svg class="h-5 w-5 transition-colors duration-200 text-red-500 fill-current"
                                                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
                                                         d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.672l1.318-1.354a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z" />
                                                 </svg>
                                             </button>
@@ -183,15 +184,31 @@
                                             onsubmit="return confirm('Confirm termination of this entry?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-500 hover:text-red-400">Delete</button>
+                                            <button type="submit"
+                                                class="text-red-500 hover:text-red-400">Delete</button>
                                         </form>
                                     </div>
                                 </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="7" class="px-6 py-4 text-center text-sm text-secondary">//
-                                    NO_DATA_ENTRY_FOUND //</td>
+                                <td colspan="7" class="px-6 py-4 text-center text-sm text-secondary">
+                                    <div class="flex flex-col items-center gap-3 py-8">
+                                        <svg class="h-12 w-12 text-secondary opacity-50" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                                d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.672l1.318-1.354a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z" />
+                                        </svg>
+                                        <div>
+                                            <p class="text-lg font-medium">// NO_FAVORITE_ARCHIVES_FOUND //</p>
+                                            <p class="mt-1">Start adding archives to your favorites!</p>
+                                        </div>
+                                        <a href="{{ route('archives.index') }}"
+                                            class="mt-2 px-4 py-2 text-sm border rounded-md transition-colors border-primary text-primary hover:bg-primary hover:text-base">
+                                            Browse Archives
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -204,8 +221,7 @@
         {{-- ============= MOBILE VIEW (CARDS) ==================== --}}
         {{-- ====================================================== --}}
         <div class="md:hidden space-y-4">
-            @forelse ($archives as $archive)
-            {{-- [PERUBAHAN] Menambahkan flex-col dan h-full untuk struktur yang lebih baik --}}
+            @forelse ($favorites as $archive)
             <div class="bg-surface border border-border rounded-md p-4 flex flex-col h-full">
                 {{-- Baris Header Kartu --}}
                 <div class="flex justify-between items-start">
@@ -221,19 +237,19 @@
                     </div>
                 </div>
 
-                {{-- [PERUBAHAN] flex-grow akan mendorong footer ke bawah --}}
+                {{-- Content --}}
                 <div class="text-sm text-secondary space-y-1 mt-3 flex-grow">
                     <p><span class="font-semibold">Owner:</span> {{ $archive->user->name }}</p>
                     <p><span class="font-semibold">Type:</span> {{ $archive->type }}</p>
                     <p><span class="font-semibold">Category:</span> {{ $archive->category === 'Other' ?
                         $archive->category_other : $archive->category }}</p>
-                    <p><span class="font-semibold">Added:</span> {{ $archive->created_at->translatedFormat('d M Y, H:i')
-                        }}</p>
+                    <p><span class="font-semibold">Favorited:</span> {{ $archive->pivot->created_at->translatedFormat('d
+                        M Y, H:i') }}</p>
                     <p class="pt-1 break-words"><span class="font-semibold">Desc:</span> {{ $archive->description ??
                         'N/A' }}</p>
                 </div>
 
-                {{-- [PERUBAHAN] Footer Kartu untuk Tags dan Aksi --}}
+                {{-- Footer Kartu untuk Tags dan Aksi --}}
                 <div class="mt-4 pt-3 border-t border-border">
                     {{-- Bagian Tags --}}
                     @if($archive->tags->isNotEmpty())
@@ -248,18 +264,20 @@
                     {{-- Bagian Aksi --}}
                     <div class="flex items-center justify-between">
                         <div x-data="{ 
-                                isFavorited: {{ $archive->is_favorited ? 'true' : 'false' }},
+                                isFavorited: true,
                                 count: {{ $archive->favorited_by_count }}
                              }" class="inline-flex items-center gap-1">
-                            <button class="cursor-pointer" @click="
+                            <button @click="
                                 axios.post('{{ route('archives.favorite.toggle', $archive) }}')
                                     .then(response => {
                                         isFavorited = response.data.is_favorited;
                                         count = response.data.favorited_by_count;
+                                        if (!isFavorited) {
+                                            $el.closest('.bg-surface').remove();
+                                        }
                                     });
                             ">
-                                <svg class="h-5 w-5 transition-colors duration-200"
-                                    :class="isFavorited ? 'text-red-500 fill-current' : 'text-secondary hover:text-red-400'"
+                                <svg class="h-5 w-5 transition-colors duration-200 text-red-500 fill-current"
                                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.672l1.318-1.354a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z" />
@@ -283,16 +301,30 @@
                 </div>
             </div>
             @empty
-            <div class="bg-surface border border-border rounded-md p-4 text-center text-sm text-secondary">
-                // NO_DATA_ENTRY_FOUND //
+            <div class="bg-surface border border-border rounded-md p-8 text-center text-sm text-secondary">
+                <div class="flex flex-col items-center gap-4">
+                    <svg class="h-16 w-16 text-secondary opacity-50" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                            d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.672l1.318-1.354a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z" />
+                    </svg>
+                    <div>
+                        <p class="text-lg font-medium">// NO_FAVORITE_ARCHIVES_FOUND //</p>
+                        <p class="mt-1">Start adding archives to your favorites!</p>
+                    </div>
+                    <a href="{{ route('archives.index') }}"
+                        class="mt-2 px-4 py-2 text-sm border rounded-md transition-colors border-primary text-primary hover:bg-primary hover:text-base">
+                        Browse Archives
+                    </a>
+                </div>
             </div>
             @endforelse
         </div>
 
         {{-- Paginasi --}}
-        @if ($archives->hasPages())
+        @if ($favorites->hasPages())
         <div class="p-4 bg-surface border-t border-border rounded-md">
-            {{ $archives->links() }}
+            {{ $favorites->links() }}
         </div>
         @endif
     </div>

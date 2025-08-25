@@ -164,4 +164,26 @@ return [
         'Beyond the Wall of Sleep', // Specific to Cthulhu Mythos
         'Cthulhu Mythos', // General term for this origin
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Archive Categories
+    |--------------------------------------------------------------------------
+    |
+    | Daftar ini digunakan untuk mengisi dropdown kategori di fitur Archives.
+    | Pastikan 'Other' selalu ada jika Anda ingin menggunakan fungsionalitas
+    | input kustom.
+    |
+    */
+    'archive_categories' => [
+        'Link Download Film',
+        'Link Game',
+        'Video Langka',
+        'Gambar Rahasia',
+        'Dokumen PDF',
+        'Dokumen Excel',
+        'Dokumen CSV',
+        'Dokumen Word',
+        'Other', // Pilihan untuk kategori kustom
+    ],
 ];

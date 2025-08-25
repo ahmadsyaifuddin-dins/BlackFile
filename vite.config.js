@@ -16,7 +16,7 @@ export default defineConfig({
         ]
     }),
     laravel({
-      input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/graph-controls.js','resources/js/pages/friends-index.js' ],
+      input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/graph-controls.js','resources/js/pages/friends-index.js'],
       refresh: true,
     }),
   ],

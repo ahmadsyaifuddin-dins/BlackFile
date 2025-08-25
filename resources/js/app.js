@@ -1,21 +1,26 @@
-import './bootstrap';
+// resources/js/app.js
 
+// 1. Impor semua library dan modul yang dibutuhkan di bagian paling atas
+import './bootstrap';
+import Alpine from 'alpinejs';
+import intersect from '@alpinejs/intersect';
+import axios from 'axios';
 import cytoscape from 'cytoscape';
+import prototypesCRUD from './prototypes-crud';
+import archiveForm from './forms/archive-form.js';
+
+// 2. Buat library bisa diakses secara global (di window object)
+//    PENTING: Lakukan ini SEBELUM mendaftarkan plugin atau data
+window.Alpine = Alpine;
+window.axios = axios;
 window.cytoscape = cytoscape;
 
-// Baris-baris ini SANGAT PENTING untuk Alpine.js
-import Alpine from 'alpinejs';
-
-// [BARU] Impor plugin Intersect dari Alpine.js
-import intersect from '@alpinejs/intersect';
-
-// [BARU] Daftarkan plugin Intersect ke Alpine
+// 3. Daftarkan plugin-plugin Alpine
 Alpine.plugin(intersect);
 
-// [ADD THESE TWO LINES]
-import prototypesCRUD from './prototypes-crud';
+// 4. Daftarkan semua komponen data Alpine Anda
 Alpine.data('prototypesCRUD', prototypesCRUD);
-// [END OF ADDITION]
+Alpine.data('archiveForm', archiveForm);
 
-window.Alpine = Alpine;
+// 5. Jalankan Alpine. Ini HARUS menjadi baris terakhir.
 Alpine.start();

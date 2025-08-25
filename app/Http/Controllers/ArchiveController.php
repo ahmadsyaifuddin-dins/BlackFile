@@ -97,6 +97,14 @@ class ArchiveController extends Controller
 
         Archive::create($dataToStore);
 
+        // Jika request datang dari AJAX (JavaScript), kirim respons JSON
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Arsip berhasil ditambahkan.',
+                'redirect_url' => route('archives.index')
+            ], 201); // 201 Created
+        }
+        // Jika request biasa (tanpa JavaScript), lakukan redirect seperti biasa
         return redirect()->route('archives.index')->with('success', 'Arsip berhasil ditambahkan.');
     }
 

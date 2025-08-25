@@ -32,7 +32,7 @@ class User extends Authenticatable
         'specialization',
         'quotes',
         'last_active_at',
-        'settings', // <-- [BARU] Tambahkan ini
+        'settings',
     ];
 
     /**

@@ -185,3 +185,33 @@
 .iframe-wrapper iframe {
     filter: invert(1) grayscale(1) brightness(1.5);
 }
+
+/* [BARU] Keyframes untuk animasi shimmer/shining */
+@keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  
+  /* [BARU] Kelas utilitas untuk efek-efek teks */
+  @layer utilities {
+    .text-glow-green {
+      text-shadow: 0 0 5px theme('colors.green.500'), 0 0 10px theme('colors.green.700');
+    }
+    .text-glow-cyan {
+      text-shadow: 0 0 5px theme('colors.cyan.500'), 0 0 10px theme('colors.cyan.700');
+    }
+    .animate-shimmer {
+      background-image: linear-gradient(
+        90deg,
+        theme('colors.amber.400') 0%,
+        theme('colors.white') 50%,
+        theme('colors.amber.400') 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
+    }
+}

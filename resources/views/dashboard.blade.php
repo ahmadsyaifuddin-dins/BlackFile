@@ -31,7 +31,7 @@
                 <p class="text-xs text-secondary mt-1">VIEW CENTRAL TREE</p>
             </a>
             @if(strtolower(Auth::user()->role->name) === 'director' || strtolower(Auth::user()->role->name) === 'technician')
-            <a href="{{ route('register') }}" class="text-center bg-surface border-2 border-border-color p-4 hover:border-primary hover:text-primary transition-colors">
+            <a href="{{ route('register.agent') }}" class="text-center bg-surface border-2 border-border-color p-4 hover:border-primary hover:text-primary transition-colors">
                 <p class="font-bold text-primary text-lg">[+]</p>
                 <p class="text-xs text-secondary mt-1">REGISTER AGENT</p>
             </a>

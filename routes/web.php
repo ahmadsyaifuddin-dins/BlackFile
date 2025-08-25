@@ -86,8 +86,8 @@ Route::middleware('auth')->group(function () {
     // Grup rute yang dilindungi oleh role tertentu (Director atau Technician)
     // Menggunakan 'role' middleware kustom Anda
     Route::middleware('role:Director,Technician')->group(function () {
-        Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
-        Route::post('/register', [RegisterController::class, 'register']);
+        Route::get('/register/agent', [RegisterController::class, 'showRegisterForm'])->name('register.agent');
+        Route::post('/register/agent', [RegisterController::class, 'registerAgent'])->name('register.agent');
 
         Route::get('/agents/{user}/edit', [UserController::class, 'edit'])->name('agents.edit');
         Route::patch('/agents/{user}', [UserController::class, 'update'])->name('agents.update');

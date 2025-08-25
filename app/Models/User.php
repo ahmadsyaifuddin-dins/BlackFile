@@ -26,6 +26,7 @@ class User extends Authenticatable
         'codename',
         'email',
         'password',
+        'confirmed',
         'master_password',
         'role_id',
         'avatar',

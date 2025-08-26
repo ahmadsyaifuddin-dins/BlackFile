@@ -19,7 +19,7 @@ class LoginController extends Controller
         $validated = $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
-            'remember' => 'boolean', // Memastikan nilainya true/false
+            'remember' => 'boolean',
         ]);
 
         // Pisahkan kredensial untuk login
@@ -30,6 +30,22 @@ class LoginController extends Controller
 
         // [DIUBAH] Gunakan nilai 'remember' sebagai argumen kedua di Auth::attempt()
         if (Auth::attempt($credentials, $validated['remember'] ?? false)) {
+
+            // 3. [PENGECEKAN BARU] Periksa apakah akun sudah dikonfirmasi
+            if (Auth::user()->confirmed == false) {
+                // Jika belum, langsung logout lagi
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                // Kirim pesan error spesifik kembali ke form login
+                return response()->json([
+                    'status' => 'denied',
+                    'message' => 'ACCESS DENIED. Akun Anda sedang menunggu persetujuan dari Direktur.'
+                ], 403); // 403 Forbidden
+            }
+
+            // 4. Jika sudah dikonfirmasi, lanjutkan proses login seperti biasa
             $request->session()->regenerate();
 
             // Update last_active_at (jika Anda masih menggunakan ini)

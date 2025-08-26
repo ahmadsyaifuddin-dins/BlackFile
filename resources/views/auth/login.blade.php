@@ -79,6 +79,7 @@
                     </button>
                 </div>
             </form>
+            <p class="text-xs text-secondary mt-2">Don't have an account? <a href="{{ route('register') }}" class="text-primary hover:underline">Register</a></p>
         </div>
 
         <!-- [DIUBAH] Container untuk semua animasi, diposisikan absolut di tengah -->

@@ -14,6 +14,10 @@ class RoleSeeder extends Seeder
             ['name' => 'Agent', 'alias' => 'Operasi Lapangan'],
             ['name' => 'Technician', 'alias' => 'Spesialis Teknis'],
             ['name' => 'Analyst', 'alias' => 'Pengolah Informasi'],
+
+            // [BARU] Role untuk sistem registrasi
+            ['name' => 'applicant', 'alias' => 'Unverified Operative'],
+            ['name' => 'affiliate', 'alias' => 'Allied Operative'],
         ];
 
         foreach ($roles as $role) {

@@ -28,6 +28,8 @@ class User extends Authenticatable
         'password',
         'master_password',
         'role_id',
+        'confirmed',
+        'temp_password',
         'avatar',
         'specialization',
         'quotes',
@@ -56,6 +58,7 @@ class User extends Authenticatable
         'last_active_at' => 'datetime',
         'master_password' => 'hashed',
         'settings' => 'array',
+        'temp_password' => 'encrypted',
     ];
 
     public function role()

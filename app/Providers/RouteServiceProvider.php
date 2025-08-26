@@ -24,6 +24,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        RateLimiter::for('register-attempt', function (Request $request) {
+            // Batasi 1 percobaan per 3 hari (4320 menit)
+            return Limit::perMinutes(4320, 1);
+        });
+
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });

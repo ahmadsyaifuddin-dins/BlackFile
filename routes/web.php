@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArchiveController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthManual\LoginController;
 use App\Http\Controllers\AuthManual\RegisterController;
 use App\Http\Controllers\AuthManual\LogoutController;
+use App\Http\Controllers\AuthManual\RegisterAgentController;
 use App\Http\Controllers\CodexController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EncryptedContactController;
@@ -34,6 +36,9 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [LoginController::class, 'login']);
+
+    Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register'])->name('register');
 });
 
 // Grup rute yang HANYA bisa diakses oleh pengguna yang SUDAH LOGIN
@@ -86,8 +91,16 @@ Route::middleware('auth')->group(function () {
     // Grup rute yang dilindungi oleh role tertentu (Director atau Technician)
     // Menggunakan 'role' middleware kustom Anda
     Route::middleware('role:Director,Technician')->group(function () {
-        Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
-        Route::post('/register', [RegisterController::class, 'register']);
+
+        Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::patch('/admin/users/{user}/approve', [AdminController::class, 'approveUser'])->name('admin.users.approve');
+        Route::delete('/admin/users/{user}/reject', [AdminController::class, 'rejectUser'])->name('admin.users.reject');
+        Route::post('/admin/invites/generate', [AdminController::class, 'generateInvite'])->name('admin.invites.generate');
+        
+        Route::get('/admin/applicants/{user}', [AdminController::class, 'getApplicantDetails'])->name('admin.applicants.show');
+
+        Route::get('/register/agent', [RegisterAgentController::class, 'showRegisterForm'])->name('register.agent');
+        Route::post('/register/agent', [RegisterAgentController::class, 'registerAgent'])->name('register.agent');
 
         Route::get('/agents/{user}/edit', [UserController::class, 'edit'])->name('agents.edit');
         Route::patch('/agents/{user}', [UserController::class, 'update'])->name('agents.update');

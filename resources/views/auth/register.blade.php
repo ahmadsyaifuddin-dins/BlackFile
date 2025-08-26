@@ -1,20 +1,24 @@
-<x-app-layout>
-    <x-slot:title>
-        Register New Agent
-    </x-slot:title>
+<x-guest-layout>
+    <h2 class="text-xl sm:text-2xl text-primary font-bold mb-6 text-center">[ REGISTER NEW DOSSIER ]</h2>
 
-    <div class="p-4 md:p-6 bg-surface border border-border-color rounded-lg">
-        <div class="mb-6">
-            <h2 class="text-2xl font-bold text-primary">
-                > [ NEW AGENT FORM ]
-            </h2>
-            <div class="mt-3 sm:mt-2 flex sm:justify-end">
-                <a href="{{ url()->previous() }}" class="text-secondary hover:text-primary transition-colors text-sm">
-                    &lt; Back
+    {{-- [LOGIKA BARU] Cek apakah ada sesi 'pending_approval' --}}
+    @if(session('pending_approval'))
+        {{-- Tampilan setelah berhasil mendaftar tanpa token --}}
+        <div class="text-center text-glow space-y-4">
+            <p class="text-primary-hover font-bold">> APPLICATION SUBMITTED</p>
+            <p class="text-secondary text-sm">
+                Your dossier has been successfully submitted. It is now awaiting review and confirmation from the Directorate. 
+                You will be notified via email upon approval.
+            </p>
+            <div class="pt-4">
+                <a href="{{ route('welcome') }}" class="px-4 py-2 bg-surface border border-border-color text-secondary hover:text-white font-bold tracking-widest rounded-md text-sm">
+                    [ RETURN TO WELCOME PAGE ]
                 </a>
             </div>
         </div>
-
+    @else
+        {{-- Tampilan form registrasi (jika tidak ada sesi 'pending_approval') --}}
+        
         @if($errors->any())
             <div class="mb-4 bg-red-900/50 border-l-4 border-red-500 text-red-300 p-4 rounded-r-lg" role="alert">
                 <p class="font-bold">> Data Input Anomaly Detected:</p>
@@ -25,68 +29,47 @@
                 </ul>
             </div>
         @endif
-        
-        <form method="POST" action="{{ route('register') }}" class="space-y-6">
-            @csrf
-            
-            {{-- Menggunakan Grid untuk layout responsif --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="name" class="block text-primary text-sm">> REAL NAME</label>
-                    <input type="text" id="name" name="name" value="{{ old('name') }}" required
-                           class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded">
-                </div>
 
+        <form method="POST" action="{{ route('register') }}" class="space-y-4">
+            @csrf
+            <div>
+                <label for="name" class="block text-primary text-sm">> REAL NAME</label>
+                <input type="text" id="name" name="name" value="{{ old('name') }}" required class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="username" class="block text-primary text-sm">> USERNAME</label>
+                    <input type="text" id="username" name="username" value="{{ old('username') }}" required class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
+                </div>
                 <div>
                     <label for="codename" class="block text-primary text-sm">> CODENAME</label>
-                    <input type="text" id="codename" name="codename" value="{{ old('codename') }}" required
-                           class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded">
+                    <input type="text" id="codename" name="codename" value="{{ old('codename') }}" required class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
                 </div>
-
-                <div>
-                    <label for="username" class="block text-primary text-sm">> USERNAME (Login ID)</label>
-                    <input type="text" id="username" name="username" value="{{ old('username') }}" required
-                           class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded">
-                </div>
-
-                <div>
-                    <label for="email" class="block text-primary text-sm">> EMAIL (Recovery)</label>
-                    <input type="email" id="email" name="email" value="{{ old('email') }}" required
-                           class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded">
-                </div>
-
+            </div>
+            <div>
+                <label for="email" class="block text-primary text-sm">> EMAIL</label>
+                <input type="email" id="email" name="email" value="{{ old('email') }}" required class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="password" class="block text-primary text-sm">> PASSCODE</label>
-                    <input type="password" id="password" name="password" required
-                           class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded">
+                    <input type="password" id="password" name="password" required class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
                 </div>
-
                 <div>
                     <label for="password_confirmation" class="block text-primary text-sm">> CONFIRM PASSCODE</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" required
-                           class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded">
+                    <input type="password" id="password_confirmation" name="password_confirmation" required class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
                 </div>
             </div>
-
             <div>
-                <label for="role_id" class="block text-primary text-sm">> ASSIGN ROLE</label>
-                <select id="role_id" name="role_id" required
-                        class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
-                    <option value="" disabled selected>-- Select Designation --</option>
-                    {{-- Loop dari variabel $roles yang dikirim Controller --}}
-                    @foreach($roles as $role)
-                        <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
-                            {{ $role->alias }}
-                        </option>
-                    @endforeach
-                </select>
+                <label for="invite_code" class="block text-primary text-sm">> INVITE TOKEN (Optional)</label>
+                <input type="text" id="invite_code" name="invite_code" value="{{ old('invite_code', $inviteCode) }}" class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
             </div>
-            
-            <div class="border-t border-border-color pt-6 flex justify-end">
-                <button type="submit" class="px-6 py-2 bg-primary text-base text-primary-hover transition-colors font-bold tracking-widest rounded-md text-sm">
-                    [ CREATE AGENT ]
+            <div class="pt-4">
+                <button type="submit" class="w-full px-6 py-2 bg-primary text-base hover:bg-primary-hover transition-colors font-bold tracking-widest rounded-md text-sm">
+                    [ SUBMIT APPLICATION ]
                 </button>
             </div>
         </form>
-    </div>
-</x-app-layout>
+        <p class="text-xs text-secondary mt-2 text-center">Already have an account? <a href="{{ route('login') }}" class="text-primary hover:underline">Login</a></p>
+    @endif
+</x-guest-layout>

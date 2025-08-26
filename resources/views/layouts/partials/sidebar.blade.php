@@ -22,6 +22,15 @@
             <span>> {{ __('Dashboard') }}</span>
         </a>
 
+        @if(strtolower(Auth::user()->role->name) === 'director' || strtolower(Auth::user()->role->name) === 'technician')
+        <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('admin.dashboard') 
+                ? 'bg-surface-light text-primary border-l-4 border-primary' 
+                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+            <span>> {{ __('Command Center') }}</span>
+        </a>
+        @endif
+
         <a href="{{ route('friends.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
            {{ request()->routeIs('friends.index') 
                 ? 'bg-surface-light text-primary border-l-4 border-primary' 
@@ -88,8 +97,8 @@
         {{-- Tampilkan menu ini HANYA jika role user adalah Director dan Technician --}}
         @if(strtolower(Auth::user()->role->name) === 'director' || strtolower(Auth::user()->role->name) ===
         'technician')
-        <a href="{{ route('register') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-        {{ request()->routeIs('register') 
+        <a href="{{ route('register.agent') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+        {{ request()->routeIs('register.agent') 
             ? 'bg-surface-light text-primary border-l-4 border-primary' 
             : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Register Agent') }}</span>

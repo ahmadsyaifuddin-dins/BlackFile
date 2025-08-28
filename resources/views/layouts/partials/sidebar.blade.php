@@ -94,6 +94,13 @@
             <span>> {{ __('Codex') }}</span>
         </a>
 
+        <a href="{{ route('credits.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+            {{ request()->routeIs('credits.*') 
+        ? 'bg-surface-light text-primary border-l-4 border-primary' 
+        : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+            <span>> {{ __('Epilogue') }}</span>
+        </a>
+
         {{-- Tampilkan menu ini HANYA jika role user adalah Director dan Technician --}}
         @if(strtolower(Auth::user()->role->name) === 'director' || strtolower(Auth::user()->role->name) ===
         'technician')

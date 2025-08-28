@@ -126,6 +126,12 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function credits()
+    {
+        return $this->hasMany(Credit::class);
+    }
+    
+    
     /**
      * [BARU & MEMPERBAIKI MASALAH]
      * Accessor cerdas untuk mendapatkan "parent" atau "handler" dari tabel connections.

@@ -91,6 +91,22 @@
         border-color: var(--border-primary-hover);
     }
 
+    .bg-primary {
+        background-color: var(--color-primary);
+    }
+
+    .bg-primary-hover:hover {
+        background-color: var(--color-primary-hover);
+    }
+
+    input[type="file"]::file-selector-button {
+        background-color: var(--color-primary);
+    }
+    
+    input[type="file"]::file-selector-button:hover {
+        background-color: var(--color-primary-hover);
+    }
+
     [x-cloak] {
         display: none !important;
     }

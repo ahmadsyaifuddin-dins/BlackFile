@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthManual\RegisterController;
 use App\Http\Controllers\AuthManual\LogoutController;
 use App\Http\Controllers\AuthManual\RegisterAgentController;
 use App\Http\Controllers\CodexController;
+use App\Http\Controllers\CreditController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EncryptedContactController;
 use App\Http\Controllers\EntityController;
@@ -31,6 +32,9 @@ use Illuminate\Support\Str;
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
+
+// Using route-model binding on the 'slug' column of the User model
+Route::get('/public-credits/{user:slug}', [CreditController::class, 'publicShow'])->name('credits.public');
 
 // Grup rute yang HANYA bisa diakses oleh "tamu" (pengguna yang belum login)
 Route::middleware('guest')->group(function () {
@@ -87,6 +91,8 @@ Route::middleware('auth')->group(function () {
     Route::post('archives/{archive}/favorite', [ArchiveController::class, 'toggleFavorite'])->name('archives.favorite.toggle');
 
     Route::resource('archives', ArchiveController::class);
+
+    Route::resource('credits', CreditController::class);
 
     // Grup rute yang dilindungi oleh role tertentu (Director atau Technician)
     // Menggunakan 'role' middleware kustom Anda

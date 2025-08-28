@@ -14,12 +14,13 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
 
                 @if(Auth::user()->role->name === 'Director')
-                    <!-- BAGIAN BARU: Manajemen Credit Pribadi Director -->
+                    <!-- BAGIAN MANAJEMEN PRIBADI DIRECTOR -->
                     <div class="pb-6 mb-6 border-b border-gray-700">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Your Personal Credits</h3>
                         <p class="text-gray-400 mt-1 mb-4">Manage your own name in the end credits roster.</p>
                         @if($directorHasCredits)
-                            <div class="flex items-center space-x-4">
+                            <!-- PERBAIKAN: Dibuat flex-wrap agar tombol tidak aneh di layar kecil -->
+                            <div class="flex flex-wrap items-center gap-4">
                                 <a href="{{ route('credits.edit', Auth::user()->id) }}" class="inline-flex items-center px-4 py-2 bg-primary border rounded-md font-semibold text-xs text-white uppercase bg-primary-hover">
                                     Edit Your Credits
                                 </a>
@@ -35,16 +36,17 @@
                             </a>
                         @endif
                     </div>
-                    <!-- AKHIR BAGIAN BARU -->
-
+                    
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Credits Roster by Operative</h3>
                     @forelse ($usersWithCredits as $user)
-                         <div class="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg mb-3">
+                         <!-- PERBAIKAN: Layout diubah menjadi flex-col di mobile, dan flex-row di layar besar -->
+                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-3 bg-gray-700/50 rounded-lg mb-3">
                             <div>
                                 <p class="font-bold text-white">{{ $user->name }}</p>
                                 <p class="text-sm text-gray-400">{{ $user->credits->count() }} entries</p>
                             </div>
-                            <div class="flex items-center space-x-4">
+                            <!-- PERBAIKAN: Dibuat flex-wrap agar tombol tidak aneh di layar kecil -->
+                            <div class="flex items-center flex-wrap gap-2 justify-start sm:justify-end">
                                 @if($user->slug)
                                     <a href="{{ route('credits.public', $user->slug) }}" class="text-primary hover:underline text-sm" target="_blank">View Public</a>
                                 @endif
@@ -64,11 +66,11 @@
                         <p class="text-center text-gray-500">No credit entries found from any operative.</p>
                     @endforelse
                 @else
-                    <!-- Tampilan untuk Agent (tidak berubah) -->
+                    <!-- Tampilan untuk Agent -->
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Your End Credits</h3>
                     <p class="text-gray-400 mt-1 mb-6">Manage the entire list of names that will appear on your public credits page.</p>
                     @if($hasCredits)
-                        <div class="flex items-center space-x-4">
+                        <div class="flex flex-wrap items-center gap-4">
                             <a href="{{ route('credits.edit', Auth::user()->id) }}" class="inline-flex items-center px-4 py-2 bg-primary border rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-hover">
                                 Edit Your Credits
                             </a>

@@ -1,9 +1,9 @@
-<x-app-layout title="Archives Vault">
+<x-app-layout title="Archives Files">
     <div class="space-y-6">
 
         {{-- Header Halaman --}}
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-            <h1 class="text-xl sm:text-2xl font-bold text-primary">[ ARCHIVES_VAULT ]</h1>
+            <h1 class="text-xl sm:text-2xl font-bold text-primary">[ ARCHIVES_FILES ]</h1>
             <a href="{{ route('archives.create') }}"
                 class="px-4 py-2 text-sm border rounded-md transition-colors border-primary text-primary hover:bg-primary hover:text-base">
                 + ADD_NEW_ENTRY

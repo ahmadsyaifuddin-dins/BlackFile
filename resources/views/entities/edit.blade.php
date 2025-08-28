@@ -10,6 +10,17 @@
         </a>
     </div>
 
+    @if($errors->any())
+    <div class="mb-4 bg-red-900/50 border-l-4 border-red-500 text-red-300 p-4 rounded-r-lg" role="alert">
+        <p class="font-bold">> Data Input Anomaly Detected:</p>
+        <ul class="mt-2 list-disc list-inside text-sm">
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
     {{-- Form Container --}}
     <div class="bg-surface border border-border-color p-6">
         <form action="{{ route('entities.update', $entity) }}" method="POST" enctype="multipart/form-data"

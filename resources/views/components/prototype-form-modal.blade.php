@@ -63,8 +63,9 @@
                 {{-- Deskripsi --}}
                 <div class="mb-4">
                     <label for="description" class="block text-gray-400 text-sm mb-1">> Description</label>
-                    <textarea name="description" id="description" rows="3" x-model="formData.description"
-                        class="form-input-dark" required></textarea>
+                    <textarea name="description" id="description" rows="5" x-model="formData.description"
+                        class="form-input-dark whitespace-pre-wrap resize-y" required></textarea>
+                    <p class="text-xs text-gray-500 mt-1">Tip: Press Enter for line breaks</p>
                 </div>
 
                 {{-- Tech Stack --}}

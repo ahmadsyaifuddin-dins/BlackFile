@@ -1,5 +1,7 @@
 <x-app-layout>
+
     <div x-data="prototypesCRUD" x-init="init()">
+
         <x-slot:title>Prototypes Project</x-slot:title>
 
         <x-slot name="header">
@@ -9,7 +11,7 @@
         </x-slot>
 
         <div class="py-1">
-            <div class="w-full px-4 sm:px-6 lg:px-8">
+            <div class="w-full sm:px-3 lg:px-3">
                 <div class="flex justify-end mb-4">
                     <button @click="openCreateModal()"
                         class="border-primary border hover:border-primary-hover text-white font-bold py-2 px-4 rounded transition duration-300 w-full sm:w-auto cursor-pointer">
@@ -46,47 +48,36 @@
                         </div>
                         @else
                         <div class="hidden sm:block">
-                            {{-- [FIX] Table container that respects sidebar layout --}}
-                            <div class="rounded-lg border border-gray-700">
-                                <div class="overflow-x-auto rounded-md">
-                                    <table class="min-w-full font-mono divide-y divide-gray-700">
+                            {{-- [FIXED] Table container with better responsive design --}}
+                            <div class="rounded-lg border border-gray-700 overflow-hidden">
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full font-mono divide-y divide-gray-700 table-fixed">
                                         <thead class="bg-gray-800">
                                             <tr>
-                                                <th
-                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-16">
+                                                <th class="px-3 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-12">
                                                     #</th>
-                                                <th
-                                                    class="px-6 py-3 border-b-2 border-gray-700 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider">
+                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-16">
                                                     Icon</th>
-                                                <th
-                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[200px]">
+                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-80">
                                                     Codename</th>
-                                                <th
-                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[150px]">
+                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-40">
                                                     Develop By</th>
-                                                <th
-                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[120px]">
+                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-32">
                                                     Project Type</th>
-                                                <th
-                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[100px]">
+                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-24">
                                                     Status</th>
-                                                {{-- <th
-                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider min-w-[120px]">
-                                                    Last Update</th> --}}
-                                                <th
-                                                    class="px-4 py-3 text-center text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-32">
+                                                <th class="px-4 py-3 text-center text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-32">
                                                     Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody class="bg-gray-900 divide-y divide-gray-700">
                                             @foreach ($prototypes as $prototype)
                                             <tr class="hover:bg-gray-800 transition-colors">
-                                                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-400">
-                                                    {{ ($prototypes->currentPage() - 1) * $prototypes->perPage() +
-                                                    $loop->iteration }}
+                                                <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-400">
+                                                    {{ ($prototypes->currentPage() - 1) * $prototypes->perPage() + $loop->iteration }}
                                                 </td>
-                                                {{-- [BARU] Kolom Data untuk Ikon --}}
-                                                <td class="px-6 py-4 whitespace-nowrap border-b border-gray-700">
+                                                {{-- [FIXED] Icon column with consistent sizing --}}
+                                                <td class="px-4 py-4 whitespace-nowrap">
                                                     <div class="flex-shrink-0 h-10 w-10">
                                                         @if($prototype->icon_path)
                                                         <img class="h-10 w-10 rounded-md object-cover"
@@ -94,35 +85,40 @@
                                                             alt="{{ $prototype->codename }} icon">
                                                         @else
                                                         {{-- Placeholder jika tidak ada ikon --}}
-                                                        <div
-                                                            class="h-10 w-10 rounded-md bg-gray-700 flex items-center justify-center text-primary font-bold text-lg">
+                                                        <div class="h-10 w-10 rounded-md bg-gray-700 flex items-center justify-center text-primary font-bold text-lg">
                                                             {{ substr($prototype->name, 0, 1) }}
                                                         </div>
                                                         @endif
                                                     </div>
                                                 </td>
-                                                <td class="px-4 py-4 whitespace-nowrap">
-                                                    <div class="text-sm leading-5 text-primary">{{
-                                                        $prototype->codename }}</div>
-                                                    <div class="text-xs leading-5 text-gray-400">{{ $prototype->name }}
+                                                {{-- [FIXED] Codename column with text truncation --}}
+                                                <td class="px-4 py-4">
+                                                    <div class="text-sm leading-5 text-primary font-semibold truncate" 
+                                                         title="{{ $prototype->codename }}">
+                                                        {{ $prototype->codename }}
+                                                    </div>
+                                                    <div class="text-xs leading-5 text-gray-400 truncate" 
+                                                         title="{{ $prototype->name }}">
+                                                        {{ Str::limit($prototype->name, 25, '...') }}
                                                     </div>
                                                 </td>
+                                                {{-- [FIXED] Developer column with truncation --}}
                                                 <td class="px-4 py-4 whitespace-nowrap text-sm leading-5 text-gray-300">
-                                                    {{ $prototype->user->name }}
+                                                    <div class="truncate" title="{{ $prototype->user->name }}">
+                                                        {{ Str::limit($prototype->user->name, 20, '...') }}
+                                                    </div>
                                                 </td>
+                                                {{-- [FIXED] Project type with truncation --}}
                                                 <td class="px-4 py-4 whitespace-nowrap text-sm leading-5 text-gray-300">
-                                                    {{ $prototype->project_type }}
+                                                    <div class="truncate" title="{{ $prototype->project_type }}">
+                                                        {{ Str::limit($prototype->project_type, 20, '...') }}
+                                                    </div>
                                                 </td>
                                                 <td class="px-4 py-4 whitespace-nowrap">
-                                                    <span
-                                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-cyan-900 text-cyan-300">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-cyan-900 text-cyan-300">
                                                         {{ $prototype->status }}
                                                     </span>
                                                 </td>
-                                                {{-- <td
-                                                    class="px-4 py-4 whitespace-nowrap text-sm leading-5 text-gray-400">
-                                                    {{ $prototype->updated_at->format('Y-m-d H:i') }}
-                                                </td> --}}
                                                 <td class="px-4 py-4 whitespace-nowrap text-center text-sm font-medium">
                                                     <div class="flex justify-center gap-1">
                                                         <a href="{{ route('prototypes.show', $prototype) }}"
@@ -143,67 +139,113 @@
                             </div>
                         </div>
 
-                        {{-- [UI MOBILE BARU] Tampilan Kartu untuk Mobile --}}
-                        <div class="sm:hidden font-mono space-y-4">
+                        {{-- [REDESIGNED] Professional Mobile Card UI --}}
+                        <div class="sm:hidden space-y-3">
                             @foreach ($prototypes as $prototype)
-                            <div class="bg-gray-800 border border-gray-700 rounded-lg p-4">
-                                {{-- Card Header --}}
-                                <div class="flex justify-between items-start mb-3">
-                                    <div class="flex items-start gap-4 flex-1 min-w-0">
-                                        {{-- [BARU] Ikon di mobile --}}
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            @if($prototype->icon_path)
-                                            <img class="h-10 w-10 rounded-md object-cover"
-                                                src="{{ asset($prototype->icon_path) }}"
-                                                alt="{{ $prototype->codename }} icon">
-                                            @else
-                                            <div
-                                                class="h-10 w-10 rounded-md bg-gray-700 flex items-center justify-center text-primary font-bold text-lg">
-                                                {{ substr($prototype->name, 0, 1) }}
+                            <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden shadow-lg">
+                                {{-- Card Header with Gradient Background --}}
+                                <div class="bg-gradient-to-r from-gray-800 to-gray-750 px-4 py-3 border-b border-gray-600">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-3">
+                                            {{-- Icon with better styling --}}
+                                            <div class="flex-shrink-0">
+                                                @if($prototype->icon_path)
+                                                <img class="h-10 w-10 rounded-lg object-cover ring-2 ring-primary/20"
+                                                    src="{{ asset($prototype->icon_path) }}"
+                                                    alt="{{ $prototype->codename }} icon">
+                                                @else
+                                                <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center text-white font-bold text-sm shadow-md">
+                                                    {{ strtoupper(substr($prototype->codename, 0, 2)) }}
+                                                </div>
+                                                @endif
                                             </div>
-                                            @endif
+                                            
+                                            {{-- Project Number --}}
+                                            <div class="text-xs text-gray-400 font-mono bg-gray-700 px-2 py-1 rounded">
+                                                #{{ ($prototypes->currentPage() - 1) * $prototypes->perPage() + $loop->iteration }}
+                                            </div>
                                         </div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-sm text-gray-500">#{{ ($prototypes->currentPage() - 1) *
-                                                $prototypes->perPage() + $loop->iteration }}</div>
-                                            <div class="text-lg leading-5 text-primary font-bold truncate">{{
-                                                $prototype->codename }}</div>
-                                            <div class="text-xs leading-5 text-gray-400 truncate">{{ $prototype->name }}
+                                        
+                                        {{-- Status Badge --}}
+                                        <span class="px-3 py-1 text-xs font-bold rounded-full bg-cyan-500 text-cyan-50 shadow-sm">
+                                            {{ strtoupper($prototype->status) }}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                {{-- Main Content --}}
+                                <div class="px-4 py-4">
+                                    {{-- Project Title Section --}}
+                                    <div class="mb-4">
+                                        <h3 class="text-lg font-bold text-primary leading-snug mb-2">
+                                            {{ $prototype->codename }}
+                                        </h3>
+                                        <p class="text-sm text-gray-300 leading-relaxed line-clamp-2">
+                                            {{ $prototype->name }}
+                                        </p>
+                                    </div>
+                                    
+                                    {{-- Project Details Grid --}}
+                                    <div class="grid grid-cols-2 gap-3 mb-4">
+                                        <div class="bg-gray-750 rounded-lg p-3">
+                                            <div class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">
+                                                Developer
+                                            </div>
+                                            <div class="text-sm text-gray-200 font-medium truncate">
+                                                {{ $prototype->user->name }}
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="bg-gray-750 rounded-lg p-3">
+                                            <div class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">
+                                                Type
+                                            </div>
+                                            <div class="text-sm text-gray-200 font-medium truncate">
+                                                {{ $prototype->project_type }}
                                             </div>
                                         </div>
                                     </div>
-                                    <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-cyan-900 text-cyan-300 flex-shrink-0 ml-2">
-                                        {{ $prototype->status }}
-                                    </span>
+                                    
+                                    {{-- Last Updated --}}
+                                    <div class="bg-gray-750 rounded-lg p-3 mb-4">
+                                        <div class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">
+                                            Last Updated
+                                        </div>
+                                        <div class="text-sm text-gray-200 font-mono">
+                                            {{ $prototype->updated_at->format('M d, Y • H:i') }}
+                                        </div>
+                                    </div>
                                 </div>
-
-                                {{-- Card Body --}}
-                                <div class="text-sm space-y-2 text-gray-300 border-t border-gray-700 pt-3">
-                                    {{-- [BARU] Develop By di mobile --}}
-                                    <p class="flex"><span class="text-gray-500 w-24 flex-shrink-0">Develop By</span>:
-                                        <span class="truncate ml-1">{{
-                                            $prototype->user->name }}</span>
-                                    </p>
-                                    <p class="flex"><span class="text-gray-500 w-24 flex-shrink-0">TYPE</span>: <span
-                                            class="truncate ml-1">{{
-                                            $prototype->project_type }}</span></p>
-                                    <p class="flex"><span class="text-gray-500 w-24 flex-shrink-0">UPDATED</span>: <span
-                                            class="truncate ml-1">{{
-                                            $prototype->updated_at->format('Y-m-d H:i') }}</span></p>
-                                </div>
-
-                                {{-- Card Footer --}}
-                                <div class="flex justify-end items-center gap-4 mt-4 border-t border-gray-700 pt-3">
-                                    <a href="{{ route('prototypes.show', $prototype) }}"
-                                        class="text-indigo-400 hover:text-indigo-600 transition text-sm font-semibold">VIEW</a>
-                                    <button type="button" @click="openEditModal({{ json_encode($prototype) }})"
-                                        class="text-yellow-400 hover:text-yellow-600 transition text-sm font-semibold">EDIT</button>
-                                    <button type="button"
-                                        @click="$dispatch('open-delete-modal', { actionUrl: '{{ route('prototypes.destroy', $prototype) }}', itemName: '{{ $prototype->codename }}' })"
-                                        class="text-red-400 hover:text-red-600 transition appearance-none bg-transparent border-none p-0 cursor-pointer text-sm font-semibold">
-                                        DELETE
-                                    </button>
+                                
+                                {{-- Action Buttons --}}
+                                <div class="bg-gray-750 px-4 py-3 border-t border-gray-600">
+                                    <div class="flex justify-end gap-2">
+                                        <a href="{{ route('prototypes.show', $prototype) }}"
+                                            class="inline-flex items-center px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                            </svg>
+                                            VIEW
+                                        </a>
+                                        
+                                        <button type="button" @click="openEditModal({{ json_encode($prototype) }})"
+                                            class="inline-flex items-center px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-white text-xs font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                            </svg>
+                                            EDIT
+                                        </button>
+                                        
+                                        <button type="button"
+                                            @click="$dispatch('open-delete-modal', { actionUrl: '{{ route('prototypes.destroy', $prototype) }}', itemName: '{{ $prototype->codename }}' })"
+                                            class="inline-flex items-center px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                            DELETE
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             @endforeach

@@ -50,9 +50,9 @@
                             <h3 class="text-2xl text-primary">[ {{ $prototype->name }} ]</h3>
                         </div>
 
-                        <div class="prose prose-invert prose-sm max-w-none text-gray-400">
-                            <p>{{ $prototype->description }}</p>
-                        </div>
+                        <p class="text-gray-400 text-sm whitespace-pre-line leading-relaxed">
+                            {{ $prototype->description }}
+                        </p>
 
                         <div class="mt-6 pt-4 border-t border-gray-700">
                             <h4 class="text-lg text-cyan-400 mb-3">> TECH ARSENAL</h4>
@@ -133,7 +133,7 @@
                                 @endswitch
                             </div>
                             @endif
-                            
+
                             <div>
                                 <p class="text-gray-500">> DEPLOYMENT START</p>
                                 <p>{{ $prototype->start_date ? $prototype->start_date->locale('id')->translatedFormat('d

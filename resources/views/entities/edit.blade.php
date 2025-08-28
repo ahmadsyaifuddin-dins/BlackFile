@@ -61,7 +61,7 @@
                             <input type="text" x-model="search" x-ref="search" @keydown.escape.prevent="open = false" placeholder="Search..." class="w-full bg-surface border-b border-border-color p-2 focus:outline-none text-white">
                             <div class="max-h-60 overflow-y-auto">
                                 <template x-for="option in filteredOptions" :key="option">
-                                    <a @click="select(option)" class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-green-400" :class="{'bg-primary text-green-600': selected === option}" x-text="option"></a>
+                                    <a @click="select(option)" class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-green-400" :class="{'text-green-600': selected === option}" x-text="option"></a>
                                 </template>
                                 <div x-show="filteredOptions.length === 0" class="px-4 py-2 text-sm text-secondary">No results found.</div>
                             </div>
@@ -86,7 +86,7 @@
                             <input type="text" x-model="search" x-ref="search" @keydown.escape.prevent="open = false" placeholder="Search..." class="w-full bg-surface border-b border-border-color p-2 focus:outline-none text-white">
                             <div class="max-h-60 overflow-y-auto">
                                 <template x-for="option in filteredOptions" :key="option">
-                                    <a @click="select(option)" class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-green-500" :class="{'bg-primary text-green-600': selected === option}" x-text="option"></a>
+                                    <a @click="select(option)" class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-green-500" :class="{'text-green-600': selected === option}" x-text="option"></a>
                                 </template>
                                 <div x-show="filteredOptions.length === 0" class="px-4 py-2 text-sm text-secondary">No results found.</div>
                             </div>
@@ -111,7 +111,7 @@
                             <input type="text" x-model="search" x-ref="search" @keydown.escape.prevent="open = false" placeholder="Search..." class="w-full bg-surface border-b border-border-color p-2 focus:outline-none text-white">
                             <div class="max-h-60 overflow-y-auto">
                                 <template x-for="option in filteredOptions" :key="option">
-                                    <a @click="select(option)" class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-green-500" :class="{'bg-primary text-green-600': selected === option}" x-text="option"></a>
+                                    <a @click="select(option)" class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-green-500" :class="{'text-green-600': selected === option}" x-text="option"></a>
                                 </template>
                                 <div x-show="filteredOptions.length === 0" class="px-4 py-2 text-sm text-secondary">No results found.</div>
                             </div>
@@ -153,19 +153,19 @@
                             <div class="py-1">
                                 <a @click="selected = 'UNKNOWN'; open = false"
                                     class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-white"
-                                    :class="{'bg-primary text-white': selected === 'UNKNOWN'}">UNKNOWN</a>
+                                    :class="{'text-white': selected === 'UNKNOWN'}">UNKNOWN</a>
                                 <a @click="selected = 'ACTIVE'; open = false"
                                     class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-red-600"
-                                    :class="{'bg-primary text-red-600': selected === 'ACTIVE'}">ACTIVE</a>
+                                    :class="{'text-red-600': selected === 'ACTIVE'}">ACTIVE</a>
                                 <a @click="selected = 'STANDBY'; open = false"
                                     class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-orange-600"
-                                    :class="{'bg-primary text-orange-600': selected === 'STANDBY'}">STANDBY</a>
+                                    :class="{'text-orange-600': selected === 'STANDBY'}">STANDBY</a>
                                 <a @click="selected = 'CONTAINED'; open = false"
                                     class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-yellow-600"
-                                    :class="{'bg-primary text-yellow-600': selected === 'CONTAINED'}">CONTAINED</a>
+                                    :class="{'text-yellow-600': selected === 'CONTAINED'}">CONTAINED</a>
                                 <a @click="selected = 'NEUTRALIZED'; open = false"
                                     class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-green-700"
-                                    :class="{'bg-primary text-green-700': selected === 'NEUTRALIZED'}">NEUTRALIZED</a>
+                                    :class="{'text-green-700': selected === 'NEUTRALIZED'}">NEUTRALIZED</a>
                             </div>
                         </div>
                     </div>
@@ -247,7 +247,7 @@
                         {{-- Tab 1: Upload File --}}
                         <div x-show="tab === 'upload'" x-transition>
                             <input type="file" name="images[]" multiple
-                                class="block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-black hover:file:bg-primary-hover cursor-pointer">
+                                class="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-black hover:file:bg-primary-hover cursor-pointer">
                         </div>
 
                         {{-- Tab 2: Link from URL --}}
@@ -266,7 +266,7 @@
             {{-- Tombol Aksi --}}
             <div class="flex justify-end pt-4">
                 <button type="submit"
-                    class="bg-primary text-primary font-bold py-3 px-8 rounded-none hover:bg-primary-hover transition-colors text-lg tracking-widest cursor-pointer">
+                    class="bg-primary text-black font-bold py-3 px-8 rounded-none hover:bg-primary-hover transition-colors text-lg tracking-widest cursor-pointer">
                     > SAVE CHANGES
                 </button>
             </div>

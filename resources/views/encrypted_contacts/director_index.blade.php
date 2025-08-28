@@ -8,7 +8,7 @@
                 </h1>
                 <p class="text-sm text-secondary font-mono mt-1">Full access to all encrypted contact files across the network.</p>
             </div>
-            <a href="{{ route('encrypted-contacts.create') }}" class="w-full sm:w-auto text-center bg-primary text-primary font-bold py-2 px-4 hover:bg-primary-hover transition-colors">
+            <a href="{{ route('encrypted-contacts.create') }}" class="w-full sm:w-auto text-center bg-primary text-black font-bold py-2 px-4 hover:bg-primary-hover transition-colors">
                 > ADD PERSONAL CONTACT
             </a>
         </div>

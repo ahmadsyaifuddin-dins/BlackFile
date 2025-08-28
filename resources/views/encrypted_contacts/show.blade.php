@@ -149,7 +149,7 @@
             </div>
             <div class="flex justify-end pt-2">
                 <button type="submit"
-                    class="bg-primary text-primary font-bold py-2 px-6 hover:bg-primary-hover transition-colors cursor-pointer">
+                    class="bg-primary text-black font-bold py-2 px-6 hover:bg-primary-hover transition-colors cursor-pointer">
                     DECRYPT
                 </button>
             </div>

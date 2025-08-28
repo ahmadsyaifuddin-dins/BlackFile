@@ -48,16 +48,16 @@
                 <h2 class="text-lg font-bold text-primary">> PROFILE PHOTO</h2>
                 @if($contact->profile_photo_path)
                 <div class="my-4">
-                    <p class="text-sm text-secondary mb-2">Current Photo:</p>
+                    <p class="text-sm text-white mb-2">Current Photo:</p>
                     <img src="{{ asset($contact->profile_photo_path) }}" alt="{{ $contact->codename }}"
                         class="w-32 h-32 object-cover border-2 border-border-color">
                 </div>
                 @endif
                 <div>
-                    <label for="profile_photo" class="block text-sm text-secondary mb-2">{{ $contact->profile_photo_path
+                    <label for="profile_photo" class="block text-sm text-white mb-2">{{ $contact->profile_photo_path
                         ? 'Replace Photo (Optional):' : 'Upload Photo (Optional):' }}</label>
                     <input type="file" name="profile_photo" id="profile_photo"
-                        class="block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary hover:file:bg-primary-hover cursor-pointer">
+                        class="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary hover:file:bg-primary-hover cursor-pointer">
                 </div>
             </div>
 
@@ -219,7 +219,7 @@
                 <div class="flex justify-between items-center pt-4">
                     {{-- Tombol Simpan --}}
                     <button type="submit"
-                        class="bg-primary text-primary font-bold py-3 px-8 hover:bg-primary-hover transition-colors tracking-widest cursor-pointer">
+                        class="bg-primary text-black font-bold py-3 px-8 hover:bg-primary-hover transition-colors tracking-widest cursor-pointer">
                         SAVE & RE-ENCRYPT
                     </button>
                 </div>
@@ -242,7 +242,7 @@
             </div>
             <div class="flex justify-end pt-2">
                 <button type="submit"
-                    class="bg-primary text-primary font-bold py-2 px-6 hover:bg-primary-hover transition-colors cursor-pointer">
+                    class="bg-primary text-black font-bold py-2 px-6 hover:bg-primary-hover transition-colors cursor-pointer">
                     AUTHORIZE & EDIT
                 </button>
             </div>

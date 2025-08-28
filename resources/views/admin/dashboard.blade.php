@@ -60,7 +60,7 @@
                 <form action="{{ route('admin.invites.generate') }}" method="POST">
                     @csrf
                     <button type="submit"
-                        class="px-3 py-1 bg-primary whitespace-nowrap sm:text-base hover:bg-primary-hover font-bold tracking-widest rounded-md text-xs cursor-pointer">[
+                        class="px-3 py-1 text-black bg-primary whitespace-nowrap sm:text-base hover:bg-primary-hover font-bold tracking-widest rounded-md text-xs cursor-pointer">[
                         + GENERATE TOKEN ]</button>
                 </form>
             </div>

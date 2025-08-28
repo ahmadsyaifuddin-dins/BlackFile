@@ -33,7 +33,7 @@
     </div>
 
     <div class="mt-6 border-t border-border-color pt-6 flex justify-end">
-        <a href="{{ route('profile.edit') }}" class="px-6 py-2 bg-primary text-base text-primary-hover transition-colors font-bold tracking-widest rounded-md text-sm">
+        <a href="{{ route('profile.edit') }}" class="px-6 py-2 bg-black text-green-700 transition-colors font-bold tracking-widest rounded-md text-sm cursor-pointer">
             [ EDIT PROFILE ]
         </a>
     </div>

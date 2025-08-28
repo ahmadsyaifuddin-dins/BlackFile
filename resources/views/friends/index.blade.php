@@ -8,7 +8,7 @@
             > [ {{ $pageTitle ?? __('NETWORK ANALYSIS TERMINAL') }} ]
         </h2>
         <a href="{{ route('friends.create') }}"
-            class="mt-2 sm:mt-0 px-4 py-2 bg-primary text-base text-primary-hover transition-colors font-bold tracking-widest rounded-md text-sm">
+            class="mt-2 sm:mt-0 px-4 py-2 bg-primary text-base text-black transition-colors font-bold tracking-widest rounded-md">
             [ + {{ __('ESTABLISH CONNECTION') }} ]
         </a>
     </div>

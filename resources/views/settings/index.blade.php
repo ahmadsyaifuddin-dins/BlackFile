@@ -59,7 +59,7 @@
         {{-- Tombol Simpan Terpusat --}}
         <div class="mt-6 flex justify-end">
             {{-- [PERBAIKAN] Warna teks diubah menjadi hitam agar kontras --}}
-            <button type="submit" class="bg-primary text-primary font-bold py-3 px-8 hover:bg-primary-hover transition-colors tracking-widest cursor-pointer">
+            <button type="submit" class="bg-primary text-black font-bold py-3 px-8 hover:bg-primary-hover transition-colors tracking-widest cursor-pointer">
                 {{ __('SAVE ALL CHANGES') }}
             </button>
         </div>

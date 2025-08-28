@@ -33,7 +33,7 @@
                 <label for="profile_photo" class="text-primary text-lg">> PROFILE PHOTO (OPTIONAL)</label>
                 <p class="text-xs text-secondary mb-2">Main visual identifier for this contact.</p>
                 <input type="file" name="profile_photo" id="profile_photo"
-                    class="block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary hover:file:bg-primary-hover cursor-pointer">
+                    class="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary hover:file:bg-primary-hover cursor-pointer">
             </div>
 
             <div>
@@ -167,7 +167,7 @@
 
             <div class="flex justify-end pt-4">
                 <button type="submit"
-                    class="bg-primary text-primary font-bold py-3 px-8 hover:bg-primary-hover transition-colors tracking-widest cursor-pointer">
+                    class="bg-primary text-black font-bold py-3 px-8 hover:bg-primary-hover transition-colors tracking-widest cursor-pointer">
                     SAVE & ENCRYPT
                 </button>
             </div>

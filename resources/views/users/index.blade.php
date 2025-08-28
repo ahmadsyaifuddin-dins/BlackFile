@@ -6,7 +6,7 @@
 
         @if(strtolower(Auth::user()->role->name) === 'director')
         <a href="{{ route('register.agent') }}"
-            class="w-full sm:w-auto text-center bg-primary text-primary font-bold py-2 px-4 rounded hover:bg-primary-hover transition-colors">
+            class="w-full sm:w-auto text-center bg-primary text-black font-bold py-2 px-4 rounded hover:bg-primary-hover transition-colors">
             > Register New Agent
         </a>
         @endif

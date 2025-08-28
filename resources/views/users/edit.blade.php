@@ -80,7 +80,7 @@
                 </div>
 
                 <div class="border-t border-border-color pt-6 flex justify-end">
-                    <button type="submit" class="px-6 py-2 bg-primary text-base text-primary-hover transition-colors font-bold tracking-widest rounded-md text-sm">
+                    <button type="submit" class="px-6 py-2 bg-primary text-primary-hover text-black transition-colors font-bold tracking-widest rounded-md text-sm cursor-pointer">
                         [ UPDATE AGENT ]
                     </button>
                 </div>

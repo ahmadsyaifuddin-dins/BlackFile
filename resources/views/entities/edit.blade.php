@@ -146,6 +146,9 @@
                                 <a @click="selected = 'ACTIVE'; open = false"
                                     class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-red-600"
                                     :class="{'bg-primary text-red-600': selected === 'ACTIVE'}">ACTIVE</a>
+                                <a @click="selected = 'STANDBY'; open = false"
+                                    class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-orange-600"
+                                    :class="{'bg-primary text-orange-600': selected === 'STANDBY'}">STANDBY</a>
                                 <a @click="selected = 'CONTAINED'; open = false"
                                     class="block px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-yellow-600"
                                     :class="{'bg-primary text-yellow-600': selected === 'CONTAINED'}">CONTAINED</a>

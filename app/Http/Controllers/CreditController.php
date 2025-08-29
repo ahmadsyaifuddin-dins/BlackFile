@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use App\Models\CreditView;
 
 class CreditController extends Controller
 {
@@ -20,11 +21,14 @@ class CreditController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-
+        
         if ($user->role->name === 'Director') {
-            $usersWithCredits = User::has('credits')->with('credits')->get();
-            // TAMBAHKAN INI: Cek apakah director sendiri punya credit
-            $directorHasCredits = $user->credits()->exists();
+            // PERUBAHAN: Gunakan withCount untuk mengambil jumlah view secara efisien
+            $usersWithCredits = User::has('credits')
+                ->with('credits')
+                ->withCount('creditViews') // Menghitung relasi creditViews
+                ->get();
+            $directorHasCredits = $user->credits()->exists(); 
             return view('credits.index', compact('usersWithCredits', 'directorHasCredits'));
         }
 
@@ -185,8 +189,28 @@ class CreditController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\View\View
      */
-    public function publicShow(User $user)
+    public function publicShow(Request $request, User $user)
     {
+        // --- LOGIKA PELACAKAN BARU ---
+        $isDirector = false;
+        if (Auth::check()) {
+            /** @var \App\Models\User $visitor */
+            $visitor = Auth::user();
+            if ($visitor->role->name === 'Director') {
+                $isDirector = true;
+            }
+        }
+
+        // Jangan catat jika pengunjung adalah Director
+        if (!$isDirector) {
+            CreditView::create([
+                'user_id' => $user->id, // ID pemilik halaman
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+                'visitor_id' => Auth::id(), // Akan null jika pengunjung adalah guest
+            ]);
+        }
+
         $credits = $user->credits()->orderBy('created_at', 'asc')->get();
 
         if ($credits->isEmpty()) {

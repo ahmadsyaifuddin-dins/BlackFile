@@ -130,8 +130,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Credit::class);
     }
-    
-    
+
+    // Di dalam class User
+    public function creditViews()
+    {
+        return $this->hasMany(CreditView::class);
+    }
     /**
      * [BARU & MEMPERBAIKI MASALAH]
      * Accessor cerdas untuk mendapatkan "parent" atau "handler" dari tabel connections.

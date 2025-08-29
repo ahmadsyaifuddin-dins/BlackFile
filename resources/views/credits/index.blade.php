@@ -43,7 +43,14 @@
                          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-3 bg-gray-700/50 rounded-lg mb-3">
                             <div>
                                 <p class="font-bold text-white">{{ $user->name }}</p>
-                                <p class="text-sm text-gray-400">{{ $user->credits->count() }} entries</p>
+                                <div class="flex items-center gap-4 text-sm text-gray-400 mt-1">
+                                    <span>{{ $user->credits->count() }} entries</span>
+                                    <!-- PERUBAHAN: Tampilkan jumlah view -->
+                                    <span class="flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+                                        {{ $user->credit_views_count }} views
+                                    </span>
+                                </div>
                             </div>
                             <!-- PERBAIKAN: Dibuat flex-wrap agar tombol tidak aneh di layar kecil -->
                             <div class="flex items-center flex-wrap gap-2 justify-start sm:justify-end">

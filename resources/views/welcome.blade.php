@@ -80,12 +80,12 @@
                     {{-- ================================================================ --}}
                     @auth
                         {{-- Tombol ini tampil JIKA pengguna SUDAH LOGIN --}}
-                        <a href="{{ route('dashboard') }}" class="px-8 py-4 bg-primary text-primary transition-colors font-bold tracking-widest text-lg hover:bg-primary-hover">
+                        <a href="{{ route('dashboard') }}" class="px-8 py-4 bg-black text-primary transition-colors font-bold tracking-widest text-lg hover:bg-primary-hover">
                             > PROCEED TO DASHBOARD
                         </a>
                     @else
                         {{-- Tombol ini tampil JIKA pengguna BELUM LOGIN --}}
-                        <a href="{{ route('login') }}" class="px-8 py-4 bg-primary text-primary transition-colors font-bold tracking-widest text-lg hover:bg-primary-hover">
+                        <a href="{{ route('login') }}" class="px-8 py-4 bg-black text-primary transition-colors font-bold tracking-widest text-lg hover:bg-primary-hover">
                             > ACCESS TERMINAL
                         </a>
                     @endauth

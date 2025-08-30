@@ -79,6 +79,9 @@ class ArchiveController extends Controller
             $q->where('user_id', $request->owner);
         });
 
+
+        $perPage = Auth::user()->settings['per_page'] ?? 15;
+
         // =================================================================
         // 4. FINALISASI QUERY DAN KIRIM DATA KE VIEW
         // =================================================================
@@ -89,7 +92,7 @@ class ArchiveController extends Controller
                 $query->where('user_id', $user->id);
             }])
             ->latest()
-            ->paginate(15)
+            ->paginate($perPage)
             ->appends($request->query()); // <-- SANGAT PENTING untuk paginasi
 
         return view('archives.index', compact('archives', 'categories', 'owners'));

@@ -28,8 +28,11 @@ class ArchiveController extends Controller
         // =================================================================
         // 1. PERSIAPAN DATA UNTUK DROPDOWN FILTER
         // =================================================================
-        $categories = Config::get('blackfile.archive_categories', []);
-
+        // Ambil semua kategori unik yang sudah ada di database, urutkan, dan filter nilai kosong.
+        $categories = Archive::whereNotNull('category')
+                     ->orderBy('category')
+                     ->distinct()
+                     ->pluck('category');
         // Ambil hanya user yang memiliki arsip, urutkan berdasarkan nama
         $owners = User::whereHas('archives')->orderBy('name')->get();
 

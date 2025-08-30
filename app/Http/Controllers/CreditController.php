@@ -37,6 +37,28 @@ class CreditController extends Controller
     }
 
     /**
+     * MENAMPILKAN LOG PENAYANGAN HALAMAN CREDIT PUBLIK.
+     * HANYA BISA DIAKSES OLEH DIRECTOR.
+     */
+    public function viewLog()
+    {
+        // Fase 1: Otorisasi - Pastikan hanya Director yang bisa mengakses
+        if (Auth::user()->role->name !== 'Director') {
+            abort(403, 'ACCESS DENIED. THIS AREA IS RESTRICTED TO DIRECTOR-LEVEL PERSONNEL.');
+        }
+
+        // Fase 2: Pengambilan Data
+        // Ambil semua data dari credit_views, urutkan dari yang terbaru.
+        // Gunakan eager loading ('owner', 'visitor') untuk efisiensi query database.
+        $views = CreditView::with(['owner', 'visitor'])
+                           ->latest('viewed_at')
+                           ->paginate(20); // Gunakan paginasi agar tidak berat
+
+        // Fase 3: Tampilkan View
+        return view('credits.view_log', compact('views'));
+    }
+
+    /**
      * Show the form for creating the entire credit list.
      */
     public function create()

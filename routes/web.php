@@ -55,6 +55,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
+    Route::get('/credits/access-log', [CreditController::class, 'viewLog'])->name('credits.viewLog');
+
     // Semua rute aplikasi Anda yang lain
     Route::resource('entities', EntityController::class);
     Route::resource('prototypes', PrototypeController::class);

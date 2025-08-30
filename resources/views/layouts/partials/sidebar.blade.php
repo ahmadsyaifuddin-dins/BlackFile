@@ -22,7 +22,8 @@
             <span>> {{ __('Dashboard') }}</span>
         </a>
 
-        @if(strtolower(Auth::user()->role->name) === 'director' || strtolower(Auth::user()->role->name) === 'technician')
+        @if(strtolower(Auth::user()->role->name) === 'director' || strtolower(Auth::user()->role->name) ===
+        'technician')
         <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
            {{ request()->routeIs('admin.dashboard') 
                 ? 'bg-surface-light text-primary border-l-4 border-primary' 
@@ -94,12 +95,44 @@
             <span>> {{ __('Codex') }}</span>
         </a>
 
-        <a href="{{ route('credits.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-            {{ request()->routeIs('credits.*') 
-        ? 'bg-surface-light text-primary border-l-4 border-primary' 
-        : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
-            <span>> {{ __('Epilogue') }}</span>
-        </a>
+        <!-- PERUBAHAN DIMULAI DI SINI: Menu Epilogue sekarang bisa dibuka-tutup -->
+        <div x-data="{ open: {{ request()->routeIs('credits.*') ? 'true' : 'false' }} }">
+            <!-- Tombol untuk membuka/menutup submenu -->
+            <button @click="open = !open" class="w-full flex items-center justify-between space-x-3 px-3 py-2 rounded-r-md transition-colors text-left
+                {{ request()->routeIs('credits.*') 
+                    ? 'bg-surface-light text-primary border-l-4 border-primary' 
+                    : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+                <span class="flex items-center space-x-3">
+                    <span>> {{ __('Epilogue') }}</span>
+                </span>
+                <!-- Ikon Panah -->
+                <svg class="w-4 h-4 transform transition-transform" :class="{ 'rotate-90': open }" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+
+            <!-- Daftar Submenu -->
+            <div x-show="open" x-transition class="mt-1 space-y-1 pl-6">
+                <!-- Submenu: Manage Credits -->
+                <a href="{{ route('credits.index') }}" class="block px-3 py-2 rounded-r-md transition-colors text-sm
+                    {{ request()->routeIs('credits.index', 'credits.edit', 'credits.create') 
+                        ? 'bg-surface-light/50 text-white' 
+                        : 'text-gray-400 hover:bg-surface-light/50 hover:text-white' }}">
+                    - Manage Credits
+                </a>
+
+                <!-- Submenu: Access Log (Hanya untuk Director) -->
+                @if(strtolower(Auth::user()->role->name) === 'director')
+                <a href="{{ route('credits.viewLog') }}" class="block px-3 py-2 rounded-r-md transition-colors text-sm
+                    {{ request()->routeIs('credits.viewLog') 
+                        ? 'bg-surface-light/50 text-white' 
+                        : 'text-gray-400 hover:bg-surface-light/50 hover:text-white' }}">
+                    - Access Log
+                </a>
+                @endif
+            </div>
+        </div>
 
         {{-- Tampilkan menu ini HANYA jika role user adalah Director dan Technician --}}
         @if(strtolower(Auth::user()->role->name) === 'director' || strtolower(Auth::user()->role->name) ===

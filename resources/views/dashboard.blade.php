@@ -6,7 +6,7 @@
     {{-- Header & System Time --}}
     <div x-data="{ time: new Date().toLocaleTimeString('en-GB') }" x-init="setInterval(() => { time = new Date().toLocaleTimeString('en-GB') }, 1000)"
         class="mb-6 font-mono border-b-2 border-border-color pb-4">
-        <h1 class="text-2xl font-bold text-primary tracking-wider">
+        <h1 class="text-xl sm:text-2xl font-bold text-primary tracking-wider">
             > Welcome, <span class="text-white">{{ Auth::user()->codename }}</span> <span class="text-primary animate-pulse">_</span>
         </h1>
         <p class="text-sm text-secondary">
@@ -52,6 +52,15 @@
                 {{-- [PERBAIKAN] Menghapus class 'iframe-green-tint' dari iframe --}}
                 <iframe title='World population' src='https://www.theworldcounts.com/embeds/counters/8?background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='100' width='100%'></iframe>
             </div>
+
+            <div class="iframe-wrapper border border-border-color p-2 bg-base">
+            <iframe title='World average temperature (°C)' src='https://www.theworldcounts.com/embeds/counters/21?background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='100' width='100%'></iframe>
+            </div>
+
+            <div class="iframe-wrapper border border-border-color p-2 bg-base">
+            <iframe title='Rise in sea levels (cm)' src='https://www.theworldcounts.com/embeds/counters/68?background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='100' width='100%'></iframe>
+            </div>
+
             {{-- Food Supply --}}
             <div class="iframe-wrapper border border-border-color p-2 bg-base">
                 <iframe title='Earth running out of food' src='https://www.theworldcounts.com/embeds/counters/112?background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='100' width='100%'></iframe>
@@ -60,6 +69,58 @@
             <div class="iframe-wrapper border border-border-color p-2 bg-base">
                 <iframe title='Earth running out of freshwater' src='https://www.theworldcounts.com/embeds/counters/113?background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='100' width='100%'></iframe>
             </div>
+
+            <div class="iframe-wrapper border border-border-color p-2 bg-base">
+            <iframe title='Population of Asia' src='https://www.theworldcounts.com/embeds/counters/129?background_color=background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='100' width='100%'></iframe>
+            </div>
+
+            <div class="iframe-wrapper border border-border-color p-2 bg-base">
+            <iframe title='Population of Indonesia' src='https://www.theworldcounts.com/embeds/counters/138?background_color=background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='100' width='100%'></iframe>
+            </div>
+
+            <div class="iframe-wrapper border border-border-color p-2 bg-base">
+            <iframe title='People who died from hunger' src='https://www.theworldcounts.com/embeds/counters/2?background_color=background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='100' width='100%'></iframe>
+        </div>
+
+        <div class="iframe-wrapper border border-border-color p-2 bg-base">
+            <iframe title='Number of obese people' src='https://www.theworldcounts.com/embeds/counters/51?background_color=background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='100' width='100%'></iframe>
+        </div>
+
+        <div class="iframe-wrapper border border-border-color p-2 bg-base">
+            <iframe title='Tonnes of food lost or wasted' src='https://www.theworldcounts.com/embeds/counters/101?background_color=background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='100' width='100%'></iframe>
+        </div>
+
+        <div class="iframe-wrapper border border-border-color p-2 bg-base">
+            <iframe title='Tonnes of paper produced' src='https://www.theworldcounts.com/embeds/counters/69?background_color=background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='100' width='100%'></iframe>
+        </div>
+
+        <div class="iframe-wrapper border border-border-color p-2 bg-base">
+            <iframe title='Time left till the end of rainforests' src='https://www.theworldcounts.com/embeds/counters/114?background_color=background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='110' width='100%'></iframe>
+        </div>
+
+        <div class="iframe-wrapper border border-border-color p-2 bg-base">
+            <iframe title='Tonnes of freshwater used' src='https://www.theworldcounts.com/embeds/counters/9?background_color=background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='100' width='100%'></iframe>
+        </div>
+
+        <div class="iframe-wrapper border border-border-color p-2 bg-base">
+            <iframe title='Liters of water you have used' src='https://www.theworldcounts.com/embeds/counters/11?background_color=background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='100' width='100%'></iframe>
+        </div>
+
+        <div class="iframe-wrapper border border-border-color p-2 bg-base">
+            <iframe title='Deaths from dirty water and related diseases' src='https://www.theworldcounts.com/embeds/counters/12?background_color=background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='110' width='100%'></iframe>
+        </div>
+
+        <div class="iframe-wrapper border border-border-color p-2 bg-base">
+            <iframe title='US dollars spent on consumer electronics' src='https://www.theworldcounts.com/embeds/counters/84?background_color=background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='110' width='100%'></iframe>
+        </div>
+
+        <div class="iframe-wrapper border border-border-color p-2 bg-base">
+        <iframe title='Cars produced' src='https://www.theworldcounts.com/embeds/counters/73?background_color=background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='100' width='100%'></iframe>
+        </div>
+
+        <div class="iframe-wrapper border border-border-color p-2 bg-base">
+        <iframe title='Tonnes of resources mined from Earth' src='https://www.theworldcounts.com/embeds/counters/16?background_color=background_color=0d1117&color=ffffff&font_family=%22Roboto+Mono%22%2C+monospace' style='border: none' height='110' width='100%'></iframe>
+        </div>
         </div>
     </div>
 
@@ -133,7 +194,7 @@
                                 @php
                                     $percentage = $totalPrototypes > 0 ? ($status->total / $totalPrototypes) * 100 : 0;
                                 @endphp
-                                <div class="bg-green-800 h-full" style="width: {{ $percentage }}%"></div>
+                                <div class="bg-primary h-full" style="width: {{ $percentage }}%"></div>
                             </div>
                         </div>
                     @empty

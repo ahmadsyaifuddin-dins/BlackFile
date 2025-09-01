@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             PrototypesSeeder::class,
             EntitiesSeeder::class,
             EntityImagesSeeder::class,
+            // DefaultMusicSeeder::class,
         ]);
     }
 }

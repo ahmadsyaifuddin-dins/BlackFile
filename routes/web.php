@@ -57,6 +57,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/credits/access-log', [CreditController::class, 'viewLog'])->name('credits.viewLog');
 
+    Route::get('/default-music', [App\Http\Controllers\DefaultMusicController::class, 'index'])->name('default-music.index');
+    Route::post('/default-music', [App\Http\Controllers\DefaultMusicController::class, 'store'])->name('default-music.store');
+    Route::delete('/default-music/{defaultMusic}', [App\Http\Controllers\DefaultMusicController::class, 'destroy'])->name('default-music.destroy');
+
     // Semua rute aplikasi Anda yang lain
     Route::resource('entities', EntityController::class);
     Route::resource('prototypes', PrototypeController::class);
@@ -104,7 +108,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/admin/users/{user}/approve', [AdminController::class, 'approveUser'])->name('admin.users.approve');
         Route::delete('/admin/users/{user}/reject', [AdminController::class, 'rejectUser'])->name('admin.users.reject');
         Route::post('/admin/invites/generate', [AdminController::class, 'generateInvite'])->name('admin.invites.generate');
-        
+
         Route::get('/admin/applicants/{user}', [AdminController::class, 'getApplicantDetails'])->name('admin.applicants.show');
 
         Route::get('/register/agent', [RegisterAgentController::class, 'showRegisterForm'])->name('register.agent');

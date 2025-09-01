@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use App\Models\CreditView;
+use App\Models\DefaultMusic;
 
 class CreditController extends Controller
 {
@@ -21,14 +22,14 @@ class CreditController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        
+
         if ($user->role->name === 'Director') {
             // PERUBAHAN: Gunakan withCount untuk mengambil jumlah view secara efisien
             $usersWithCredits = User::has('credits')
                 ->with('credits')
                 ->withCount('creditViews') // Menghitung relasi creditViews
                 ->get();
-            $directorHasCredits = $user->credits()->exists(); 
+            $directorHasCredits = $user->credits()->exists();
             return view('credits.index', compact('usersWithCredits', 'directorHasCredits'));
         }
 
@@ -51,8 +52,8 @@ class CreditController extends Controller
         // Ambil semua data dari credit_views, urutkan dari yang terbaru.
         // Gunakan eager loading ('owner', 'visitor') untuk efisiensi query database.
         $views = CreditView::with(['owner', 'visitor'])
-                           ->latest('viewed_at')
-                           ->paginate(20); // Gunakan paginasi agar tidak berat
+            ->latest('viewed_at')
+            ->paginate(20); // Gunakan paginasi agar tidak berat
 
         // Fase 3: Tampilkan View
         return view('credits.view_log', compact('views'));
@@ -70,7 +71,8 @@ class CreditController extends Controller
         if ($user->credits()->exists()) {
             return redirect()->route('credits.edit', $user->id);
         }
-        return view('credits.create');
+        $defaultMusics = DefaultMusic::all();
+        return view('credits.create', compact('defaultMusics'));
     }
 
     public function store(Request $request)
@@ -82,17 +84,22 @@ class CreditController extends Controller
     public function edit($userId)
     {
         $user = User::findOrFail($userId);
-        // $this->authorize('update-credits', $user); // Anda perlu membuat policy ini
-
         $credits = $user->credits()->orderBy('created_at', 'asc')->get();
 
-        return view('credits.edit', compact('user', 'credits'));
+        // TAMBAHKAN INI
+        $defaultMusics = DefaultMusic::all();
+
+        // Cari path musik yang ada
+        $musicCredit = $credits->whereNotNull('music_path')->first();
+        $musicPath = $musicCredit->music_path ?? null;
+
+        return view('credits.edit', compact('user', 'credits', 'musicPath', 'defaultMusics'));
     }
+
 
     public function update(Request $request, $userId)
     {
         $user = User::findOrFail($userId);
-        // $this->authorize('update-credits', $user);
 
         // Secara otomatis buat slug jika belum ada
         if (empty($user->slug)) {
@@ -101,43 +108,31 @@ class CreditController extends Controller
         }
 
         $validated = $request->validate([
-            'credits' => 'present|array',
-            'credits.*.id' => 'nullable|integer',
-            'credits.*.role' => 'required|string|max:255',
-            'credits.*.names' => 'required|array|min:1', // Memastikan array 'names' ada dan tidak kosong
-            'credits.*.logos' => 'nullable|array',
-            'credits.*.logos.*.type' => ['required', Rule::in(['file', 'url'])],
+            'credits'              => 'present|array',
+            'credits.*.id'         => 'nullable|integer',
+            'credits.*.role'       => 'required|string|max:255',
+            'credits.*.names'      => 'required|array|min:1',
+            'credits.*.names.*'    => 'required|string|max:255',
+            'credits.*.logos'      => 'nullable|array',
+            'credits.*.logos.*.type' => ['required_with:credits.*.logos', \Illuminate\Validation\Rule::in(['file', 'url'])],
             'credits.*.logos.*.path' => 'nullable|string',
-            'credits.*.logos.*.file' => 'nullable|image|max:2048',
-            'music' => 'nullable|file|mimes:mp3,wav,ogg|max:4240',
+            'credits.*.logos.*.file' => 'nullable|image|max:2048', // 2MB
+            'music_source'         => 'required|in:default,custom',
+            'default_music_path'   => 'nullable|string',
+            'music'                => 'nullable|file|mimes:mp3,wav,ogg|max:10240', // 10MB
         ]);
 
         $submittedCreditsData = $validated['credits'] ?? [];
         $existingCreditIds = $user->credits()->pluck('id')->toArray();
-        $submittedCreditIds = [];
-        $newMusicPath = null;
 
-        DB::transaction(function () use ($request, $user, $submittedCreditsData, &$submittedCreditIds, &$newMusicPath, $existingCreditIds) {
+        DB::transaction(function () use ($request, $user, $submittedCreditsData, $existingCreditIds, $validated) {
 
-            // PERBAIKAN: Logika musik hanya dijalankan jika ada file baru
-            if ($request->hasFile('music')) {
-                // 1. Hapus musik lama dari server
-                $oldMusicCredit = $user->credits()->whereNotNull('music_path')->first();
-                if ($oldMusicCredit) {
-                    File::delete(public_path($oldMusicCredit->music_path));
-                }
+            $submittedCreditIds = [];
 
-                // 2. Hapus path musik lama dari SEMUA entri credit di database
-                $user->credits()->update(['music_path' => null]);
-
-                // 3. Simpan musik baru
-                $musicFile = $request->file('music');
-                $fileName = Str::uuid() . '.' . $musicFile->getClientOriginalExtension();
-                $musicFile->move(public_path('uploads/credits/music'), $fileName);
-                $newMusicPath = 'uploads/credits/music/' . $fileName;
-            }
-
+            // --- FASE 1: SINKRONISASI DATA CREDIT (SECTIONS, NAMES, LOGOS) ---
             foreach ($submittedCreditsData as $index => $creditData) {
+
+                // Logika untuk memproses dan menyimpan logo
                 $finalLogoPaths = [];
                 if (!empty($creditData['logos'])) {
                     foreach ($creditData['logos'] as $logoIndex => $logoData) {
@@ -147,12 +142,16 @@ class CreditController extends Controller
                             if ($request->hasFile("credits.{$index}.logos.{$logoIndex}.file")) {
                                 $file = $request->file("credits.{$index}.logos.{$logoIndex}.file");
                                 $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+                                // Gunakan public_path() untuk penyimpanan lokal
                                 $file->move(public_path('uploads/credits/logos'), $fileName);
                                 $finalLogoPaths[] = 'uploads/credits/logos/' . $fileName;
-                                if (!empty($logoData['path'])) {
+
+                                // Hapus file lama jika ada yang diganti
+                                if (!empty($logoData['path']) && !Str::startsWith($logoData['path'], 'http')) {
                                     File::delete(public_path($logoData['path']));
                                 }
                             } elseif (!empty($logoData['path'])) {
+                                // Pertahankan path file lama jika tidak ada file baru yang diunggah
                                 $finalLogoPaths[] = $logoData['path'];
                             }
                         }
@@ -160,13 +159,13 @@ class CreditController extends Controller
                 }
 
                 $payload = [
-                    'role' => $creditData['role'],
-                    'names' => array_filter($creditData['names']), // Gunakan 'names' (plural)
-                    'logos' => $finalLogoPaths,
                     'user_id' => $user->id,
+                    'role'    => $creditData['role'],
+                    'names'   => array_filter($creditData['names']),
+                    'logos'   => $finalLogoPaths,
                 ];
 
-                if (!empty($creditData['id'])) {
+                if (!empty($creditData['id']) && is_numeric($creditData['id'])) {
                     $credit = Credit::find($creditData['id']);
                     if ($credit) {
                         $credit->update($payload);
@@ -178,10 +177,12 @@ class CreditController extends Controller
                 }
             }
 
+            // --- FASE 2: HAPUS DATA CREDIT LAMA ---
             $idsToDelete = array_diff($existingCreditIds, $submittedCreditIds);
             if (!empty($idsToDelete)) {
                 $creditsToDelete = Credit::whereIn('id', $idsToDelete)->get();
                 foreach ($creditsToDelete as $creditToDelete) {
+                    // Hapus file logo terkait sebelum menghapus record dari DB
                     if ($creditToDelete->logos) {
                         foreach ($creditToDelete->logos as $logo) {
                             if (!Str::startsWith($logo, 'http')) {
@@ -193,11 +194,36 @@ class CreditController extends Controller
                 Credit::destroy($idsToDelete);
             }
 
+            // --- FASE 3: PROSES DAN SIMPAN MUSIK ---
+            $newMusicPath = null;
+            $currentMusicCredit = $user->credits()->whereNotNull('music_path')->first();
+
+            if ($validated['music_source'] === 'default') {
+                if ($currentMusicCredit && Str::startsWith($currentMusicCredit->music_path, 'uploads/credits/music')) {
+                    File::delete(public_path($currentMusicCredit->music_path));
+                }
+                $newMusicPath = $validated['default_music_path'] ?? null;
+            } elseif ($validated['music_source'] === 'custom' && $request->hasFile('music')) {
+                if ($currentMusicCredit && Str::startsWith($currentMusicCredit->music_path, 'uploads/credits/music')) {
+                    File::delete(public_path($currentMusicCredit->music_path));
+                }
+                $file = $request->file('music');
+                $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/credits/music'), $fileName);
+                $newMusicPath = 'uploads/credits/music/' . $fileName;
+            }
+            // Jika user memilih custom tapi tidak upload, pertahankan yang lama
+            elseif ($validated['music_source'] === 'custom' && $currentMusicCredit) {
+                $newMusicPath = $currentMusicCredit->music_path;
+            }
+
+            // Update path musik di database SETELAH semua credit disinkronisasi
+            $user->credits()->update(['music_path' => null]);
             if ($newMusicPath) {
-                $firstCredit = $user->credits()->orderBy('id', 'asc')->first();
+                // Ambil credit pertama yang ada SETELAH proses sinkronisasi
+                $firstCredit = $user->credits()->orderBy('created_at', 'asc')->first();
                 if ($firstCredit) {
-                    $firstCredit->music_path = $newMusicPath;
-                    $firstCredit->save();
+                    $firstCredit->update(['music_path' => $newMusicPath]);
                 }
             }
         });
@@ -206,8 +232,6 @@ class CreditController extends Controller
     }
 
     /**
-     * Display the public credits page for a user.
-     *
      * @param  \App\Models\User  $user
      * @return \Illuminate\View\View
      */

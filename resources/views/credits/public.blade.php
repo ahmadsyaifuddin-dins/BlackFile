@@ -28,7 +28,7 @@
 
         .credits-scroll {
             position: absolute;
-            top: -4%;
+            top: -11%; /* POSISI INI TIDAK DIUBAH SESUAI PERMINTAAN */
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
@@ -43,17 +43,27 @@
 
         .credit-role {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.25rem;
+            /* PERBAIKAN: Ukuran font disesuaikan untuk mobile & desktop */
+            font-size: 1rem; /* Ukuran dasar untuk mobile */
             color: #36d351; /* Warna hijau khas BlackFile */
-            margin-bottom: 1rem;
-            margin-top: 3rem;
+            margin-bottom: 1.25rem; /* Jarak ke nama pertama sedikit ditambah */
+            margin-top: 4rem; /* Jarak antar seksi diperlebar */
             text-transform: uppercase;
+            letter-spacing: 0.1em;
+            /* PERBAIKAN: Efek glow halus */
+            text-shadow: 0 0 8px rgba(54, 211, 81, 0.4);
         }
+
         .credit-name {
-            font-size: 1.5rem;
-            color: #f3f4f6;
-            margin-bottom: 0.5rem;
+            /* PERBAIKAN: Ukuran font, warna, dan bobot disesuaikan */
+            font-size: 1.125rem; /* text-lg, lebih kecil dari sebelumnya */
+            font-weight: 300; /* Font lebih tipis dan elegan */
+            color: #d1d5db; /* gray-300, sedikit lebih lembut dari putih murni */
+            margin-bottom: 0.75rem; /* Jarak antar nama sedikit ditambah */
+            letter-spacing: 0.025em; /* Spasi antar huruf agar lebih mudah dibaca */
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.1); /* Efek glow sangat halus */
         }
+
         .logo-container {
             margin-top: 1.5rem;
             display: flex;
@@ -64,51 +74,37 @@
         .logo-img {
             height: 4.5rem;
         }
+        
+        /* PERBAIKAN: Media query untuk layar lebih besar (desktop) */
+        @media (min-width: 640px) {
+            .credit-role {
+                font-size: 1.25rem; /* Ukuran kembali normal di desktop */
+            }
+            .credit-name {
+                font-size: 1.25rem; /* Ukuran kembali normal di desktop */
+            }
+        }
 
-        /* PERBAIKAN: Overlay untuk memulai interaksi */
+        /* Overlay untuk memulai interaksi */
         #start-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-            cursor: pointer;
-            transition: opacity 0.5s ease-out;
+            position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.9);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 50; cursor: pointer; transition: opacity 0.5s ease-out;
         }
-        #start-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
+        #start-overlay.hidden { opacity: 0; pointer-events: none; }
         .play-icon {
-            width: 80px;
-            height: 80px;
-            border: 2px solid #36d351;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s ease;
+            width: 80px; height: 80px; border: 2px solid #36d351; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease;
         }
-        .play-icon:hover {
-            transform: scale(1.1);
-            background-color: rgba(54, 211, 81, 0.1);
-        }
+        .play-icon:hover { transform: scale(1.1); background-color: rgba(54, 211, 81, 0.1); }
         .play-triangle {
-            width: 0;
-            height: 0;
-            border-top: 20px solid transparent;
-            border-bottom: 20px solid transparent;
-            border-left: 30px solid #36d351;
-            margin-left: 8px;
+            width: 0; height: 0; border-top: 20px solid transparent; border-bottom: 20px solid transparent;
+            border-left: 30px solid #36d351; margin-left: 8px;
         }
     </style>
 </head>
 <body class="bg-black">
 
-    <!-- PERBAIKAN: Overlay untuk memulai interaksi -->
     <div id="start-overlay">
         <div class="play-icon">
             <div class="play-triangle"></div>
@@ -119,7 +115,7 @@
     <div class="credits-container">
         <div class="credits-scroll" id="credits-content">
             <div class="pt-[100vh]">
-                <h1 class="text-5xl font-bold font-['Orbitron'] my-5 tracking-widest">BLACKFILE</h1>
+                <h1 class="text-4xl sm:text-5xl font-bold font-['Orbitron'] my-5 tracking-widest">BLACKFILE</h1>
                 <img src="{{ asset('app-icon.png') }}" alt="app-icon" class="w-24 block mx-auto">
                 @foreach($credits as $section)
                     <div class="my-8">
@@ -146,7 +142,6 @@
     </div>
 
     @if($musicCredit)
-        <!-- PERBAIKAN: Hapus 'autoplay', tambahkan 'id' -->
         <audio id="credits-audio" loop>
             <source src="{{ url($musicCredit->music_path) }}" type="audio/mpeg">
             Your browser does not support the audio element.
@@ -160,45 +155,36 @@
             const scrollContent = document.getElementById('credits-content');
 
             function startExperience() {
-                // Sembunyikan overlay dengan efek fade
                 startOverlay.classList.add('hidden');
-
-                // Coba putar audio
                 if (audio) {
                     audio.play().catch(error => {
                         console.warn("Autoplay was prevented by the browser.", error);
                     });
                 }
                 
-                // Hitung durasi dan mulai animasi scroll
                 const totalHeight = scrollContent.scrollHeight;
                 const viewportHeight = window.innerHeight;
                 const scrollDistance = totalHeight + viewportHeight;
-                const speed = 25; // pixels per second (kecepatan dramatis)
+                const speed = 17; // Kecepatan sedikit disesuaikan untuk font baru
                 const duration = scrollDistance / speed;
                 
                 scrollContent.style.animation = `scroll-up ${duration}s linear forwards`;
             }
 
-            // PERBAIKAN: Coba autoplay secara otomatis. Jika gagal, tunggu klik.
             if (audio) {
                 let playPromise = audio.play();
                 if (playPromise !== undefined) {
                     playPromise.then(_ => {
-                        // Autoplay berhasil (jarang terjadi)
                         startExperience();
                     }).catch(error => {
-                        // Autoplay diblokir, tunggu interaksi pengguna
                         startOverlay.addEventListener('click', startExperience, { once: true });
                     });
                 }
             } else {
-                // Jika tidak ada audio, tunggu klik untuk memulai
                 startOverlay.addEventListener('click', startExperience, { once: true });
             }
         });
 
-        // Tambahkan keyframe via JS agar bersih
         const style = document.createElement('style');
         style.textContent = `@keyframes scroll-up { from { transform: translate(-50%, 0); } to { transform: translate(-50%, -100%); } }`;
         document.head.appendChild(style);

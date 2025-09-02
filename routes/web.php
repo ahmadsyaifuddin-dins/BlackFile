@@ -10,6 +10,7 @@ use App\Http\Controllers\AuthManual\RegisterAgentController;
 use App\Http\Controllers\CodexController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DefaultMusicController;
 use App\Http\Controllers\EncryptedContactController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\FriendController;
@@ -45,6 +46,10 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [RegisterController::class, 'register'])->name('register');
 });
 
+Route::get('/default-music-file/{path}', [DefaultMusicController::class, 'serveMusicFile'])
+    ->where('path', '.*')
+    ->name('default-music.serve');
+
 // Grup rute yang HANYA bisa diakses oleh pengguna yang SUDAH LOGIN
 Route::middleware('auth')->group(function () {
     // Rute dasar setelah login
@@ -57,9 +62,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/credits/access-log', [CreditController::class, 'viewLog'])->name('credits.viewLog');
 
-    Route::get('/default-music', [App\Http\Controllers\DefaultMusicController::class, 'index'])->name('default-music.index');
-    Route::post('/default-music', [App\Http\Controllers\DefaultMusicController::class, 'store'])->name('default-music.store');
-    Route::delete('/default-music/{defaultMusic}', [App\Http\Controllers\DefaultMusicController::class, 'destroy'])->name('default-music.destroy');
+    Route::get('/default-music', [DefaultMusicController::class, 'index'])->name('default-music.index');
+    Route::post('/default-music', [DefaultMusicController::class, 'store'])->name('default-music.store');
+    Route::delete('/default-music/{defaultMusic}', [DefaultMusicController::class, 'destroy'])->name('default-music.destroy');
 
     // Semua rute aplikasi Anda yang lain
     Route::resource('entities', EntityController::class);

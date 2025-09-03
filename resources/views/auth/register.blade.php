@@ -65,7 +65,7 @@
                 <input type="text" id="invite_code" name="invite_code" value="{{ old('invite_code', $inviteCode) }}" class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
             </div>
             <div class="pt-4">
-                <button type="submit" class="w-full px-6 py-2 bg-primary text-base hover:bg-primary-hover transition-colors font-bold tracking-widest rounded-md text-sm">
+                <button type="submit" class="w-full px-6 py-2 bg-black text-primary text-base hover:bg-primary-hover transition-colors font-bold tracking-widest rounded-md text-sm">
                     [ SUBMIT APPLICATION ]
                 </button>
             </div>

@@ -74,7 +74,7 @@
 
                 <div class="flex items-center justify-end mt-6">
                     <button type="submit"
-                        class="w-full px-4 py-2 text-primary text-base hover:bg-primary-hover font-bold tracking-widest cursor-pointer">
+                        class="w-full px-4 py-2 bg-black text-primary text-base hover:bg-primary-hover font-bold tracking-widest cursor-pointer">
                         > INITIATE CONNECTION
                     </button>
                 </div>

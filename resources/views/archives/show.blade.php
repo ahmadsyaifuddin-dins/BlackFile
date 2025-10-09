@@ -3,7 +3,7 @@
 
         {{-- Header Halaman --}}
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-            <h1 class="text-xl sm:text-2xl font-bold text-primary truncate">[ {{ $archive->name }} ]</h1>
+            <h1 class="text-xl sm:text-2xl font-bold text-primary break-words">[ {{ $archive->name }} ]</h1>
             <a href="{{ url()->previous() }}"
                 class="flex-shrink-0 text-sm text-secondary hover:text-primary transition-colors duration-200">
                 &lt;-- Back to Vault
@@ -15,7 +15,8 @@
             {{-- Bagian Deskripsi (Full-width) --}}
             <div class="p-6">
                 <h3 class="text-sm font-bold uppercase tracking-wider text-secondary">Description</h3>
-                <p class="mt-2 text-primary whitespace-pre-wrap">{{ $archive->description ?? '// No description provided' }}</p>
+                <p class="mt-2 text-primary whitespace-pre-wrap">{{ $archive->description ?? '// No description
+                    provided' }}</p>
             </div>
 
             {{-- Bagian Spesifikasi (Grid Layout) --}}
@@ -99,7 +100,8 @@
                 <h3 class="text-sm font-bold uppercase tracking-wider text-secondary">Links</h3>
                 <ul class="mt-2 space-y-3">
                     @foreach ($archive->links as $link)
-                    <li class="flex items-center gap-4" x-data="{ tooltip: 'Copy' }">
+                    {{-- [PERBAIKAN] Pastikan nilai awal 'tooltip' adalah huruf kecil --}}
+                    <li class="flex items-center gap-4" x-data="{ tooltip: 'copy' }">
                         <svg class="h-5 w-5 text-secondary flex-shrink-0" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -107,18 +109,29 @@
                         </svg>
                         <a href="{{ $link }}" target="_blank" rel="noopener noreferrer"
                             class="text-primary text-primary-hover break-all text-sm flex-grow">{{ $link }}</a>
-                        <button class="cursor-pointer"
-                            @click="navigator.clipboard.writeText('{{ $link }}'); tooltip = 'Copied!'; setTimeout(() => tooltip = 'Copy', 2000)"
-                            class="relative flex-shrink-0">
-                            <span x-text="tooltip"
-                                class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs bg-surface-light text-secondary px-2 py-1 rounded-md"
-                                x-show="tooltip === 'Copied!'" x-transition></span>
-                            <svg class="h-5 w-5 text-secondary hover:text-primary" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+
+                            <button @click="
+                            navigator.clipboard.writeText('{{ $link }}'); 
+                            tooltip = 'copied'; 
+                            setTimeout(() => tooltip = 'copy', 1500)
+                        " class="relative flex-shrink-0 w-5 h-5 cursor-pointer" x-cloak>
+                    
+                        {{-- Ikon Ceklis (ditampilkan saat tooltip === 'copied') --}}
+                        <div x-show="tooltip === 'copied'" x-transition.opacity.duration.300ms 
+                             class="absolute inset-0 flex items-center justify-center">
+                            <svg class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                             </svg>
-                        </button>
+                        </div>
+                    
+                        {{-- Ikon Salin (ditampilkan saat tooltip === 'copy') --}}
+                        <div x-show="tooltip === 'copy'" x-transition.opacity.duration.300ms
+                             class="absolute inset-0 flex items-center justify-center">
+                            <svg class="h-5 w-5 text-secondary hover:text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                    </button>
                     </li>
                     @endforeach
                 </ul>
@@ -138,7 +151,8 @@
                             isFavorited = response.data.is_favorited;
                             count = response.data.favorited_by_count;
                         });
-                "class="w-full cursor-pointer sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-sm border rounded-md transition-colors border-primary text-primary hover:bg-primary hover:text-base">
+                "
+                    class="w-full cursor-pointer sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-sm border rounded-md transition-colors border-primary text-primary hover:bg-primary hover:text-base">
                     <svg class="h-5 w-5 transition-colors duration-200"
                         :class="isFavorited ? 'text-red-500 fill-current' : 'text-secondary hover:text-red-400'"
                         fill="none" viewBox="0 0 24 24" stroke="currentColor">

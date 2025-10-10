@@ -37,6 +37,14 @@
                         </template>
                     </div>
 
+                    <div>
+                        <label for="preview_image_url" class="block text-sm font-medium text-secondary">> Preview Image URL (Optional)</label>
+                        <input type="url" name="preview_image_url" id="preview_image_url" x-model="formData.preview_image_url"
+                               class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary"
+                               placeholder="https://example.com/image.jpg">
+                        <template x-if="errors.preview_image_url"><p class="mt-1 text-xs text-red-500" x-text="errors.preview_image_url[0]"></p></template>
+                    </div>
+
                     {{-- Input Kategori --}}
                     <div>
                         <label for="category" class="block text-sm font-medium text-secondary">> Category</label>
@@ -142,7 +150,7 @@
                                 class="mt-1 p-4 w-full bg-base border-2 border-dashed border-border rounded-md flex justify-center items-center">
                                 <input type="file" name="archive_file" id="archive_file"
                                     @change="handleFileSelect($event)"
-                                    class="block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-base hover:file:bg-primary-hover">
+                                    class="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-primary file:text-base hover:file:bg-primary-hover">
                             </div>
                             <template x-if="errors.archive_file">
                                 <p class="mt-1 text-xs text-red-500" x-text="errors.archive_file[0]"></p>
@@ -179,7 +187,7 @@
                 {{-- Footer dengan Submit Button --}}
                 <div class="bg-surface-light border-t border-border px-6 py-4 text-right rounded-b-md">
                     <button type="submit" :disabled="isUploading"
-                        class="inline-flex items-center justify-center gap-2 py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-base bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-surface-light cursor-pointer"
+                        class="inline-flex text-white items-center justify-center gap-2 py-2 px-6 border border-transparent shadow-sm font-medium rounded-md text-base bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-surface-light cursor-pointer"
                         :class="{ 'opacity-50 cursor-not-allowed': isUploading }">
                         <span x-show="!isUploading">SAVE_ENTRY</span>
                         <span x-show="isUploading">UPLOADING...</span>

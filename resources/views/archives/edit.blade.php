@@ -35,6 +35,15 @@
                         @error('description') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                     </div>
 
+                    {{-- Input Preview Image URL --}}
+                    <div>
+                        <label for="preview_image_url" class="block text-sm font-medium text-secondary">> Preview Image URL (Optional)</label>
+                        <input type="url" name="preview_image_url" id="preview_image_url" value="{{ old('preview_image_url', $archive->preview_image_url) }}"
+                               class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary"
+                               placeholder="https://example.com/image.jpg">
+                        @error('preview_image_url') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
+
                     {{-- [BARU] Wrapper Alpine.js untuk Kategori --}}
                     <div x-data="{ selectedCategory: '{{ old('category', $archive->category) }}' }" class="space-y-6">
                         {{-- Input Kategori --}}
@@ -119,7 +128,7 @@
                 {{-- Tombol Submit di Footer --}}
                 <div class="bg-surface-light border-t border-border px-6 py-4 text-right rounded-b-md">
                     <button type="submit"
-                        class="inline-flex items-center justify-center gap-2 py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-base bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-surface-light">
+                        class="cursor-pointer inline-flex items-center justify-center gap-2 py-2 px-6 border border-transparent shadow-sm font-medium rounded-md text-base text-white bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-surface-light">
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />

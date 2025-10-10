@@ -21,13 +21,14 @@ class Archive extends Model
         'name',
         'description',
         'type',
-        'category', // <-- Tambahkan ini
+        'category',
         'category_other', 
-        'is_public', // <-- Tambahkan ini
+        'is_public',
         'file_path',
         'mime_type',
         'size',
         'links',
+        'preview_image_url'
     ];
 
     /**
@@ -37,7 +38,7 @@ class Archive extends Model
      */
     protected $casts = [
         'links' => 'array', // Otomatis mengubah JSON dari database menjadi array di PHP
-        'is_public' => 'boolean', // <-- Tambahkan ini
+        'is_public' => 'boolean',
     ];
 
     /**

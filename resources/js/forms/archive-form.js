@@ -12,6 +12,7 @@ export default function archiveForm() {
             type: window.archiveFormData?.type || 'file',
             links: window.archiveFormData?.links || '',
             tags: window.archiveFormData?.tags || '',
+            preview_image_url: window.archiveFormData?.preview_image_url || '',
             _token: window.archiveFormData?.csrf_token || ''
         },
         
@@ -54,6 +55,7 @@ export default function archiveForm() {
             data.append('category_other', this.formData.category_other || '');
             data.append('tags', this.formData.tags || '');
             data.append('type', this.formData.type || 'file');
+            data.append('preview_image_url', this.formData.preview_image_url || '');
             data.append('_token', this.formData._token);
             
             // Handle is_public: Controller menggunakan $request->has('is_public')

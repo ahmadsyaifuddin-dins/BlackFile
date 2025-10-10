@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File;
-use Illuminate\Support\Facades\Config; // <-- Tambahkan ini
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
 class ArchiveController extends Controller
@@ -25,9 +25,7 @@ class ArchiveController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // =================================================================
         // 1. PERSIAPAN DATA UNTUK DROPDOWN FILTER
-        // =================================================================
         // Ambil semua kategori unik yang sudah ada di database, urutkan, dan filter nilai kosong.
         $categories = Archive::whereNotNull('category')
                      ->orderBy('category')
@@ -36,9 +34,7 @@ class ArchiveController extends Controller
         // Ambil hanya user yang memiliki arsip, urutkan berdasarkan nama
         $owners = User::whereHas('archives')->orderBy('name')->get();
 
-        // =================================================================
         // 2. MEMBANGUN QUERY DASAR BERDASARKAN ROLE
-        // =================================================================
         $query = Archive::query();
 
         if (strtolower($user->role->name) !== 'director') {
@@ -48,9 +44,7 @@ class ArchiveController extends Controller
             });
         }
 
-        // =================================================================
         // 3. MENERAPKAN FILTER SECARA DINAMIS
-        // =================================================================
 
         // Filter Pencarian Umum (Nama, Deskripsi, atau Tag)
         $query->when($request->filled('search'), function ($q) use ($request) {
@@ -82,9 +76,7 @@ class ArchiveController extends Controller
 
         $perPage = Auth::user()->settings['per_page'] ?? 15;
 
-        // =================================================================
         // 4. FINALISASI QUERY DAN KIRIM DATA KE VIEW
-        // =================================================================
         $archives = $query->with(['user', 'tags'])
             // [UBAH] Tambahkan withCount dan withExists untuk status favorit
             ->withCount('favoritedBy')
@@ -200,9 +192,10 @@ class ArchiveController extends Controller
                 File::types(['pdf', 'jpg', 'jpeg', 'png', 'docx', 'xlsx', 'zip', 'rar', 'mp4', 'mp3', 'm4a', 'gif'])
                     ->max('8mb'),
             ],
-            // --- [INI PERBAIKANNYA] ---
+            //
             'links' => 'required_if:type,url|nullable|string',
             'tags' => 'nullable|string',
+            'preview_image_url' => 'nullable|url|max:2048',
         ]);
 
         $dataToStore = [
@@ -213,6 +206,7 @@ class ArchiveController extends Controller
             'is_public' => $request->has('is_public'),
             'category' => $validated['category'],
             'category_other' => $validated['category_other'] ?? null,
+            'preview_image_url' => $validated['preview_image_url'] ?? null, 
         ];
 
         if ($validated['type'] === 'file' && $request->hasFile('archive_file')) {
@@ -234,7 +228,7 @@ class ArchiveController extends Controller
 
         $archive = Archive::create($dataToStore);
 
-        // --- [LOGIKA BARU UNTUK TAGS] ---
+        // [LOGIKA UNTUK TAGS]
         if (!empty($validated['tags'])) {
             $this->syncTags($validated['tags'], $archive);
         }
@@ -278,6 +272,7 @@ class ArchiveController extends Controller
             'category_other' => 'nullable|required_if:category,Other|string|max:255',
             'links' => 'required_if:type,url|nullable|string',
             'tags' => 'nullable|string',
+            'preview_image_url' => 'nullable|url|max:2048',
         ]);
 
         // 1. Update field yang selalu ada dari data yang divalidasi
@@ -289,6 +284,7 @@ class ArchiveController extends Controller
 
         $archive->category = $validated['category'];
         $archive->category_other = $validated['category_other'] ?? null;
+        $archive->preview_image_url = $validated['preview_image_url'] ?? null;
 
         // 3. Update field 'links' jika arsipnya bertipe URL
         if ($archive->type === 'url') {
@@ -303,13 +299,13 @@ class ArchiveController extends Controller
         // 4. Simpan semua perubahan ke database
         $archive->save();
 
-        // --- [LOGIKA BARU UNTUK TAGS] ---
+        // [LOGIKA UNTUK TAGS]
         $this->syncTags($validated['tags'] ?? null, $archive);
 
         return redirect()->route('archives.index')->with('success', 'Arsip berhasil diperbarui.');
     }
 
-    // --- [TAMBAHKAN METHOD BANTU BARU DI BAWAH INI] ---
+    // [TAMBAHKAN METHOD BANTU]
     private function syncTags(?string $tagsString, Archive $archive): void
     {
         if (is_null($tagsString)) {

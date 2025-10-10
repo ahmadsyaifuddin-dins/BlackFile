@@ -10,6 +10,13 @@
             </a>
         </div>
 
+          {{-- Tampilkan Gambar Pratinjau jika ada --}}
+          @if($archive->preview_image_url)
+          <div class="w-full overflow-hidden rounded-lg border border-border">
+              <img src="{{ $archive->preview_image_url }}" alt="Archive Preview Image" class="w-full h-auto object-cover">
+          </div>
+          @endif
+
         {{-- Kontainer Detail Utama --}}
         <div class="bg-surface border border-border rounded-md shadow-lg">
             {{-- Bagian Deskripsi (Full-width) --}}
@@ -110,28 +117,31 @@
                         <a href="{{ $link }}" target="_blank" rel="noopener noreferrer"
                             class="text-primary text-primary-hover break-all text-sm flex-grow">{{ $link }}</a>
 
-                            <button @click="
+                        <button @click="
                             navigator.clipboard.writeText('{{ $link }}'); 
                             tooltip = 'copied'; 
                             setTimeout(() => tooltip = 'copy', 1500)
                         " class="relative flex-shrink-0 w-5 h-5 cursor-pointer" x-cloak>
-                    
-                        {{-- Ikon Ceklis (ditampilkan saat tooltip === 'copied') --}}
-                        <div x-show="tooltip === 'copied'" x-transition.opacity.duration.300ms 
-                             class="absolute inset-0 flex items-center justify-center">
-                            <svg class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                        </div>
-                    
-                        {{-- Ikon Salin (ditampilkan saat tooltip === 'copy') --}}
-                        <div x-show="tooltip === 'copy'" x-transition.opacity.duration.300ms
-                             class="absolute inset-0 flex items-center justify-center">
-                            <svg class="h-5 w-5 text-secondary hover:text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                    </button>
+
+                            {{-- Ikon Ceklis (ditampilkan saat tooltip === 'copied') --}}
+                            <div x-show="tooltip === 'copied'" x-transition.opacity.duration.300ms
+                                class="absolute inset-0 flex items-center justify-center">
+                                <svg class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+
+                            {{-- Ikon Salin (ditampilkan saat tooltip === 'copy') --}}
+                            <div x-show="tooltip === 'copy'" x-transition.opacity.duration.300ms
+                                class="absolute inset-0 flex items-center justify-center">
+                                <svg class="h-5 w-5 text-secondary hover:text-primary" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                        </button>
                     </li>
                     @endforeach
                 </ul>

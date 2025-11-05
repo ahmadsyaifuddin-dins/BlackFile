@@ -132,7 +132,7 @@ Route::get('/avatar-proxy/{name}', function (string $name) {
 
     // Coba ambil dari cache, jika tidak ada, jalankan fungsi untuk mengambilnya
     $imageData = Cache::remember($cacheKey, now()->addHours(24), function () use ($name) {
-        $response = Http::get('https://i.postimg.cc/HxS7HmR9/agent-default.jpg', [
+        $response = Http::get('https://blackfile.xo.je/agent-default.jpg', [
             'name' => $name,
             'background' => '0d1117',
             'color' => '2ea043',

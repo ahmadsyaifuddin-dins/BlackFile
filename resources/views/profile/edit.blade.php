@@ -34,10 +34,10 @@
             @method('PATCH')
 
             <div class="space-y-6 text-glow">
-                <!-- [DIUBAH] Bagian Upload Avatar Responsif -->
+                <!-- Bagian Upload Avatar Responsif -->
                 <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6" 
                      x-data="{ fileName: '' }">
-                    <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : 'https://i.postimg.cc/HxS7HmR9/agent-default.jpg' }}" 
+                    <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : 'https://blackfile.xo.je/agent-default.jpg' }}" 
                          alt="Avatar" class="w-20 h-20 object-cover rounded-full border-2 border-border-color flex-shrink-0">
                     
                     <div class="w-full sm:w-auto">

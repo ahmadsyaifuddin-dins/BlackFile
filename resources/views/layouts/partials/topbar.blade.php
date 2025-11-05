@@ -15,7 +15,7 @@
             <span class="hidden sm:block text-sm text-secondary group-hover:text-primary transition-colors truncate">
                 {{ Auth::user()->role->alias }} — {{ Auth::user()->codename }}
             </span>
-            <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : 'https://i.postimg.cc/HxS7HmR9/agent-default.jpg' }}"
+            <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : 'https://blackfile.xo.je/agent-default.jpg' }}"
                  class="w-8 h-8 object-cover rounded-full border-2 border-border-color">
         </a>
     </div>

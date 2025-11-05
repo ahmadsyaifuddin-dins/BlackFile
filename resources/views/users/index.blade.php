@@ -32,7 +32,7 @@
 
                 <!-- [DIUBAH] Info Agent sekarang mencakup avatar -->
                 <div class="flex items-center space-x-4">
-                    <img src="{{ $agent->avatar ? asset($agent->avatar) : 'https://i.postimg.cc/HxS7HmR9/agent-default.jpg' }}"
+                    <img src="{{ $agent->avatar ? asset($agent->avatar) : 'https://blackfile.xo.je/agent-default.jpg' }}"
                         alt="Avatar" class="w-12 h-12 object-cover rounded-full border-2 border-border-color flex-shrink-0">
                     <div>
                         <a href="{{ route('agents.show', $agent->id) }}">

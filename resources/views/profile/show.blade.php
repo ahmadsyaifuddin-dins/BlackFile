@@ -11,7 +11,7 @@
         
         <!-- Avatar -->
         <div class="flex-shrink-0 mx-auto sm:mx-0">
-            <img src="{{ $user->avatar ? asset($user->avatar) : 'https://i.postimg.cc/HxS7HmR9/agent-default.jpg' }}" 
+            <img src="{{ $user->avatar ? asset($user->avatar) : 'https://blackfile.xo.je/agent-default.jpg' }}" 
                  alt="Avatar" class="w-32 h-32 object-cover rounded-full border-4 border-border-color shadow-lg">
         </div>
         

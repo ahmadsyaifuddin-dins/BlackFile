@@ -52,11 +52,18 @@ export default function archiveForm() {
             data.append('name', this.formData.name || '');
             data.append('description', this.formData.description || '');
             data.append('category', this.formData.category || '');
-            data.append('category_other', this.formData.category_other || '');
             data.append('tags', this.formData.tags || '');
             data.append('type', this.formData.type || 'file');
-            data.append('preview_image_url', this.formData.preview_image_url || '');
             data.append('_token', this.formData._token);
+            
+            // Only append nullable fields if they have values
+            if (this.formData.category_other) {
+                data.append('category_other', this.formData.category_other);
+            }
+            
+            if (this.formData.preview_image_url) {
+                data.append('preview_image_url', this.formData.preview_image_url);
+            }
             
             // Handle is_public: Controller menggunakan $request->has('is_public')
             // Jadi kita hanya kirim field ini jika checkbox dicentang

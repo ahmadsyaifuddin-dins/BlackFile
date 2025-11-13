@@ -36,8 +36,8 @@
                             <p class="mt-1 text-xs text-red-500" x-text="errors.description[0]"></p>
                         </template>
                     </div>
-
-                    <div>
+                            
+                     <div>
                         <label for="preview_image_url" class="block text-sm font-medium text-secondary">> Preview Image URL (Optional)</label>
                         <input type="url" name="preview_image_url" id="preview_image_url" x-model="formData.preview_image_url"
                                class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary"
@@ -49,7 +49,7 @@
                     <div>
                         <label for="category" class="block text-sm font-medium text-secondary">> Category</label>
                         <select name="category" id="category" x-model="formData.category"
-                            class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-secondary">
+                            class="mt-1 block w-full bg-base border-border rounded-md shadow-sm focus:ring-primary focus:border-primary text-primary">
                             <option value="">-- Select Category --</option>
                             @foreach($categories as $category)
                             <option value="{{ $category }}">{{ $category }}</option>
@@ -144,13 +144,13 @@
 
                         {{-- Input untuk File --}}
                         <div x-show="formData.type === 'file'" x-transition>
-                            <label for="archive_file" class="block text-sm font-medium text-secondary">> Select
+                            <label for="archive_file" class="block text-sm font-medium text-white">> Select
                                 File</label>
                             <div
                                 class="mt-1 p-4 w-full bg-base border-2 border-dashed border-border rounded-md flex justify-center items-center">
                                 <input type="file" name="archive_file" id="archive_file"
                                     @change="handleFileSelect($event)"
-                                    class="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-primary file:text-base hover:file:bg-primary-hover">
+                                    class="block w-full text-sm file:text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-base hover:file:bg-primary-hover">
                             </div>
                             <template x-if="errors.archive_file">
                                 <p class="mt-1 text-xs text-red-500" x-text="errors.archive_file[0]"></p>
@@ -175,7 +175,7 @@
                 {{-- Progress Bar dan Success Message --}}
                 <div class="px-6 pb-6 space-y-4">
                     <div x-show="isUploading" x-transition class="w-full bg-surface-light rounded-full">
-                        <div class="bg-primary text-xs font-medium text-primary text-center p-0.5 leading-none rounded-full"
+                        <div class="bg-primary text-xs font-medium text-white text-center p-0.5 leading-none rounded-full"
                             :style="`width: ${progress}%`" x-text="`${progress}%`">
                         </div>
                     </div>
@@ -185,9 +185,9 @@
                 </div>
 
                 {{-- Footer dengan Submit Button --}}
-                <div class="bg-surface-light border-t border-border px-6 py-4 text-right rounded-b-md">
+                <div class="bg-surface-light border-t border-border px-6 py-4 text-right rounded-b-md text-black">
                     <button type="submit" :disabled="isUploading"
-                        class="inline-flex text-white items-center justify-center gap-2 py-2 px-6 border border-transparent shadow-sm font-medium rounded-md text-base bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-surface-light cursor-pointer"
+                        class="inline-flex items-center justify-center gap-2 py-2 px-6 border border-transparent shadow-sm font-medium rounded-md text-base bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-surface-light cursor-pointer"
                         :class="{ 'opacity-50 cursor-not-allowed': isUploading }">
                         <span x-show="!isUploading">SAVE_ENTRY</span>
                         <span x-show="isUploading">UPLOADING...</span>
@@ -204,8 +204,11 @@
             name: @json(old('name', '')),
             description: @json(old('description', '')),
             is_public: @json(old('is_public', false)),
+            category: @json(old('category', '')),
+            category_other: @json(old('category_other', '')),
             type: @json(old('type', 'file')),
             links: @json(old('links', '')),
+            tags: @json(old('tags', '')),
             preview_image_url: @json(old('preview_image_url', '')),
             csrf_token: @json(csrf_token())
         };

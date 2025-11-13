@@ -206,6 +206,7 @@
             is_public: @json(old('is_public', false)),
             type: @json(old('type', 'file')),
             links: @json(old('links', '')),
+            preview_image_url: @json(old('preview_image_url', '')),
             csrf_token: @json(csrf_token())
         };
         

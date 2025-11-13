@@ -13,7 +13,7 @@
     </div>
     @endif
 
-    {{-- [PERBAIKAN] Semua panel pengaturan sekarang berada di dalam satu form dan satu grid --}}
+    {{-- Semua panel pengaturan sekarang berada di dalam satu form dan satu grid --}}
     <form action="{{ route('settings.update') }}" method="POST">
         @csrf
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -22,7 +22,7 @@
                 <h2 class="text-lg font-bold text-primary border-b border-border-color pb-2 mb-4">> {{ __('Language Setting') }}</h2>
                 <label for="locale" class="block text-sm text-secondary mb-2">{{ __('Select Terminal Language:') }}</label>
                 <select name="locale" id="locale" class="w-full bg-base border-2 border-border-color focus:border-primary focus:ring-0 text-white p-2">
-                    {{-- [PERBAIKAN] Logika @selected diperbaiki --}}
+                    {{-- Logika @selected diperbaiki --}}
                     <option class="text-black" value="en" @selected((Auth::user()->settings['locale'] ?? 'en') == 'en')>English</option>
                     <option class="text-black" value="id" @selected((Auth::user()->settings['locale'] ?? 'en') == 'id')>Bahasa Indonesia</option>
                 </select>
@@ -36,6 +36,8 @@
                     @php $currentPerPage = Auth::user()->settings['per_page'] ?? 9; @endphp
                     <option class="text-black" value="6" @selected($currentPerPage == 6)>{{ __('6 Entries') }}</option>
                     <option class="text-black" value="9" @selected($currentPerPage == 9)>{{ __('9 Entries') }}</option>
+                    <option class="text-black" value="12" @selected($currentPerPage == 12)>{{ __('12 Entries') }}</option>
+                    <option class="text-black" value="15" @selected($currentPerPage == 15)>{{ __('15 Entries') }}</option>  
                     <option class="text-black" value="18" @selected($currentPerPage == 18)>{{ __('18 Entries') }}</option>
                     <option class="text-black" value="27" @selected($currentPerPage == 27)>{{ __('27 Entries') }}</option>
                     <option class="text-black" value="54" @selected($currentPerPage == 54)>{{ __('54 Entries') }}</option>
@@ -58,7 +60,7 @@
 
         {{-- Tombol Simpan Terpusat --}}
         <div class="mt-6 flex justify-end">
-            {{-- [PERBAIKAN] Warna teks diubah menjadi hitam agar kontras --}}
+            {{-- Warna teks diubah menjadi hitam agar kontras --}}
             <button type="submit" class="bg-primary text-black font-bold py-3 px-8 hover:bg-primary-hover transition-colors tracking-widest cursor-pointer">
                 {{ __('SAVE ALL CHANGES') }}
             </button>

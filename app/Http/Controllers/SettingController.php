@@ -37,7 +37,7 @@ class SettingController extends Controller
     public function updatePagination(Request $request)
     {
         $request->validate([
-            'per_page' => 'required|integer|in:6,9,18,27,54', // Hanya izinkan nilai ini
+            'per_page' => 'required|integer|in:6,9,12,15,18,27,54', // Hanya izinkan nilai ini
         ]);
 
         Session::put('per_page', $request->per_page);
@@ -52,7 +52,7 @@ class SettingController extends Controller
     {
         $request->validate([
             'locale' => 'required|in:en,id',
-            'per_page' => 'required|integer|in:6,9,18,27,54',
+            'per_page' => 'required|integer|in:6,9,12,15,18,27,54',
             'theme' => 'required|string|in:default,amber,arctic,red',
         ]);
 

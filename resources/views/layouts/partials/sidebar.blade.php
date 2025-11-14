@@ -67,13 +67,6 @@
             <span>> {{ __('Entities Database') }}</span>
         </a>
 
-        <a href="{{ route('encrypted-contacts.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-            {{ request()->routeIs('encrypted-contacts.*') 
-        ? 'bg-surface-light text-primary border-l-4 border-primary' 
-        : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
-            <span>> {{ __('Kontak Terenkripsi') }}</span>
-        </a>
-
         <a href="{{ route('archives.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
          {{ request()->routeIs('archives.*') 
              ? 'bg-surface-light text-primary border-l-4 border-primary' 
@@ -87,15 +80,14 @@
              : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Archives Favorites') }}</span>
         </a>
-
-        <a href="{{ route('codex.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-            {{ request()->routeIs('codex.index') 
+            
+        <a href="{{ route('encrypted-contacts.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+            {{ request()->routeIs('encrypted-contacts.*') 
         ? 'bg-surface-light text-primary border-l-4 border-primary' 
         : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
-            <span>> {{ __('Codex') }}</span>
+            <span>> {{ __('Kontak Terenkripsi') }}</span>
         </a>
-
-        <!-- PERUBAHAN DIMULAI DI SINI: Menu Epilogue sekarang bisa dibuka-tutup -->
+            
         <div x-data="{ open: {{ request()->routeIs('credits.*') ? 'true' : 'false' }} }">
             <!-- Tombol untuk membuka/menutup submenu -->
             <button @click="open = !open" class="w-full flex items-center justify-between space-x-3 px-3 py-2 rounded-r-md transition-colors text-left
@@ -154,6 +146,13 @@
             <span>> {{ __('Register Agent') }}</span>
         </a>
         @endif
+                
+        <a href="{{ route('codex.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+            {{ request()->routeIs('codex.index') 
+        ? 'bg-surface-light text-primary border-l-4 border-primary' 
+        : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+            <span>> {{ __('Codex') }}</span>
+        </a>        
 
         <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
            {{ request()->routeIs('logs.*') 

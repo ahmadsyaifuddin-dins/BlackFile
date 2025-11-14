@@ -1,7 +1,7 @@
 <x-mail::message>
 
 <x-slot name="header">
-    <x-mail::header :logo="asset('app-icon.png')" :url="url('/')" />
+    <x-mail::header :logo="$message->embed(public_path('app-icon.png'))" :url="url('/')" />
 </x-slot>
 
 SYSTEM ALERT: New Entity Registered

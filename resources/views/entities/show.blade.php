@@ -1,3 +1,17 @@
+@php
+    // origin adalah halaman index (atau halaman sebelumnya) yang mungkin dikirimkan ke show
+    $origin = request('return_url') ?? null;
+
+    // Back link dari show: kalau ada origin gunakan origin, kalau nggak balik ke index
+    $backToIndex = $origin ?? route('entities.index');
+
+    // Untuk tombol Edit: set return_url ke URL show (agar edit->Cancel balik ke show)
+    // dan teruskan origin (jika ada) supaya controller tahu asal-index saat submit
+    $editUrl = route('entities.edit', $entity) . '?return_url=' . urlencode(route('entities.show', $entity));
+    if ($origin) {
+        $editUrl .= '&origin=' . urlencode($origin);
+    }
+@endphp
 <x-app-layout :title="$entity->codename ?? $entity->name">
     {{-- Header dengan style "Classified" --}}
     <div class="border-y-2 border-dashed border-primary/50 py-4 mb-8">
@@ -10,8 +24,8 @@
             </div>
             
             <div class="flex-shrink-0 flex flex-col md:flex-row md:items-center gap-3 w-full md:w-auto">
-                <a href="{{ url()->previous() }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">&lt; BACK</a>
-                <a href="{{ route('entities.edit', $entity) }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">> EDIT FILE</a>
+                <a href="{{ $backToIndex }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">&lt; BACK</a>
+                <a href="{{ $editUrl }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">> EDIT FILE</a>
                 
                 <form action="{{ route('entities.destroy', $entity) }}" method="POST" class="w-full md:w-auto" onsubmit="return confirm('WARNING: Are you sure you want to terminate this entity record? This action cannot be undone.');">
                     @csrf
@@ -34,7 +48,6 @@
             </div>
             
             {{-- 
-                [PERBAIKAN]
                 - Mengubah 'grid-cols-2' menjadi 'grid-cols-1 sm:grid-cols-2'.
                 - Ini akan membuat kolom-kolom ini bertumpuk di layar kecil.
             --}}
@@ -45,7 +58,7 @@
                 </div>
                  <div class="bg-surface border-l-2 border-border-color p-3">
                     <p class="text-xs text-secondary">POINT_OF_ORIGIN</p>
-                    {{-- [PERBAIKAN] Menambahkan 'break-words' untuk memecah teks panjang --}}
+                    {{-- Menambahkan 'break-words' untuk memecah teks panjang --}}
                     <p class="font-bold break-words">{{ $entity->origin ?? 'Unknown' }}</p>
                 </div>
             </div>

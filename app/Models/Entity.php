@@ -20,6 +20,7 @@ class Entity extends Model
         'abilities',
         'weaknesses',
         'status',
+        'thumbnail_image_id',
     ];
 
     /**
@@ -28,5 +29,10 @@ class Entity extends Model
     public function images(): HasMany
     {
         return $this->hasMany(EntityImage::class);
+    }
+
+    public function thumbnail()
+    {
+        return $this->belongsTo(EntityImage::class, 'thumbnail_image_id');
     }
 }

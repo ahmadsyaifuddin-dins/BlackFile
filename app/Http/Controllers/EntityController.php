@@ -18,21 +18,13 @@ class EntityController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View
      */
     public function index(Request $request)
     {
-        // 1. Memulai query builder yang kosong dan fleksibel.
         $query = Entity::query();
 
-        // 2. Menerapkan filter PENCARIAN jika ada input 'search' dari form.
         if ($request->filled('search')) {
-            // Menyiapkan kata kunci dengan wildcard '%' agar bisa mencari bagian kata.
             $searchTerm = '%' . $request->search . '%';
-
-            // Menambahkan kondisi WHERE untuk mencari di beberapa kolom sekaligus.
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'like', $searchTerm)
                     ->orWhere('codename', 'like', $searchTerm)
@@ -40,36 +32,37 @@ class EntityController extends Controller
             });
         }
 
-        // 3. Menerapkan filter KATEGORI jika ada input 'category' dari form.
         if ($request->filled('category')) {
             $query->where('category', $request->category);
         }
 
-        // RANK
         if ($request->filled('rank')) {
             $query->where('rank', $request->rank);
         }
 
-        // ORIGIN
         if ($request->filled('origin')) {
             $query->where('origin', $request->origin);
         }
 
-        // PAGINATION
+        // [LOGIKA BARU] Eager load relasi 'thumbnail' dan 'images'
+        // Ini akan mengoptimalkan query di halaman index
+        $query->with(['images', 'thumbnail']);
+
         $perPage = Auth::user()->settings['per_page'] ?? 9;
 
-        // 4. Setelah semua filter diterapkan, baru kita atur urutan dan paginasi.
-        //    Hasilnya akan sesuai dengan permintaan Anda: data lama (ID kecil) di atas.
         $entities = $query->orderBy('id', 'asc')->paginate($perPage);
 
-        // 5. Mengirim data yang sudah difilter dan diurutkan ke view.
         return view('entities.index', compact('entities'));
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
         return view('entities.create');
     }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -86,61 +79,71 @@ class EntityController extends Controller
             'weaknesses' => 'nullable|string',
             'status' => 'required|in:ACTIVE,STANDBY,CONTAINED,NEUTRALIZED,UNKNOWN,MYTHOS',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // Validasi untuk setiap file
-            'captions' => 'nullable|array',
-            'captions.*' => 'nullable|string|max:255',
-
-            'image_url' => 'nullable|url', // Memastikan input adalah URL yang valid
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'image_url' => 'nullable|url',
+            'thumbnail_selection' => 'nullable|string', 
         ]);
 
-        // Buat entitas tanpa data gambar terlebih dahulu
-        $entityData = $request->except(['images', 'image_url']);
+        // 1. Buat entitas dulu (tanpa thumbnail_image_id)
+        $entityData = $request->except(['images', 'image_url', 'thumbnail_selection']);
         $entity = Entity::create($entityData);
 
-        // Proses upload file (jika ada)
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $imageFile) {
-                $path = $imageFile->store('entity_images', 'public_uploads');
-                $entity->images()->create([
-                    'path' => $path,
-                    'caption' => 'Uploaded Evidence',
-                ]);
-            }
-        }
+        $newThumbnailId = null;
+        $thumbnailSelection = $request->input('thumbnail_selection');
 
-        // Proses input URL gambar (jika ada)
+        // 2. Proses URL (jika ada)
         if ($request->filled('image_url')) {
-            $entity->images()->create([
+            $image = $entity->images()->create([
                 'path' => $request->input('image_url'),
                 'caption' => 'Linked Evidence',
             ]);
+            // Jika 'new_url' dipilih sebagai thumbnail
+            if ($thumbnailSelection === 'new_url') {
+                $newThumbnailId = $image->id;
+            }
+        }
+
+        // 3. Proses upload file (jika ada)
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $imageFile) {
+                $path = $imageFile->store('entity_images', 'public_uploads');
+                $image = $entity->images()->create([
+                    'path' => $path,
+                    'caption' => 'Uploaded Evidence',
+                ]);
+
+                // Jika 'new_index_X' dipilih sebagai thumbnail
+                if ($thumbnailSelection === 'new_index_' . $index) {
+                    $newThumbnailId = $image->id;
+                }
+            }
+        }
+
+        // 4. [LOGIKA BARU] Update entitas dengan ID thumbnail
+        if ($newThumbnailId) {
+            $entity->thumbnail_image_id = $newThumbnailId;
+            $entity->save();
         }
 
         try {
-            // Ambil semua user (agent) KECUALI diri sendiri (yang membuat)
             $recipients = User::where('id', '!=', Auth::id())->get();
-
             if ($recipients->isNotEmpty()) {
-                // Kirim email ke semua agent yang ditemukan
-                // Ini berjalan SYNC dan mungkin memakan waktu beberapa detik
                 Mail::to($recipients)->send(new NewEntityAlert($entity));
             }
-
         } catch (\Exception $e) {
-            // Jika email gagal, JANGAN hentikan proses.
-            // Cukup catat errornya ke log.
             Log::error('SMTP Notification Failed for new entity ' . $entity->id . ': ' . $e->getMessage());
-            
-            // Redirect kembali ke index (sesuai alur Anda) dengan pesan 'warning'
             return redirect()->route('entities.index')
                 ->with('warning', 'Entity created, but failed to send email alerts. Check log.');
         }
+
         return redirect()->route('entities.index')->with('success', 'Entity created successfully.');
     }
 
+    /**
+     * Display the specified resource.
+     */
     public function show(Entity $entity)
     {
-        // Eager load relasi images untuk menghindari N+1 query problem
         $entity->load('images');
         return view('entities.show', compact('entity'));
     }
@@ -150,6 +153,8 @@ class EntityController extends Controller
      */
     public function edit(Entity $entity)
     {
+        // Eager load images agar bisa ditampilkan di form
+        $entity->load('images'); 
         return view('entities.edit', compact('entity'));
     }
 
@@ -160,7 +165,6 @@ class EntityController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            // Pastikan codename unik, TAPI abaikan entitas yang sedang diedit
             'codename' => ['nullable', 'string', 'max:255', Rule::unique('entities')->ignore($entity->id)],
             'category' => 'required|string|max:255',
             'rank' => 'nullable|string|max:255',
@@ -171,71 +175,100 @@ class EntityController extends Controller
             'status' => 'required|in:ACTIVE,STANDBY,CONTAINED,NEUTRALIZED,UNKNOWN,MYTHOS',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'captions' => 'nullable|array',
-            'captions.*' => 'nullable|string|max:255',
-
-            'image_url' => 'nullable|url', // Memastikan input adalah URL yang valid
-
+            'image_url' => 'nullable|url',
             'images_to_delete' => 'nullable|array',
-            'images_to_delete.*' => 'exists:entity_images,id', // Pastikan ID gambar yang dikirim ada di database
+            'images_to_delete.*' => 'exists:entity_images,id',
+            // [BARU] Validasi input thumbnail
+            'thumbnail_selection' => 'nullable|string',
         ]);
 
-        // HAPUS GAMBAR YANG DIPILIH
+        // [LOGIKA BARU]
+        $thumbnailSelection = $request->input('thumbnail_selection');
+        $newThumbnailId = null;
+        $finalThumbnailId = $entity->thumbnail_image_id; // Mulai dengan ID yang ada
+
+        // 1. HAPUS GAMBAR YANG DIPILIH
         if ($request->has('images_to_delete')) {
-            $imagesToDelete = EntityImage::whereIn('id', $request->input('images_to_delete'))
-                ->where('entity_id', $entity->id) // Keamanan: pastikan gambar milik entitas ini
+            $deletedIds = $request->input('images_to_delete');
+            $imagesToDelete = EntityImage::whereIn('id', $deletedIds)
+                ->where('entity_id', $entity->id)
                 ->get();
 
             foreach ($imagesToDelete as $image) {
-                // Hanya hapus file fisik jika itu bukan URL
                 if (!filter_var($image->path, FILTER_VALIDATE_URL)) {
                     Storage::disk('public_uploads')->delete($image->path);
                 }
-                // 2. Hapus record dari database
                 $image->delete();
             }
-        }
 
-        // PROSES GAMBAR BARU
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $imageFile) {
-                $path = $imageFile->store('entity_images', 'public_uploads');
-                $entity->images()->create([
-                    'path' => $path,
-                    'caption' => $request->captions[$index] ?? null,
-                ]);
+            // [BARU] Jika thumbnail yang sekarang ikut terhapus, set jadi null
+            if (in_array($finalThumbnailId, $deletedIds)) {
+                $finalThumbnailId = null;
             }
         }
 
-        // Proses input URL gambar
+        // 2. PROSES GAMBAR BARU (URL)
         if ($request->filled('image_url')) {
-            $entity->images()->create([
+            $image = $entity->images()->create([
                 'path' => $request->input('image_url'),
                 'caption' => 'Linked Evidence',
             ]);
+            // Jika 'new_url' dipilih, catat ID-nya
+            if ($thumbnailSelection === 'new_url') {
+                $newThumbnailId = $image->id;
+            }
         }
 
-        // Update data utama entitas (setelah proses gambar agar tidak error jika validasi gagal)
-        $entityData = $request->except(['images', 'images_to_delete', 'image_url']);
+        // 3. PROSES GAMBAR BARU (FILE UPLOAD)
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $imageFile) {
+                $path = $imageFile->store('entity_images', 'public_uploads');
+                $image = $entity->images()->create([
+                    'path' => $path,
+                    'caption' => 'Uploaded Evidence',
+                ]);
+                
+                // Jika 'new_index_X' dipilih, catat ID-nya
+                if ($thumbnailSelection === 'new_index_' . $index) {
+                    $newThumbnailId = $image->id;
+                }
+            }
+        }
+
+        // 4. TENTUKAN THUMBNAIL_ID FINAL
+        if ($newThumbnailId) {
+            // Prioritas 1: Gambar baru (upload/url)
+            $finalThumbnailId = $newThumbnailId;
+        } elseif (is_numeric($thumbnailSelection)) {
+            // Prioritas 2: Gambar lama yang ada
+            // Pastikan ID itu masih ada (tidak dihapus) dan milik entitas ini
+            if ($entity->images()->where('id', $thumbnailSelection)->exists()) {
+                $finalThumbnailId = $thumbnailSelection;
+            }
+        }
+        // Jika tidak ada di atas, $finalThumbnailId akan tetap ID lama (atau null jika dihapus)
+
+        // 5. UPDATE DATA UTAMA ENTITAS
+        $entityData = $request->except(['images', 'images_to_delete', 'image_url', 'thumbnail_selection']);
+        // [BARU] Sertakan ID thumbnail final
+        $entityData['thumbnail_image_id'] = $finalThumbnailId;
+        
         $entity->update($entityData);
 
         return redirect()->route('entities.show', $entity)->with('success', 'Entity record updated successfully.');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Entity $entity)
     {
-        // 1. Hapus file gambar dari storage terlebih dahulu
         foreach ($entity->images as $image) {
             if (!filter_var($image->path, FILTER_VALIDATE_URL)) {
                 Storage::disk('public_uploads')->delete($image->path);
             }
         }
-
-        // 2. Hapus record dari database
-        // (Relasi di migration akan menghapus record di 'entity_images' secara otomatis)
         $entity->delete();
 
         return redirect()->route('entities.index')->with('success', 'Entity record has been terminated.');

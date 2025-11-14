@@ -15,9 +15,7 @@
         </div>
         @endif
 
-        {{-- ================================================================ --}}
-        {{-- == PERUBAHAN: FORM FILTER DENGAN LAYOUT GRID == --}}
-        {{-- ================================================================ --}}
+        {{-- FORM FILTER DENGAN LAYOUT GRID --}}
         <div class="bg-surface border border-border-color p-4 font-mono">
             <form action="{{ route('entities.index') }}" method="GET">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -149,7 +147,6 @@
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             @forelse($entities as $entity)
             {{--
-            [PERUBAHAN #1]
             - Menambahkan 'x-data="{ inView: false }"' untuk melacak status visibilitas.
             - Menambahkan 'x-intersect:enter="inView = true"' -> Saat elemen masuk layar, set inView jadi true.
             - Menambahkan 'x-intersect:leave="inView = false"' -> Saat elemen keluar layar, set inView jadi false.
@@ -169,25 +166,33 @@
 
                 <div class="p-4 flex flex-col sm:flex-row gap-4">
                     <div class="w-full sm:w-1/3 flex-shrink-0">
-                        <a href="{{ route('entities.show', $entity) }}">
-                            @if($entity->images->isNotEmpty())
+                        <a href="{{ route('entities.show', $entity) }}?return_url={{ urlencode(request()->fullUrl()) }}">
                             @php
-                            $thumbnail = $entity->images->first();
-                            $imagePath = Illuminate\Support\Str::startsWith($thumbnail->path, 'http')
-                            ? $thumbnail->path
-                            : asset('uploads/' . $thumbnail->path);
+                                // 1. Coba ambil thumbnail yang spesifik
+                                $thumbnail = $entity->thumbnail;
+                                
+                                // 2. Jika tidak ada (null), fallback ke gambar pertama
+                                if (!$thumbnail && $entity->images->isNotEmpty()) {
+                                    $thumbnail = $entity->images->first();
+                                }
                             @endphp
-                            <div class="aspect-square">
-                                <img src="{{ $imagePath }}" alt="{{ $entity->codename }}"
-                                    :class="{ 'grayscale': !inView }"
-                                    class="w-full h-full object-cover transition-all duration-500 ease-in-out"
-                                    loading="lazy">
-                            </div>
+                            @if($thumbnail)
+                                @php
+                                    $imagePath = Illuminate\Support\Str::startsWith($thumbnail->path, 'http')
+                                        ? $thumbnail->path
+                                        : asset('uploads/' . $thumbnail->path);
+                                @endphp
+                                <div class="aspect-square">
+                                    <img src="{{ $imagePath }}" alt="{{ $entity->codename }}"
+                                         :class="{ 'grayscale': !inView }"
+                                         class="w-full h-full object-cover transition-all duration-500 ease-in-out"
+                                         loading="lazy">
+                                </div>
                             @else
-                            <div
-                                class="w-full h-32 bg-base flex items-center justify-center border border-dashed border-border-color">
-                                <span class="text-secondary font-mono text-sm">[NO VISUALS]</span>
-                            </div>
+                                <div
+                                    class="w-full h-32 bg-base flex items-center justify-center border border-dashed border-border-color">
+                                    <span class="text-secondary font-mono text-sm">[NO VISUALS]</span>
+                                </div>
                             @endif
                         </a>
                     </div>
@@ -207,7 +212,7 @@
 
                 {{-- Footer Aksi dengan Tombol Hapus --}}
                 <div class="px-4 py-2 border-t-2 border-border-color flex items-center justify-end gap-4">
-                    <a href="{{ route('entities.edit', $entity) }}"
+                    <a href="{{ route('entities.edit', $entity) }}?return_url={{ urlencode(request()->fullUrl()) }}"
                         class="text-secondary hover:text-primary text-sm font-mono whitespace-nowrap">EDIT</a>
 
                     <form action="{{ route('entities.destroy', $entity) }}" method="POST"
@@ -218,7 +223,7 @@
                             class="text-red-500 hover:text-red-400 text-sm font-mono whitespace-nowrap">TERMINATE</button>
                     </form>
 
-                    <a href="{{ route('entities.show', $entity) }}"
+                    <a href="{{ route('entities.show', $entity) }}?return_url={{ urlencode(request()->fullUrl()) }}"
                         class="text-primary hover:text-white text-sm font-bold font-mono whitespace-nowrap">ACCESS
                         ENTITY</a>
                 </div>

@@ -10,9 +10,21 @@
         <p>{{ session('success') }}</p>
     </div>
     @endif
+    
+    {{-- [BARU] Tampilkan error validasi jika ada --}}
+    @if($errors->any())
+    <div class="mb-4 bg-red-600/10 border-l-4 border-red-500 text-red-400 p-4 rounded-r-lg" role="alert">
+        <p class="font-bold">Broadcast Failed</p>
+        <ul class="mt-1 list-disc list-inside text-xs">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" x-data="{ isModalOpen: false, applicant: null }">
-        <!-- Kolom Kiri: Pending Applicants -->
         <div class="bg-surface border border-border-color rounded-lg p-4">
             <h3 class="text-xl font-bold text-white mb-4 border-b border-border-color pb-2">> PENDING APPLICATIONS</h3>
             <div class="space-y-3 max-h-96 overflow-y-auto pr-2">
@@ -26,7 +38,6 @@
                         <p class="text-xs text-secondary mt-1 sm:mt-0">Applied: {{
                             $applicant->created_at->diffForHumans() }}</p>
                     </div>
-                    {{-- [DIUBAH] Tombol sekarang responsif dan selalu di baris baru --}}
                     <div
                         class="flex flex-col sm:flex-row items-stretch gap-2 mt-3 pt-3 border-t border-border-color/50">
                         <button @click="isModalOpen = true; applicant = {{ $applicant }}"
@@ -53,7 +64,6 @@
             </div>
         </div>
 
-        <!-- Kolom Kanan: Invite Tokens -->
         <div class="bg-surface border border-border-color rounded-lg p-4">
             <div class="flex items-center justify-between mb-4 border-b border-border-color pb-2">
                 <p class="text-sm sm:text-xl font-bold text-white">> INVITE TOKENS</p>
@@ -66,12 +76,10 @@
             </div>
             <div class="space-y-3 max-h-96 overflow-y-auto pr-2">
                 @forelse($invites as $invite)
-                {{-- [DIUBAH] Tambahkan x-data untuk state penyalinan --}}
                 <div class="bg-base p-3 rounded-md" x-data="{ copied: false }">
                     <div class="flex items-center justify-between gap-4">
                         <p class="font-mono text-primary-hover break-all" x-ref="token_{{ $invite->id }}">{{
                             $invite->code }}</p>
-                        {{-- [BARU] Tombol Salin --}}
                         <button @click="
                                 navigator.clipboard.writeText($refs.token_{{ $invite->id }}.innerText);
                                 copied = true;
@@ -98,7 +106,7 @@
                 @endforelse
             </div>
         </div>
-        <!-- [BARU] Modal untuk Detail Applicant -->
+
         <div x-show="isModalOpen" @keydown.escape.window="isModalOpen = false"
             class="fixed inset-0 z-30 flex items-center justify-center p-4" style="display: none;">
             <div x-show="isModalOpen" x-transition.opacity class="absolute inset-0 bg-black/75"></div>
@@ -127,5 +135,77 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    {{-- Broadcast Agents --}}
+    <div class="mt-6 bg-surface border border-border-color rounded-lg p-4" x-data="{ target: 'selected' }">
+        <h3 class="text-xl font-bold text-white mb-4 border-b border-border-color pb-2">> AGENT BROADCAST</h3>
+        
+        <form action="{{ route('admin.command.notify') }}" method="POST">
+            @csrf
+            
+            {{-- Input Subject --}}
+            <div class="mb-4">
+                <label for="subject" class="block text-sm font-bold text-primary mb-2">> SUBJECT</label>
+                <input type="text" id="subject" name="subject"
+                       class="w-full bg-base border border-border-color rounded-md px-3 py-2 text-glow focus:outline-none focus:border-primary"
+                       value="{{ old('subject') }}" required>
+            </div>
+
+            {{-- Input Message --}}
+            <div class="mb-4">
+                <label for="message" class="block text-sm font-bold text-primary mb-2">> MESSAGE (Markdown Enabled)</label>
+                <textarea id="message" name="message" rows="8"
+                          class="w-full bg-base border border-border-color rounded-md px-3 py-2 text-glow focus:outline-none focus:border-primary font-mono"
+                          required>{{ old('message') }}</textarea>
+                <p class="text-xs text-secondary mt-1">// Anda bisa menggunakan Markdown untuk format teks dan gambar, misal: `![Logo](url_gambar.png)`</p>
+            </div>
+
+            {{-- Target Selection --}}
+            <div class="mb-4">
+                <label class="block text-sm font-bold text-primary mb-2">> TARGET RECIPIENTS</label>
+                <div class="flex items-center gap-6">
+                    <label class="flex items-center text-glow cursor-pointer">
+                        <input type="radio" name="target" value="selected" x-model="target"
+                               class="bg-base border-border-color text-primary focus:ring-primary">
+                        <span class="ml-2">Selected Agents</span>
+                    </label>
+                    <label class="flex items-center text-glow cursor-pointer">
+                        <input type="radio" name="target" value="all" x-model="target"
+                               class="bg-base border-border-color text-primary focus:ring-primary">
+                        <span class="ml-2">All Active Agents ({{ $agents->count() }})</span>
+                    </label>
+                </div>
+            </div>
+
+            {{-- Agent Checkbox List (Conditional) --}}
+            <div x-show="target === 'selected'" x-transition
+                 class="mb-4 border border-border-color bg-base rounded-md p-3">
+                <label class="block text-sm font-bold text-primary mb-2">> SELECT AGENTS</label>
+                <div class="max-h-60 overflow-y-auto pr-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                    @forelse($agents as $agent)
+                        <label
+                            class="flex items-center space-x-2 bg-surface/50 border border-border-color/50 px-3 py-2 rounded-md hover:bg-base cursor-pointer transition-colors">
+                            <input type="checkbox" name="agents[]" value="{{ $agent->id }}"
+                                   class="bg-base border-border-color text-primary focus:ring-primary rounded-sm">
+                            <span class="text-sm text-glow" title="{{ $agent->name }} ({{ $agent->email }})">
+                                {{ $agent->codename }}
+                            </span>
+                        </label>
+                    @empty
+                        <p class="text-secondary text-sm col-span-full">[ NO ACTIVE AGENTS FOUND ]</p>
+                    @endforelse
+                </div>
+            </div>
+
+            {{-- Tombol Submit --}}
+            <div class="mt-6 text-right border-t border-border-color pt-4">
+                <button type="submit"
+                        class="px-6 py-2 text-black bg-primary hover:bg-green-800 font-bold tracking-widest rounded-md cursor-pointer transition-colors">
+                    [ DISPATCH BROADCAST ]
+                </button>
+            </div>
+            
+        </form>
     </div>
 </x-app-layout>

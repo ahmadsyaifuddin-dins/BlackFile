@@ -97,7 +97,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('encrypted-contacts', EncryptedContactController::class);
     Route::post('/encrypted-contacts/{encryptedContact}/unlock', [EncryptedContactController::class, 'unlock'])->name('encrypted-contacts.unlock');
 
-    // --- [TAMBAHKAN RUTE BARU DI SINI] ---
     Route::get('favorites/archives', [ArchiveController::class, 'favorites'])->name('favorites.archives');
     Route::post('archives/{archive}/favorite', [ArchiveController::class, 'toggleFavorite'])->name('archives.favorite.toggle');
 
@@ -113,6 +112,8 @@ Route::middleware('auth')->group(function () {
         Route::patch('/admin/users/{user}/approve', [AdminController::class, 'approveUser'])->name('admin.users.approve');
         Route::delete('/admin/users/{user}/reject', [AdminController::class, 'rejectUser'])->name('admin.users.reject');
         Route::post('/admin/invites/generate', [AdminController::class, 'generateInvite'])->name('admin.invites.generate');
+
+        Route::post('/command/notify', [AdminController::class, 'sendNotification'])->name('admin.command.notify');
 
         Route::get('/admin/applicants/{user}', [AdminController::class, 'getApplicantDetails'])->name('admin.applicants.show');
 

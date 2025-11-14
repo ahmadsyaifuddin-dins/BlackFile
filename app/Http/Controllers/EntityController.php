@@ -6,8 +6,13 @@ use App\Models\Entity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-use App\Models\EntityImage; // <-- PENTING: Import EntityImage
+use App\Models\EntityImage;
 use Illuminate\Support\Facades\Auth;
+
+use App\Models\User;
+use App\Mail\NewEntityAlert;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class EntityController extends Controller
 {
@@ -40,17 +45,17 @@ class EntityController extends Controller
             $query->where('category', $request->category);
         }
 
-        // --- FILTER BARU: RANK ---
+        // RANK
         if ($request->filled('rank')) {
             $query->where('rank', $request->rank);
         }
 
-        // --- FILTER BARU: ORIGIN ---
+        // ORIGIN
         if ($request->filled('origin')) {
             $query->where('origin', $request->origin);
         }
 
-        // --- FILTER BARU: PAGINATION ---
+        // PAGINATION
         $perPage = Auth::user()->settings['per_page'] ?? 9;
 
         // 4. Setelah semua filter diterapkan, baru kita atur urutan dan paginasi.
@@ -103,12 +108,32 @@ class EntityController extends Controller
             }
         }
 
-        // --- LOGIKA BARU: Proses input URL gambar (jika ada) ---
+        // Proses input URL gambar (jika ada)
         if ($request->filled('image_url')) {
             $entity->images()->create([
                 'path' => $request->input('image_url'),
                 'caption' => 'Linked Evidence',
             ]);
+        }
+
+        try {
+            // Ambil semua user (agent) KECUALI diri sendiri (yang membuat)
+            $recipients = User::where('id', '!=', Auth::id())->get();
+
+            if ($recipients->isNotEmpty()) {
+                // Kirim email ke semua agent yang ditemukan
+                // Ini berjalan SYNC dan mungkin memakan waktu beberapa detik
+                Mail::to($recipients)->send(new NewEntityAlert($entity));
+            }
+
+        } catch (\Exception $e) {
+            // Jika email gagal, JANGAN hentikan proses.
+            // Cukup catat errornya ke log.
+            Log::error('SMTP Notification Failed for new entity ' . $entity->id . ': ' . $e->getMessage());
+            
+            // Redirect kembali ke index (sesuai alur Anda) dengan pesan 'warning'
+            return redirect()->route('entities.index')
+                ->with('warning', 'Entity created, but failed to send email alerts. Check log.');
         }
         return redirect()->route('entities.index')->with('success', 'Entity created successfully.');
     }
@@ -151,12 +176,11 @@ class EntityController extends Controller
 
             'image_url' => 'nullable|url', // Memastikan input adalah URL yang valid
 
-            // --- VALIDASI BARU ---
             'images_to_delete' => 'nullable|array',
             'images_to_delete.*' => 'exists:entity_images,id', // Pastikan ID gambar yang dikirim ada di database
         ]);
 
-        // --- LOGIKA BARU: HAPUS GAMBAR YANG DIPILIH ---
+        // HAPUS GAMBAR YANG DIPILIH
         if ($request->has('images_to_delete')) {
             $imagesToDelete = EntityImage::whereIn('id', $request->input('images_to_delete'))
                 ->where('entity_id', $entity->id) // Keamanan: pastikan gambar milik entitas ini
@@ -172,7 +196,7 @@ class EntityController extends Controller
             }
         }
 
-        // --- LOGIKA LAMA: PROSES GAMBAR BARU ---
+        // PROSES GAMBAR BARU
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $imageFile) {
                 $path = $imageFile->store('entity_images', 'public_uploads');
@@ -183,7 +207,7 @@ class EntityController extends Controller
             }
         }
 
-        // --- LOGIKA BARU: Proses input URL gambar ---
+        // Proses input URL gambar
         if ($request->filled('image_url')) {
             $entity->images()->create([
                 'path' => $request->input('image_url'),

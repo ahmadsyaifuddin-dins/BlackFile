@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Invite;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Mail\AgentNotification;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -27,7 +29,66 @@ class AdminController extends Controller
         // Ambil semua token undangan yang pernah dibuat
         $invites = Invite::with('creator')->orderBy('created_at', 'desc')->get();
 
-        return view('admin.dashboard', compact('pendingApplicants', 'invites'));
+        // Ambil semua agent (user terkonfirmasi & BUKAN admin)
+        $agents = User::where('confirmed', true)
+            ->whereHas('role', function ($query) {
+                $query->where('name', '!=', 'admin'); // Target semua role KECUALI admin
+            })
+            ->orderBy('codename')
+            ->get();
+
+        // Tambahkan 'agents' ke view
+        return view('admin.dashboard', compact('pendingApplicants', 'invites', 'agents'));
+    }
+
+    /**
+     * Method untuk mengirim notifikasi broadcast (langsung/synchronous).
+     */
+    public function sendNotification(Request $request)
+    {
+        $data = $request->validate([
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+            'target' => 'required|in:all,selected',
+            'agents' => 'required_if:target,selected|array',
+            'agents.*' => 'exists:users,id', 
+        ]);
+
+        $subject = $data['subject'];
+        $content = $data['message'];
+
+        $targetAgents = collect();
+
+        // Query dasar untuk agent (terkonfirmasi & BUKAN admin)
+        $agentQuery = User::where('confirmed', true)
+            ->whereHas('role', function ($query) {
+                $query->where('name', '!=', 'admin');
+            });
+
+        if ($data['target'] === 'all') {
+            $targetAgents = $agentQuery->get();
+        } else {
+            // Ambil hanya ID yang dipilih YANG JUGA memenuhi kriteria agentQuery
+            $targetAgents = $agentQuery->whereIn('id', $data['agents'])->get();
+        }
+
+        if ($targetAgents->isEmpty()) {
+            return back()->withErrors(['message' => 'No valid agents selected for notification.']);
+        }
+
+        // Kirim email secara langsung (synchronous)
+        foreach ($targetAgents as $agent) {
+            try {
+                Mail::to($agent->email)->send(new AgentNotification($subject, $content));
+            } catch (\Exception $e) {
+                // Jika 1 email gagal, catat error dan lanjut ke email berikutnya
+                // Anda bisa log errornya di sini jika perlu
+                Log::error("Failed to send email to {$agent->email}: " . $e->getMessage());
+                // Untuk saat ini, kita abaikan saja agar tidak menghentikan proses
+            }
+        }
+
+        return back()->with('success', 'Notification broadcast has been sent to ' . $targetAgents->count() . ' agents.');
     }
 
     public function approveUser(User $user)
@@ -41,9 +102,6 @@ class AdminController extends Controller
             'role_id' => $affiliateRole->id,
         ]);
 
-        // Di sini Anda bisa menambahkan notifikasi email ke user
-        // Mail::to($user->email)->send(new AccountApprovedMail());
-
         return redirect()->route('admin.dashboard')->with('success', "User '{$user->codename}' has been approved and is now an Allied Operative.");
     }
 
@@ -54,9 +112,6 @@ class AdminController extends Controller
     {
         $codename = $user->codename;
         $user->delete();
-
-        // Di sini Anda bisa menambahkan notifikasi email ke user
-        // Mail::to($user->email)->send(new AccountRejectedMail());
 
         return redirect()->route('admin.dashboard')->with('success', "Application for '{$codename}' has been rejected and deleted.");
     }
@@ -69,14 +124,13 @@ class AdminController extends Controller
         Invite::create([
             'code' => 'inviteByAbsolute-' . Str::random(16),
             'created_by' => Auth::id(),
-            // [DIUBAH] Atur waktu kadaluwarsa 1 jam dari sekarang
             'expires_at' => now()->addHour(),
         ]);
 
         return redirect()->route('admin.dashboard')->with('success', 'New 1-hour invite token has been generated.');
     }
 
-    // [BARU] Method untuk mengambil detail applicant via AJAX
+    
     public function getApplicantDetails(User $user)
     {
         // Pastikan hanya applicant yang bisa dilihat

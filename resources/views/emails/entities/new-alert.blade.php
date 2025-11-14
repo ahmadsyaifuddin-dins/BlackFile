@@ -1,20 +1,22 @@
 <x-mail::message>
 
-<x-slot name="header">
-    <x-mail::header :logo="$message->embed(public_path('app-icon.png'))" :url="url('/')" />
-</x-slot>
+<p style="text-align: center;">
+    <img src="{{ $message->embed(public_path('app-icon.png')) }}" alt="{{ config('app.name') }} Logo" width="100">
+</p>
 
 SYSTEM ALERT: New Entity Registered
 
 Attention Operatives,
 
-A new entity has been registered into the BlackFile database by Director {{ Auth::user()->codename }}.
+A new entity has been registered into the BlackFile database by Director <b>{{ Auth::user()->codename }}</b>.
 
 Entitas Summary
 
 Codename: {{ $entity->codename ?? 'N/A' }}
 
 Name: {{ $entity->name ?? 'N/A' }}
+
+Category: {{ $entity->category ?? 'N/A' }}
 
 Rank / Classification: {{ $entity->rank ?? 'Unknown' }}
 

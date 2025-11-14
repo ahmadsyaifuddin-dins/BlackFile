@@ -10,7 +10,7 @@ Attention Operatives,
 
 A new entity has been registered into the BlackFile database by Director {{ Auth::user()->codename }}.
 
-Dossier Summary
+Entitas Summary
 
 Codename: {{ $entity->codename ?? 'N/A' }}
 
@@ -27,7 +27,7 @@ Description:
 </x-mail::panel>
 
 <x-mail::button :url="route('entities.show', $entity)">
-View Full Dossier
+View Full Entitas
 </x-mail::button>
 
 Secure the data. Maintain the veil.

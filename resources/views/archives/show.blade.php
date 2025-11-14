@@ -1,21 +1,25 @@
+@php
+    // fallback ke index
+    $backUrl = request('return_url') ?? route('archives.index');
+@endphp
 <x-app-layout title="Detail Arsip: {{ $archive->name }}">
     <div class="max-w-4xl mx-auto space-y-6">
 
         {{-- Header Halaman --}}
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
             <h1 class="text-xl sm:text-2xl font-bold text-primary break-words">[ {{ $archive->name }} ]</h1>
-            <a href="{{ url()->previous() }}"
+            <a href="{{ $backUrl }}"
                 class="flex-shrink-0 text-sm text-secondary hover:text-primary transition-colors duration-200">
                 &lt;-- Back to Vault
             </a>
         </div>
 
-          {{-- Tampilkan Gambar Pratinjau jika ada --}}
-          @if($archive->preview_image_url)
-          <div class="w-full overflow-hidden rounded-lg border border-border">
-              <img src="{{ $archive->preview_image_url }}" alt="Archive Preview Image" class="w-full h-auto object-cover">
-          </div>
-          @endif
+        {{-- Tampilkan Gambar Pratinjau jika ada --}}
+        @if($archive->preview_image_url)
+        <div class="w-full overflow-hidden rounded-lg border border-border">
+            <img src="{{ $archive->preview_image_url }}" alt="Archive Preview Image" class="w-full h-auto object-cover">
+        </div>
+        @endif
 
         {{-- Kontainer Detail Utama --}}
         <div class="bg-surface border border-border rounded-md shadow-lg">

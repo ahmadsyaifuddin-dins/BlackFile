@@ -64,8 +64,8 @@
                             <span x-text="count" class="text-sm text-secondary"></span>
                         </div>
                         <div class="flex items-center space-x-4">
-                            <a href="{{ route('archives.show', $archive) }}"
-                                class="text-secondary text-primary-hover text-sm">Details</a>
+                            <a href="{{ route('archives.show', $archive) }}?return_url={{ urlencode(request()->fullUrl()) }}"
+                                class="text-secondary text-primary-hover text-sm">Details</a>                             
                             <a href="{{ route('archives.edit', $archive) }}"
                                 class="text-yellow-500 hover:text-yellow-400 text-sm">Edit</a>
                             <form action="{{ route('archives.destroy', $archive) }}" method="POST" class="inline-block"

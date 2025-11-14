@@ -1,10 +1,14 @@
+@php
+    $backUrl = request('return_url') ?? route('archives.show', $archive);
+@endphp
+
 <x-app-layout title="Edit Arsip: {{ $archive->name }}">
     <div class="max-w-3xl mx-auto">
 
         {{-- Header Halaman --}}
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-xl sm:text-2xl font-bold text-primary">[ EDIT_ENTRY ]</h1>
-            <a href="{{ url()->previous() }}"
+            <a href="{{ $backUrl }}"
                 class="text-sm text-secondary hover:text-primary transition-colors duration-200">
                 &lt;-- Back to Vault
             </a>

@@ -301,8 +301,23 @@ class ArchiveController extends Controller
 
         // [LOGIKA UNTUK TAGS]
         $this->syncTags($validated['tags'] ?? null, $archive);
+        
+        // Redirect handling (honor return_url jika disediakan)
+        $return = $request->input('return_url');
 
-        return redirect()->route('archives.index')->with('success', 'Arsip berhasil diperbarui.');
+        if ($return) {
+            // Terima: (a) path relatif yang diawali '/', atau (b) absolute URL yang mulai dengan APP_URL
+            $appUrl = rtrim(config('app.url'), '/');
+    
+            if (!Str::startsWith($return, '/') && !Str::startsWith($return, $appUrl)) {
+                // bukan path relatif dan bukan domain kita -> tolak (hindari open-redirect)
+                $return = null;
+            }
+        }
+    
+        $return = $return ?? route('archives.index');
+
+        return redirect()->to($return)->with('success', 'Arsip berhasil diperbarui.');
     }
 
     // [TAMBAHKAN METHOD BANTU]

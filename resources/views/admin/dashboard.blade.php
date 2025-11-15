@@ -166,14 +166,16 @@
                 <label class="block text-sm font-bold text-primary mb-2">> TARGET RECIPIENTS</label>
                 <div class="flex items-center gap-6">
                     <label class="flex items-center text-glow cursor-pointer">
-                        <input type="radio" name="target" value="selected" x-model="target"
+                        <x-forms.radio name="target" value="selected" x-model="target"
                                class="bg-base border-border-color text-primary focus:ring-primary">
                         <span class="ml-2">Selected Agents</span>
+                        </x-forms.radio>
                     </label>
                     <label class="flex items-center text-glow cursor-pointer">
-                        <input type="radio" name="target" value="all" x-model="target"
+                        <x-forms.radio name="target" value="all" x-model="target"
                                class="bg-base border-border-color text-primary focus:ring-primary">
                         <span class="ml-2">All Active Agents ({{ $agents->count() }})</span>
+                        </x-forms.radio>
                     </label>
                 </div>
             </div>
@@ -186,11 +188,12 @@
                     @forelse($agents as $agent)
                         <label
                             class="flex items-center space-x-2 bg-surface/50 border border-border-color/50 px-3 py-2 rounded-md hover:bg-base cursor-pointer transition-colors">
-                            <input type="checkbox" name="agents[]" value="{{ $agent->id }}"
+                            <x-forms.checkbox name="agents[]" value="{{ $agent->id }}"
                                    class="bg-base border-border-color text-primary focus:ring-primary rounded-sm">
                             <span class="text-sm text-glow" title="{{ $agent->name }} ({{ $agent->email }})">
                                 {{ $agent->codename }}
                             </span>
+                            </x-forms.checkbox>
                         </label>
                     @empty
                         <p class="text-secondary text-sm col-span-full">[ NO ACTIVE AGENTS FOUND ]</p>

@@ -17,9 +17,7 @@
     <div x-show="isModalOpen" x-transition @click.outside="isModalOpen = false"
         class="relative w-full max-w-lg bg-surface border-2 border-border-color rounded-lg shadow-lg flex flex-col">
 
-        <!-- ====================================================== -->
         <!-- == MODE VIEW (TAMPILAN AGENT BACA-SAJA) == -->
-        <!-- ====================================================== -->
         <div x-show="!isEditing">
             <!-- Header Agent -->
             <div class="flex items-start justify-between p-4 border-b border-border-color">
@@ -82,7 +80,7 @@
                         </div>
                         <div class="text-right">
                             <button type="submit"
-                                class="px-3 py-1 bg-primary text-base text-primary-hover font-bold text-xs rounded">[
+                                class="px-3 py-1 bg-primary text-base text-primary-hover font-bold rounded">[
                                 ESTABLISH LINK ]</button>
                         </div>
                     </form>
@@ -118,9 +116,7 @@
             </div>
         </div>
 
-        <!-- ====================================================== -->
-        <!-- == MODE EDIT (FORM UPDATE ASET) ====================== -->
-        <!-- ====================================================== -->
+        <!-- == MODE EDIT (FORM UPDATE ASET) -->
         <div x-show="isEditing">
             <form method="POST" :action="'/friends/' + selectedNodeData.id.substring(1)">
                 @csrf
@@ -161,9 +157,9 @@
                 <!-- Footer Aksi (Edit Mode) -->
                 <div class="p-4 border-t border-border-color flex items-center justify-end space-x-3">
                     <button type="button" @click="isEditing = false"
-                        class="px-4 py-2 bg-secondary/20 text-secondary hover:bg-secondary/40 font-bold text-sm rounded">CANCEL</button>
+                        class="px-4 py-2 bg-secondary/20 text-secondary hover:bg-secondary/40 font-bold rounded">CANCEL</button>
                     <button type="submit"
-                        class="px-4 py-2 bg-primary text-base text-primary-hover font-bold text-sm rounded">[ SAVE
+                        class="px-4 py-2 bg-primary text-base text-primary-hover font-bold rounded">[ SAVE
                         CHANGES ]</button>
                 </div>
             </form>

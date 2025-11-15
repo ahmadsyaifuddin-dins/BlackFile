@@ -60,10 +60,11 @@
                 <div class="mt-2 text-center">
                     <label for="thumb_id_{{ $image->id }}"
                         class="flex items-center justify-center text-xs text-secondary cursor-pointer">
-                        <input type="radio" x-model="selectedThumbnail" value="{{ $image->id }}"
+                        <x-forms.radio x-model="selectedThumbnail" value="{{ $image->id }}"
                             id="thumb_id_{{ $image->id }}"
                             class="w-4 h-4 bg-base border-border-color text-primary focus:ring-primary mr-2">
                         Set Thumbnail
+                        </x-forms.radio>
                     </label>
                 </div>
                 
@@ -71,10 +72,11 @@
                 <div class="mt-1 text-center">
                     <label for="delete_image_{{ $image->id }}"
                         class="flex items-center justify-center text-xs text-red-400 cursor-pointer">
-                        <input type="checkbox" name="images_to_delete[]" value="{{ $image->id }}"
+                        <x-forms.checkbox name="images_to_delete[]" value="{{ $image->id }}"
                             id="delete_image_{{ $image->id }}"
                             class="w-4 h-4 bg-base border-border-color text-red-600 focus:ring-red-500 mr-2">
                         TERMINATE
+                        </x-forms.checkbox>
                     </label>
                 </div>
             </div>
@@ -122,11 +124,16 @@
                         <template x-for="(preview, index) in filePreviews" :key="index">
                             <div class="relative group">
                                 <img :src="preview" class="w-full h-32 object-cover border-2" :class="selectedThumbnail === 'new_index_' + index ? 'border-primary' : 'border-border-color'">
-                                <div class="mt-2 text-center">
-                                    <label :for="'thumb_new_' + index" class="flex items-center justify-center text-xs text-secondary cursor-pointer">
-                                        <input type="radio" :id="'thumb_new_' + index" x-model="selectedThumbnail" :value="'new_index_' + index" class="w-4 h-4 bg-base border-border-color text-primary focus:ring-primary mr-2">
+                               
+                                <div class="mt-2 flex justify-center">
+                                    <x-forms.radio
+                                        {{-- Gunakan x-bind: untuk atribut Alpine --}}
+                                        x-bind:id="'thumb_new_' + index"
+                                        x-model="selectedThumbnail"
+                                        x-bind:value="'new_index_' + index"
+                                    >
                                         Set Thumbnail
-                                    </label>
+                                    </x-forms.radio>
                                 </div>
                             </div>
                         </template>
@@ -152,10 +159,9 @@
                                  :class="selectedThumbnail === 'new_url' ? 'border-primary' : 'border-border-color'" 
                                  x-on:error.once="$event.target.src = '{{ asset('images/placeholder-error.jpg') }}'"> {{-- Fallback jika URL error --}}
                             <div class="mt-2 text-center">
-                                <label for="thumb_url" class="flex items-center justify-center text-xs text-secondary cursor-pointer">
-                                    <input type="radio" id="thumb_url" x-model="selectedThumbnail" value="new_url" class="w-4 h-4 bg-base border-border-color text-primary focus:ring-primary mr-2">
+                                <x-forms.radio id="thumb_url" x-model="selectedThumbnail" value="new_url" class="w-4 h-4 bg-base border-border-color text-primary focus:ring-primary mr-2">
                                     Set Thumbnail
-                                </label>
+                                </x-forms.radio>
                             </div>
                         </div>
                     </div>

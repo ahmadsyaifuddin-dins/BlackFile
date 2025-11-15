@@ -9,11 +9,11 @@
                 setTimeout(() => { status = 'idle' }, 3000)
             }
         })"
-        {{-- [DIUBAH] Jadikan container ini 'relative' untuk menjadi jangkar bagi animasi --}}
+        {{-- Jadikan container ini 'relative' untuk menjadi jangkar bagi animasi --}}
         class="relative min-h-[250px]"
     >
         <!-- Form Login -->
-        {{-- [DIUBAH] Form sekarang menjadi transparan saat status berubah, bukan menghilang --}}
+        {{-- Form sekarang menjadi transparan saat status berubah, bukan menghilang --}}
         <div 
             :class="{ 'opacity-0 invisible': status !== 'idle' }"
             class="transition-opacity duration-300"
@@ -65,11 +65,9 @@
                 </div>
                 
                 <div class="block mt-4">
-                    <label for="remember" class="inline-flex items-center cursor-pointer">
-                        <input id="remember" type="checkbox" name="remember" 
-                               class="rounded bg-surface border-border-color text-primary shadow-sm focus:ring-primary focus:ring-offset-surface">
-                        <span class="ms-2 text-sm text-secondary hover:text-white">> Keep me logged in</span>
-                    </label>
+                    <x-forms.checkbox id="remember_me" name="remember">
+                        Remember me
+                    </x-forms.checkbox>
                 </div>
 
                 <div class="flex items-center justify-end mt-6">
@@ -82,7 +80,7 @@
             <p class="text-xs text-secondary mt-2">Don't have an account? <a href="{{ route('register') }}" class="text-primary hover:underline">Register</a></p>
         </div>
 
-        <!-- [DIUBAH] Container untuk semua animasi, diposisikan absolut di tengah -->
+        <!-- Container untuk semua animasi, diposisikan absolut di tengah -->
         <div x-show="status !== 'idle'" x-transition x-cloak 
              class="absolute inset-0 flex items-center justify-center">
             

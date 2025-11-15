@@ -119,14 +119,16 @@
         <!-- Pilihan Sumber Musik -->
         <div class="flex items-center space-x-4 mb-4">
             <label class="flex items-center text-white">
-                <input type="radio" name="music_source" value="default" x-model="musicSource"
+                <x-forms.radio name="music_source" value="default" x-model="musicSource"
                     class="form-radio bg-gray-900 border-gray-700 text-primary">
                 <span class="ml-2">Use Default Music</span>
+                </x-forms.radio>
             </label>
             <label class="flex items-center text-white">
-                <input type="radio" name="music_source" value="custom" x-model="musicSource"
+                <x-forms.radio name="music_source" value="custom" x-model="musicSource"
                     class="form-radio bg-gray-900 border-gray-700 text-primary">
                 <span class="ml-2">Upload Custom</span>
+                </x-forms.radio>
             </label>
         </div>
 

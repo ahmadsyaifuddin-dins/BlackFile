@@ -27,15 +27,17 @@
                     <div class="flex flex-wrap gap-x-6 gap-y-2">
                         <label for="filter-user"
                             class="flex items-center space-x-2 text-secondary cursor-pointer hover:text-white">
-                            <input type="checkbox" id="filter-user" value="{{ auth()->user()->role->alias }}"
+                            <x-forms.checkbox id="filter-user" value="{{ auth()->user()->role->alias }}"
                                 class="filter-role form-checkbox bg-base border-border-color text-primary focus:ring-primary">
                             <span>{{ __('My Role') }} ({{ auth()->user()->role->alias }})</span>
+                            </x-forms.checkbox>
                         </label>
                         <label for="filter-friend"
                             class="flex items-center space-x-2 text-secondary cursor-pointer hover:text-white">
-                            <input type="checkbox" id="filter-friend" value="Asset"
+                            <x-forms.checkbox id="filter-friend" value="Asset"
                                 class="filter-role form-checkbox bg-base border-border-color text-primary focus:ring-primary">
                             <span>{{ __('Asset') }}</span>
+                            </x-forms.checkbox>
                         </label>
                     </div>
                 </div>

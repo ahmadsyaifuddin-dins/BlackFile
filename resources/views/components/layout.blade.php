@@ -14,12 +14,12 @@
     @vite('resources/js/pages/friends-index.js')
 
 </head>
-@props(['title', 'theme' => 'default']) {{-- [BARU] Menerima prop 'theme' dengan nilai default --}}
+@props(['title', 'theme' => 'default']) {{-- Menerima prop 'theme' dengan nilai default --}}
 
 <body class="font-mono antialiased text-secondary bg-base @if($theme === 'terminal') theme-terminal @endif"
     data-theme="{{ Auth::user()->settings['theme'] ?? 'default' }}">
 
-    {{-- [BARU] Div untuk efek scanline hanya muncul jika tema adalah 'terminal' --}}
+    {{-- Div untuk efek scanline hanya muncul jika tema adalah 'terminal' --}}
     @if($theme === 'terminal')
     <div class="fixed top-0 left-0 h-full w-full scan-overlay pointer-events-none z-0"></div>
     @endif

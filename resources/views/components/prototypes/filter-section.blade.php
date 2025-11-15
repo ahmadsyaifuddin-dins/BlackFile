@@ -50,7 +50,7 @@
 
             {{-- Tombol Aksi --}}
             <div class="flex items-end gap-2">
-                <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded transition">
+                <button type="submit" class="cursor-pointer w-full bg-primary hover:bg-green-800 text-white font-bold py-2 px-4 rounded transition">
                     FILTER
                 </button>
                 <a href="{{ route('prototypes.index') }}" class="w-full text-center bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition">

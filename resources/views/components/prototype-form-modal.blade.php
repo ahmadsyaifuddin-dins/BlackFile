@@ -4,7 +4,7 @@
     x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
     class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 px-4" x-cloak>
     {{-- Konten Modal --}}
-    <div @click.outside="isModalOpen = false"
+    <div
         class="bg-gray-900 border border-gray-700 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
 
         {{-- Form Action di-binding secara dinamis dari Alpine.js --}}

@@ -18,7 +18,7 @@
         class="relative w-full max-w-lg bg-surface border-2 border-border-color rounded-lg shadow-lg flex flex-col">
 
         <!-- ====================================================== -->
-        <!-- == MODE VIEW (TAMPILAN AGENT BACA-SAJA) =========== -->
+        <!-- == MODE VIEW (TAMPILAN AGENT BACA-SAJA) == -->
         <!-- ====================================================== -->
         <div x-show="!isEditing">
             <!-- Header Agent -->

@@ -6,7 +6,7 @@
     class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 px-4" x-cloak>
 
     {{-- Perbaikan: ganti isOpen dengan isDeleteModalOpen --}}
-    <div @click.outside="isDeleteModalOpen = false" class="bg-gray-900 border border-red-700 rounded-lg shadow-xl w-full max-w-md">
+    <div class="bg-gray-900 border border-red-700 rounded-lg shadow-xl w-full max-w-md">
         
         {{-- Perbaikan: ganti actionUrl dengan deleteFormAction --}}
         <form x-bind:action="deleteFormAction" method="POST">

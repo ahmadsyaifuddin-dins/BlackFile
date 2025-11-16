@@ -11,7 +11,7 @@
         <h2 class="text-lg font-bold text-primary border-b border-border-color pb-2 mb-4">> CREATE MASTER PASSWORD</h2>
         
         <div class="mb-4 bg-yellow-900/20 border border-yellow-500/50 text-yellow-300 text-sm p-4">
-            <p><span class="font-bold">CRITICAL WARNING:</span> This password encrypts your contact data. If you forget it, your data will be <span class="font-bold">PERMANENTLY UNRECOVERABLE</span>. There is no "Forgot Password" option. Store it securely.</p>
+            <p><span class="font-bold">CRITICAL WARNING:</span> Password Master ini mengenkripsi data kontak Anda. Jika Anda lupa kata sandi ini, data kontak Anda akan <span class="font-bold">HILANG SELAMANYA</span> dan tidak dapat dipulihkan. Tidak ada opsi “Lupa Kata Sandi”. Simpan kata sandi ini dengan aman.</p>
         </div>
 
         <form action="{{ route('master-password.store') }}" method="POST" class="space-y-6">

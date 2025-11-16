@@ -137,7 +137,6 @@ class User extends Authenticatable
         return $this->hasMany(CreditView::class);
     }
     /**
-     * [BARU & MEMPERBAIKI MASALAH]
      * Accessor cerdas untuk mendapatkan "parent" atau "handler" dari tabel connections.
      * Ini akan dipanggil secara otomatis saat kita menulis `$user->parent`.
      */

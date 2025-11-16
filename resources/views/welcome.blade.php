@@ -16,9 +16,6 @@
             <div class="container mx-auto flex justify-between items-center">
                 <span class="text-2xl font-bold text-primary tracking-[.25em]">[B.F]</span>
                 
-                {{-- ================================================================ --}}
-                {{-- == PERUBAHAN: Tombol Header Pintar == --}}
-                {{-- ================================================================ --}}
                 @auth
                     {{-- Tombol ini tampil JIKA pengguna SUDAH LOGIN --}}
                     <a href="{{ route('dashboard') }}" class="px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-base transition-colors font-bold text-sm">
@@ -75,9 +72,6 @@
                     <h2 class="text-2xl font-bold text-white">Your mission, should you choose to accept it, begins here.</h2>
                     <p class="mt-4 mb-8 max-w-xl mx-auto">This terminal is the gateway. Verify your identity to proceed.</p>
                     
-                    {{-- ================================================================ --}}
-                    {{-- == PERUBAHAN: Tombol CTA Pintar == --}}
-                    {{-- ================================================================ --}}
                     @auth
                         {{-- Tombol ini tampil JIKA pengguna SUDAH LOGIN --}}
                         <a href="{{ route('dashboard') }}" class="px-8 py-4 bg-black text-primary transition-colors font-bold tracking-widest text-lg hover:bg-primary-hover">

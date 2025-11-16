@@ -1,14 +1,11 @@
 <aside class="h-full bg-surface border-r bg-black border-border-color flex flex-col transition-transform duration-300 ease-in-out
-           fixed inset-y-0 left-0 -translate-x-full md:relative md:translate-x-0 z-20 w-64"
-    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'">
-    <div
-        class="relative p-4 text-2xl font-bold border-b border-border-color text-primary tracking-[.25em] flex-shrink-0 flex justify-between items-center">
+           fixed inset-y-0 left-0 -translate-x-full md:relative md:translate-x-0 z-20 w-64" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'">
+    <div class="relative p-4 text-2xl font-bold border-b border-border-color text-primary tracking-[.25em] flex-shrink-0 flex justify-between items-center">
         <span>[B.F]</span>
 
         {{-- Tombol Close Baru untuk Mobile --}}
         <button @click="sidebarOpen = false" class="md:hidden text-secondary hover:text-white focus:outline-none">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
         </button>
@@ -67,27 +64,48 @@
             <span>> {{ __('Entities Database') }}</span>
         </a>
 
-        <a href="{{ route('archives.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-         {{ request()->routeIs('archives.*') 
-             ? 'bg-surface-light text-primary border-l-4 border-primary' 
-             : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
-            <span>> {{ __('Archives Files') }}</span>
-        </a>
-
-        <a href="{{ route('favorites.archives') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-         {{ request()->routeIs('favorites.archives') 
-             ? 'bg-surface-light text-primary border-l-4 border-primary' 
-             : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
-            <span>> {{ __('Archives Favorites') }}</span>
-        </a>
-            
         <a href="{{ route('encrypted-contacts.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
             {{ request()->routeIs('encrypted-contacts.*') 
         ? 'bg-surface-light text-primary border-l-4 border-primary' 
         : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Kontak Terenkripsi') }}</span>
         </a>
-            
+
+        <div x-data="{ open: {{ request()->routeIs('archives.*') || request()->routeIs('favorites.archives') ? 'true' : 'false' }} }">
+            <!-- Tombol untuk membuka/menutup submenu -->
+            <button @click="open = !open" class="w-full flex items-center justify-between space-x-3 px-3 py-2 rounded-r-md transition-colors text-left
+        {{ request()->routeIs('archives.*') || request()->routeIs('favorites.archives') 
+            ? 'bg-surface-light text-primary border-l-4 border-primary' 
+            : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+                <span class="flex items-center space-x-3">
+                    <span>> {{ __('Archives') }}</span>
+                </span>
+                <!-- Ikon Panah -->
+                <svg class="w-4 h-4 transform transition-transform" :class="{ 'rotate-90': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+
+            <!-- Daftar Submenu -->
+            <div x-show="open" x-transition class="mt-1 space-y-1 pl-6">
+                <!-- Submenu: Archives Files -->
+                <a href="{{ route('archives.index') }}" class="block px-3 py-2 rounded-r-md transition-colors text-sm
+            {{ request()->routeIs('archives.index') 
+                ? 'bg-surface-light/50 text-white' 
+                : 'text-gray-400 hover:bg-surface-light/50 hover:text-white' }}">
+                    - {{ __('Archives Files') }}
+                </a>
+
+                <!-- Submenu: Archives Favorites -->
+                <a href="{{ route('favorites.archives') }}" class="block px-3 py-2 rounded-r-md transition-colors text-sm
+            {{ request()->routeIs('favorites.archives') 
+                ? 'bg-surface-light/50 text-white' 
+                : 'text-gray-400 hover:bg-surface-light/50 hover:text-white' }}">
+                    - {{ __('Archives Favorites') }}
+                </a>
+            </div>
+        </div>
+
         <div x-data="{ open: {{ request()->routeIs('credits.*') ? 'true' : 'false' }} }">
             <!-- Tombol untuk membuka/menutup submenu -->
             <button @click="open = !open" class="w-full flex items-center justify-between space-x-3 px-3 py-2 rounded-r-md transition-colors text-left
@@ -98,8 +116,7 @@
                     <span>> {{ __('Epilogue') }}</span>
                 </span>
                 <!-- Ikon Panah -->
-                <svg class="w-4 h-4 transform transition-transform" :class="{ 'rotate-90': open }" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 transform transition-transform" :class="{ 'rotate-90': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
             </button>
@@ -146,13 +163,13 @@
             <span>> {{ __('Register Agent') }}</span>
         </a>
         @endif
-                
+
         <a href="{{ route('codex.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
             {{ request()->routeIs('codex.index') 
         ? 'bg-surface-light text-primary border-l-4 border-primary' 
         : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Codex') }}</span>
-        </a>        
+        </a>
 
         <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
            {{ request()->routeIs('logs.*') 
@@ -172,8 +189,7 @@
     <div class="p-4 border-t border-border-color flex-shrink-0">
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-            <button type="submit"
-                class="w-full text-left flex items-center space-x-3 px-3 py-2 rounded transition-colors hover:bg-red-900/50 hover:text-red-400 cursor-pointer">
+            <button type="submit" class="w-full text-left flex items-center space-x-3 px-3 py-2 rounded transition-colors hover:bg-red-900/50 hover:text-red-400 cursor-pointer">
                 <span>> {{ __('Terminate Session') }}</span>
             </button>
         </form>

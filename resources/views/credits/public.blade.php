@@ -43,19 +43,19 @@
 
         .credit-role {
             font-family: 'Orbitron', sans-serif;
-            /* PERBAIKAN: Ukuran font disesuaikan untuk mobile & desktop */
+            /* Ukuran font disesuaikan untuk mobile & desktop */
             font-size: 1rem; /* Ukuran dasar untuk mobile */
             color: #36d351; /* Warna hijau khas BlackFile */
             margin-bottom: 1.25rem; /* Jarak ke nama pertama sedikit ditambah */
             margin-top: 4rem; /* Jarak antar seksi diperlebar */
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            /* PERBAIKAN: Efek glow halus */
+            /* Efek glow halus */
             text-shadow: 0 0 8px rgba(54, 211, 81, 0.4);
         }
 
         .credit-name {
-            /* PERBAIKAN: Ukuran font, warna, dan bobot disesuaikan */
+            /* Ukuran font, warna, dan bobot disesuaikan */
             font-size: 1.125rem; /* text-lg, lebih kecil dari sebelumnya */
             font-weight: 300; /* Font lebih tipis dan elegan */
             color: #d1d5db; /* gray-300, sedikit lebih lembut dari putih murni */
@@ -75,7 +75,7 @@
             height: 4.5rem;
         }
         
-        /* PERBAIKAN: Media query untuk layar lebih besar (desktop) */
+        /* Media query untuk layar lebih besar (desktop) */
         @media (min-width: 640px) {
             .credit-role {
                 font-size: 1.25rem; /* Ukuran kembali normal di desktop */

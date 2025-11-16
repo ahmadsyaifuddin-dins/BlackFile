@@ -25,11 +25,38 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('users.show', compact('user'));
+        // Atur nilai default terlebih dahulu
+        $localeName = 'N/A';
+        $perPageName = 'N/A';
+        $themeName = 'N/A';
+
+        // Timpa nilai default HANYA JIKA user->settings ada
+        if ($user->settings) {
+            $locale = $user->settings['locale'] ?? 'N/A';
+            $per_page = $user->settings['per_page'] ?? 'N/A';
+            $theme = $user->settings['theme'] ?? 'N/A';
+
+            // Format Bahasa
+            if ($locale === 'id') {
+                $localeName = 'Indonesian (id)';
+            } elseif ($locale === 'en') {
+                $localeName = 'English (en)';
+            } else {
+                $localeName = $locale;
+            }
+
+            // Format Per Page
+            $perPageName = ($per_page !== 'N/A') ? $per_page . ' entries' : 'N/A';
+
+            // Format Theme
+            $themeName = ucfirst($theme);
+        }
+
+        return view('users.show', compact('user', 'localeName', 'perPageName', 'themeName'));
     }
 
      /**
-     * [BARU] Menampilkan form untuk mengedit data user lain.
+     * Menampilkan form untuk mengedit data user lain.
      */
     public function edit(User $user)
     {
@@ -38,7 +65,7 @@ class UserController extends Controller
     }
 
     /**
-     * [BARU] Memperbarui data user lain.
+     * Memperbarui data user lain.
      */
     public function update(Request $request, User $user)
     {
@@ -56,7 +83,7 @@ class UserController extends Controller
         // Update data utama, kecuali password
         $user->update($request->except('password'));
 
-        // [LOGIKA BARU] Hanya update password jika field-nya diisi
+        // Hanya update password jika field-nya diisi
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
             $user->save();
@@ -66,7 +93,7 @@ class UserController extends Controller
     }
 
     /**
-     * [BARU] Menghapus user.
+     * Menghapus user.
      */
     public function destroy(User $user)
     {

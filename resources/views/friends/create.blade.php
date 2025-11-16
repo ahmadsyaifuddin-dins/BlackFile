@@ -26,11 +26,6 @@
 
         <form method="POST" action="{{ route('friends.store') }}">
             @csrf
-
-            {{-- ====================================================== --}}
-            {{-- BAGIAN INI MENGGANTIKAN FORM LAMA ANDA --}}
-            {{-- ====================================================== --}}
-
             <!-- Mode 1: Daftarkan Aset Baru -->
             <div class="border-b border-border-color pb-6">
                 <h3 class="text-base text-primary font-bold mb-4">> [ {{ __('OPTION A: REGISTER NEW ASSET') }} ]</h3>
@@ -88,11 +83,6 @@
                     </select>
                 </div>
             </div>
-
-            {{-- ====================================================== --}}
-            {{-- AKHIR DARI BAGIAN YANG BARU --}}
-            {{-- ====================================================== --}}
-
             <div class="border-t border-border-color pt-6 flex justify-end">
                 <button type="submit"
                     class="px-6 py-2 bg-primary text-black text-base transition-colors font-bold tracking-widest rounded-md cursor-pointer">

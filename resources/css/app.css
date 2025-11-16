@@ -44,7 +44,7 @@
         --border-primary-hover: #f1fa8c;
     }
 
-    /* [BARU] Definisi untuk tema Arctic Blue */
+    /* Definisi untuk tema Arctic Blue */
     body[data-theme='arctic'] {
         --color-primary: #8be9fd;
         --color-primary-hover: #a4ffff;
@@ -52,7 +52,7 @@
         --border-primary-hover: #a4ffff;
     }
 
-    /* [BARU] Definisi untuk tema Code Red */
+    /* Definisi untuk tema Code Red */
     body[data-theme='red'] {
         --color-primary: #ff5555;
         --color-primary-hover: #ff6e67;
@@ -127,7 +127,7 @@
 }
 
 /* ========================================================================== */
-/* == BAGIAN 2: KOMPONEN CUSTOM ============================================== */
+/* BAGIAN 2: KOMPONEN CUSTOM
 /* ========================================================================== */
 
 @layer components {

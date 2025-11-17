@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('description');
             $table->text('abilities')->nullable();
             $table->text('weaknesses')->nullable();
-            $table->enum('status', ['ACTIVE', 'CONTAINED', 'NEUTRALIZED', 'UNKNOWN','MYTHOS'])->default('UNKNOWN');
+            $table->text('status')->default('UNKNOWN');
             $table->timestamps();
         });
     }

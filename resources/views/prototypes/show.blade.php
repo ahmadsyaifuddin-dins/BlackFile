@@ -13,10 +13,9 @@
                 <h2 class="font-semibold text-xl text-gray-200 leading-tight">
                     <span class="text-gray-500">Prototype //</span> {{ $prototype->codename }}
                 </h2>
-                <a href="{{ route('prototypes.index') }}"
-                    class="text-gray-400 hover:text-white transition duration-300 font-mono text-sm">
+                <x-button variant="outline" class="mt-2 mb-2" href="{{ route('prototypes.index') }}">
                     &lt;-- [ RETURN TO PROJECTS ]
-                </a>
+                </x-button>
             </div>
             <div class="bg-gray-900 border border-gray-700 shadow-sm sm:rounded-lg overflow-hidden">
                 {{-- Bagian Gambar Sampul (jika ada) --}}

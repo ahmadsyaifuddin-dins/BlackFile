@@ -81,11 +81,12 @@ return [
         'Angelic Hierarchy',
         'Demonic Hierarchy',
         'Metaphysical Concept', // Abstract, non-physical beings/ideas
-
+        
         // --- Faction & Project Specific ---
         '[B.F] Anomaly', // Anomalies specific to BlackFile's findings
         'SCP Anomaly',
         'Cthulhu Mythos',
+        'Hindu Mythology',
 
         // --- Technological ---
         'Artificial Intelligence',

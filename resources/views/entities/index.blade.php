@@ -15,126 +15,71 @@
         @endif
 
         {{-- FORM FILTER DENGAN LAYOUT GRID --}}
+        {{-- FORM FILTER DENGAN LAYOUT GRID --}}
         <div class="bg-surface border border-border-color p-4 font-mono">
             <form action="{{ route('entities.index') }}" method="GET">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {{-- Kolom 1: Search --}}
-                    <div class="lg:col-span-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    
+                    {{-- Kolom 1: Search (Menggunakan Component Input + Icon Slot) --}}
+                    <div class="lg:col-span-1 md:col-span-2">
                         <label for="search" class="sr-only">Search</label>
-                        <input type="text" name="search" id="search"
-                            placeholder="Search by keyword, name, or codename..." value="{{ request('search') }}"
-                            class="w-full bg-base border-2 border-border-color focus:border-primary focus:ring-0 text-white px-3 py-2">
+                        <x-forms.input 
+                            name="search" 
+                            placeholder="Search entities..." 
+                            value="{{ request('search') }}">
+                            
+                            {{-- Mengirim SVG ke dalam slot 'icon' --}}
+                            <x-slot:icon>
+                                <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </x-slot:icon>
+                        </x-forms.input>
                     </div>
 
                     {{-- Kolom 2: Filter Category --}}
                     <div>
-                        <label for="category" class="sr-only">Category</label>
-                        @php $categories = config('blackfile.entity_categories'); @endphp
-                        <div x-data="{ open: false, selected: '{{ request('category', '') }}' }"
-                            class="relative font-mono">
-                            <input type="hidden" name="category" x-bind:value="selected">
-                            <button type="button" @click="open = !open"
-                                class="relative w-full bg-base border-2 border-border-color text-left text-white p-2 pr-10 focus:outline-none focus:border-primary">
-                                <span x-text="selected || '-- All Categories --'"></span>
-                                <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"><svg
-                                        class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M10 3a.75.75 0 01.53.22l3.5 3.5a.75.75 0 01-1.06 1.06L10 4.81 7.03 7.78a.75.75 0 01-1.06-1.06l3.5-3.5A.75.75 0 0110 3zm-3.72 9.53a.75.75 0 011.06 0L10 15.19l2.97-2.97a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 010-1.06z"
-                                            clip-rule="evenodd" />
-                                    </svg></span>
-                            </button>
-                            <div x-show="open" @click.away="open = false"
-                                class="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto bg-black border border-border-color shadow-lg"
-                                style="display: none;">
-                                <a @click="selected = ''; open = false"
-                                    class="block px-4 py-2 text-sm cursor-pointer text-primary hover:text-green-400"
-                                    :class="{'text-green-800 bg-surface': selected === ''}">-- All Categories --</a>
-                                @foreach($categories as $category)
-                                <a @click="selected = '{{ addslashes($category) }}'; open = false"
-                                    class="block px-4 py-2 text-sm cursor-pointer text-primary hover:text-green-400"
-                                    :class="{'text-green-800 bg-surface': selected === '{{ addslashes($category) }}'}">{{
-                                    $category }}</a>
-                                @endforeach
-                            </div>
-                        </div>
+                        <x-forms.select 
+                            name="category" 
+                            :options="config('blackfile.entity_categories')" 
+                            :selected="request('category')" 
+                            placeholder="-- All Categories --" 
+                        />
                     </div>
 
                     {{-- Kolom 3: Filter Rank --}}
                     <div>
-                        <label for="rank" class="sr-only">Rank</label>
-                        @php $ranks = config('blackfile.entity_ranks'); @endphp
-                        <div x-data="{ open: false, selected: '{{ request('rank', '') }}' }" class="relative font-mono">
-                            <input type="hidden" name="rank" x-bind:value="selected">
-                            <button type="button" @click="open = !open"
-                                class="relative w-full bg-base border-2 border-border-color text-left text-white p-2 pr-10 focus:outline-none focus:border-primary">
-                                <span x-text="selected || '-- All Ranks --'"></span>
-                                <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"><svg
-                                        class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M10 3a.75.75 0 01.53.22l3.5 3.5a.75.75 0 01-1.06 1.06L10 4.81 7.03 7.78a.75.75 0 01-1.06-1.06l3.5-3.5A.75.75 0 0110 3zm-3.72 9.53a.75.75 0 011.06 0L10 15.19l2.97-2.97a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 010-1.06z"
-                                            clip-rule="evenodd" />
-                                    </svg></span>
-                            </button>
-                            <div x-show="open" @click.away="open = false"
-                                class="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto bg-black border border-border-color shadow-lg"
-                                style="display: none;">
-                                <a @click="selected = ''; open = false"
-                                    class="block px-4 py-2 text-sm cursor-pointer text-primary hover:text-green-400"
-                                    :class="{'text-green-800 bg-surface': selected === ''}">-- All Ranks --</a>
-                                @foreach($ranks as $rank)
-                                <a @click="selected = '{{ addslashes($rank) }}'; open = false"
-                                    class="block px-4 py-2 text-sm cursor-pointer text-primary hover:text-green-400"
-                                    :class="{'text-green-800 bg-surface': selected === '{{ addslashes($rank) }}'}">{{
-                                    $rank }}</a>
-                                @endforeach
-                            </div>
-                        </div>
+                        <x-forms.select 
+                            name="rank" 
+                            :options="config('blackfile.entity_ranks')" 
+                            :selected="request('rank')" 
+                            placeholder="-- All Ranks --" 
+                        />
                     </div>
 
                     {{-- Kolom 4: Filter Origin --}}
                     <div>
-                        <label for="origin" class="sr-only">Origin</label>
-                        @php $origins = config('blackfile.entity_origins'); @endphp
-                        <div x-data="{ open: false, selected: '{{ request('origin', '') }}' }"
-                            class="relative font-mono">
-                            <input type="hidden" name="origin" x-bind:value="selected">
-                            <button type="button" @click="open = !open"
-                                class="relative w-full bg-base border-2 border-border-color text-left text-white p-2 pr-10 focus:outline-none focus:border-primary">
-                                <span x-text="selected || '-- All Origins --'"></span>
-                                <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"><svg
-                                        class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M10 3a.75.75 0 01.53.22l3.5 3.5a.75.75 0 01-1.06 1.06L10 4.81 7.03 7.78a.75.75 0 01-1.06-1.06l3.5-3.5A.75.75 0 0110 3zm-3.72 9.53a.75.75 0 011.06 0L10 15.19l2.97-2.97a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 010-1.06z"
-                                            clip-rule="evenodd" />
-                                    </svg></span>
-                            </button>
-                            <div x-show="open" @click.away="open = false"
-                                class="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto bg-black border border-border-color shadow-lg"
-                                style="display: none;">
-                                <a @click="selected = ''; open = false"
-                                    class="block px-4 py-2 text-sm cursor-pointer text-primary hover:text-green-400"
-                                    :class="{'text-green-800 bg-surface': selected === ''}">-- All Origins --</a>
-                                @foreach($origins as $origin)
-                                <a @click="selected = '{{ addslashes($origin) }}'; open = false"
-                                    class="block px-4 py-2 text-sm cursor-pointer text-primary hover:text-green-400"
-                                    :class="{'text-green-800 bg-surface': selected === '{{ addslashes($origin) }}'}">{{
-                                    $origin }}</a>
-                                @endforeach
-                            </div>
-                        </div>
+                        <x-forms.select 
+                            name="origin" 
+                            :options="config('blackfile.entity_origins')" 
+                            :selected="request('origin')" 
+                            placeholder="-- All Origins --" 
+                        />
                     </div>
-                    
                 </div>
+
                 {{-- Tombol Aksi --}}
-                <div class="flex items-center gap-2 mt-4">
-                    <x-button type="submit">
-                        FILTER
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 mt-4 pt-4 border-t border-border-color/30">  
+                    {{-- Tombol Reset --}}
+                    {{-- Tambahkan 'w-full sm:w-auto' agar full width di HP --}}
+                    <x-button variant="outline" href="{{ route('entities.index') }}" class="w-full sm:w-auto justify-center">
+                        [ CLEAR FILTERS ]
                     </x-button>
-                    <x-button variant="outline" href="{{ route('entities.index') }}">
-                        RESET
+
+                    {{-- Tombol Submit --}}
+                    <x-button type="submit" class="w-full sm:w-auto justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                        <span>EXECUTE FILTER</span>
                     </x-button>
                 </div>
             </form>

@@ -11,71 +11,102 @@
 >
     @csrf
     @if($entity)
-        @method('PUT') {{-- Hanya ada saat edit --}}
+        @method('PUT')
     @endif
 
-    {{-- Baris 1: Name & Codename --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="flex items-center gap-4">
-            <label for="name" class="flex-shrink-0 text-primary">> NAME:</label>
-            <input type="text" name="name" id="name" required 
-                   value="{{ old('name', $entity->name ?? null) }}"
-                   placeholder="Input entity name..."
-                   class="w-full bg-transparent border-0 border-b-2 border-border-color focus:border-primary focus:ring-0 text-white">
+    {{-- BAGIAN 1: INFORMASI DASAR --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        {{-- Name --}}
+        <div>
+            <label for="name" class="block text-primary mb-1">> NAME:</label>
+            <x-forms.input 
+                name="name" 
+                id="name"
+                required 
+                :value="old('name', $entity->name ?? null)"
+                placeholder="Input entity name..." 
+            />
         </div>
-        <div class="flex items-center gap-4">
-            <label for="codename" class="flex-shrink-0 text-primary">> CODENAME:</label>
-            <input type="text" name="codename" id="codename" 
-                   value="{{ old('codename', $entity->codename ?? null) }}"
-                   placeholder="e.g., SCP-173, Subject-Alpha..."
-                   class="w-full bg-transparent border-0 border-b-2 border-border-color focus:border-primary focus:ring-0 text-white">
+
+        {{-- Codename --}}
+        <div>
+            <label for="codename" class="block text-primary mb-1">> CODENAME:</label>
+            <x-forms.input 
+                name="codename" 
+                id="codename"
+                :value="old('codename', $entity->codename ?? null)"
+                placeholder="e.g., SCP-173, Subject-Alpha..." 
+            />
         </div>
     </div>
 
-    {{-- Baris 2: Dropdowns --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    {{-- BAGIAN 2: KATEGORISASI (DROPDOWNS) --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        <x-forms.searchable-dropdown 
+        {{-- Category (Searchable) --}}
+        <x-forms.select 
             label="> CATEGORY:"
             name="category"
             :options="config('blackfile.entity_categories')"
-            :selected="old('category', $entity->category ?? config('blackfile.entity_categories')[0] ?? '')"
+            :selected="old('category', $entity->category ?? '')"
+            placeholder="-- Select Category --"
+            :searchable="true" 
         />
 
-        <x-forms.searchable-dropdown 
+        {{-- Rank (Searchable) --}}
+        <x-forms.select 
             label="> RANK:"
             name="rank"
             :options="config('blackfile.entity_ranks')"
-            :selected="old('rank', $entity->rank ?? config('blackfile.entity_ranks')[0] ?? '')"
+            :selected="old('rank', $entity->rank ?? '')"
+            placeholder="-- Select Rank --"
+            :searchable="true" 
         />
 
-        <x-forms.searchable-dropdown 
+        {{-- Origin (Searchable) --}}
+        <x-forms.select 
             label="> ORIGIN:"
             name="origin"
             :options="config('blackfile.entity_origins')"
-            :selected="old('origin', $entity->origin ?? config('blackfile.entity_origins')[0] ?? '')"
+            :selected="old('origin', $entity->origin ?? '')"
+            placeholder="-- Select Origin --"
+            :searchable="true" 
         />
 
-        <x-forms.status-dropdown 
-            :selected="old('status', $entity->status ?? 'UNKNOWN')" 
+        {{-- Status (Manual Array) --}}
+        {{-- Kita definisikan opsi status langsung di sini --}}
+        @php
+            $statusOptions = [
+                'UNKNOWN' => 'UNKNOWN',
+                'ACTIVE' => 'ACTIVE',
+                'CONTAINED' => 'CONTAINED',
+                'NEUTRALIZED' => 'NEUTRALIZED',
+            ];
+        @endphp
+        <x-forms.select 
+            label="> STATUS:"
+            name="status"
+            :options="$statusOptions"
+            :selected="old('status', $entity->status ?? 'UNKNOWN')"
         />
         
     </div>
 
-    {{-- Textareas --}}
+    {{-- BAGIAN 3: DETAIL TEXTAREAS (Custom Component Kamu) --}}
     <x-entities.form-textareas 
         :description="old('description', $entity->description ?? null)"
         :abilities="old('abilities', $entity->abilities ?? null)"
         :weaknesses="old('weaknesses', $entity->weaknesses ?? null)"
     />
 
-    {{-- Image Upload --}}
-    <x-entities.form-image-upload :entity="$entity" /> {{-- $entity akan null (create) or berisi data (edit) --}}
+    {{-- BAGIAN 4: MEDIA UPLOAD (Custom Component Kamu) --}}
+    <x-entities.form-image-upload :entity="$entity" />
 
-    {{-- Tombol Aksi --}}
-    <div class="flex justify-end pt-4">
+    {{-- FOOTER: TOMBOL AKSI --}}
+    <div class="flex justify-end">
         <x-button type="submit">
-            > {{ $entity ? 'SAVE CHANGES' : 'EXECUTE' }}
+            > {{ $entity ? 'SAVE CHANGES' : 'EXECUTE REGISTRATION' }}
         </x-button>
     </div>
 </form>

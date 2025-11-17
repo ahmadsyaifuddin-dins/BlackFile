@@ -144,10 +144,11 @@
             {{-- Tab 2: Link from URL --}}
             <div x-show="tab === 'link'" x-transition style="display: none;">
                 <label for="image_url" class="flex-shrink-0 text-primary">> IMAGE_URL:</label>
-                <input type="text" name="image_url" id="image_url"
+                <x-forms.input type="text" name="image_url" id="image_url"
                     placeholder="https://... Paste image URL here"
                     x-model="urlInput" @input="handleUrlChange"
                     class="mt-1 w-full bg-transparent border-0 border-b-2 border-border-color focus:border-primary focus:ring-0 text-white">
+                </x-forms.input>
                 <p class="text-xs text-secondary mt-2">Note: Only one URL can be added at a time. This will be automatically selected as thumbnail.</p>
             
                 {{-- Preview untuk URL BARU --}}

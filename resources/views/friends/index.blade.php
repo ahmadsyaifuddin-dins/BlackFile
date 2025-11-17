@@ -17,8 +17,20 @@
             <div class="flex flex-col md:flex-row gap-4 md:items-center">
                 <div class="w-full md:w-1/3">
                     <label for="search-input" class="block text-primary text-sm mb-1">> {{ __('SEARCH ASSET (CODENAME)') }}</label>
-                    <input type="text" id="search-input" placeholder="E.g., EAGLE-01"
-                        class="w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded">
+                    
+                    {{-- Menggunakan x-forms.input dengan slot icon --}}
+                    <x-forms.input 
+                        id="search-input" 
+                        name="search" 
+                        placeholder="E.g., EAGLE-01"
+                    >
+                        {{-- Slot Icon Kaca Pembesar --}}
+                        <x-slot:icon>
+                            <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </x-slot:icon>
+                    </x-forms.input>
                 </div>
 
                 <div class="w-full md:w-2/3">

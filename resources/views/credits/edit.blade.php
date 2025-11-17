@@ -9,7 +9,7 @@
     </x-slot>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <a href="{{ url()->previous() }}" class="text-sm text-gray-400 hover:text-gray-200"> <-- Back to Credits</a>
+            <x-button href="{{ url()->previous() }}" variant="outline" class="text-sm text-gray-400 hover:text-gray-200 mb-2"> <--Back to Credits </x-button>
             <div class="bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
                 <form action="{{ route('credits.update', $user->id) }}" method="POST" enctype="multipart/form-data">
                     @method('PUT')

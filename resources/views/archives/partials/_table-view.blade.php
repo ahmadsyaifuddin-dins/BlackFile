@@ -35,9 +35,9 @@
                             @if($archive->tags->isNotEmpty())
                             <div class="mt-2 flex flex-wrap gap-1">
                                 @foreach($archive->tags as $tag)
-                                <span
-                                    class="px-2 text-xs rounded-full bg-surface-light text-secondary whitespace-nowrap">{{
-                                    $tag->name }}</span>
+                                <span class="px-2 text-xs rounded-full bg-base border border-border-color text-secondary whitespace-nowrap">
+                                    {{ $tag->name }}
+                                </span>
                                 @endforeach
                             </div>
                             @endif

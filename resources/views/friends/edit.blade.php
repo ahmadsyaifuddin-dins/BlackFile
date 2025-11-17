@@ -31,23 +31,19 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label for="name" class="block text-primary text-sm">> REAL NAME</label>
-                    <input type="text" id="name" name="name" value="{{ old('name', $friend->name) }}"
-                           class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded" 
-                           required>
+                    <x-forms.input type="text" id="name" name="name" value="{{ old('name', $friend->name) }}" />
                 </div>
 
                 <div>
                     <label for="codename" class="block text-primary text-sm">> CODENAME</label>
-                    <input type="text" id="codename" name="codename" value="{{ old('codename', $friend->codename) }}"
-                           class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded" 
-                           required>
+                    <x-forms.input type="text" id="codename" name="codename" value="{{ old('codename', $friend->codename) }}" />
                 </div>
             </div>
 
             {{-- Dropdown untuk Parent Asset sudah DIHAPUS --}}
             
             <div class="border-t border-border-color pt-6 flex justify-end">
-                <button type="submit" class="px-6 py-2 bg-primary text-base text-primary-hover transition-colors font-bold tracking-widest rounded-md text-sm">
+                <button type="submit" class="px-6 py-2 bg-primary text-base text-primary-hover transition-colors font-bold tracking-widest rounded-md">
                     [ UPDATE AGENT ]
                 </button>
             </div>

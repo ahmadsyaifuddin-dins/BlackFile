@@ -24,13 +24,13 @@
             </div>
             
             <div class="flex-shrink-0 flex flex-col md:flex-row md:items-center gap-3 w-full md:w-auto">
-                <a href="{{ $backToIndex }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">&lt; BACK</a>
-                <a href="{{ $editUrl }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">> EDIT FILE</a>
+                <x-button variant="outline" href="{{ $backToIndex }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">&lt; BACK</x-button>
+                <x-button variant="outline" href="{{ $editUrl }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">> EDIT FILE</x-button>
                 
                 <form action="{{ route('entities.destroy', $entity) }}" method="POST" class="w-full md:w-auto" onsubmit="return confirm('WARNING: Are you sure you want to terminate this entity record? This action cannot be undone.');">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="w-full font-mono bg-red-900/50 border border-red-500/50 text-red-400 font-bold py-2 px-4 hover:bg-red-900/80 transition-colors">
+                    <button type="submit" class="w-full font-mono bg-red-900/50 border border-red-500/50 text-red-400 font-bold py-2 px-4 hover:bg-red-900/80 transition-colors rounded-lg">
                         > TERMINATE
                     </button>
                 </form>

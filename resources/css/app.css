@@ -138,6 +138,58 @@
     .faded {
         opacity: 0.25;
     }
+
+    /* Form Input & Select Styles */
+    .form-control {
+        @apply w-full bg-[var(--color-base)] border-2 border-[var(--color-border)] text-white px-3 py-2;
+        @apply font-mono transition-colors duration-200;
+        @apply placeholder-gray-600;
+        @apply focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)];
+    }
+
+    /* Style khusus untuk dropdown options */
+    .form-select-dropdown {
+        @apply absolute z-50 mt-1 w-full max-h-60 overflow-y-auto bg-black border border-[var(--border-color-primary)] shadow-lg shadow-[var(--color-primary)]/10;
+    }
+
+    .form-select-option {
+        @apply block px-4 py-2 text-sm cursor-pointer text-[var(--color-secondary)] transition-colors;
+    }
+
+    .form-select-option:hover, 
+    .form-select-option.active {
+        @apply bg-[var(--color-surface)] text-[var(--color-primary)];
+    }
+
+    /* Varian Danger untuk Form Control (Merah) */
+    .form-control.form-danger {
+        @apply bg-red-900/10 border-red-500/50 text-red-200 placeholder-red-400/50;
+        @apply focus:border-red-500 focus:ring-red-500 focus:ring-1;
+    }
+
+    /* Label khusus danger */
+    .label-danger {
+        @apply text-red-400;
+    }
+
+    /* Style Input Garis Bawah (Underline) */
+    .form-underline {
+        /* Struktur Dasar */
+        @apply w-full bg-transparent text-white px-1 py-2;
+        @apply font-mono rounded-none;
+        @apply placeholder-gray-600;
+
+        /* Border: Hanya Bawah */
+        @apply border-b-2 border-[var(--color-border)];
+        @apply border-t-0 border-x-0; /* Pastikan sisi lain tidak ada border */
+
+        /* State Focus: Hapus semua kotak/ring, hanya ganti warna border bawah */
+        @apply focus:outline-none; /* INI KUNCINYA: Hapus outline putih browser */
+        @apply focus:ring-0;       /* Hapus ring shadow Tailwind */
+        @apply focus:border-[var(--color-primary)]; /* Hijau saat aktif */
+        
+        @apply transition-colors duration-200;
+    }
 }
 
 /* BAGIAN 3: UTILITIES & ANIMASI CUSTOM */

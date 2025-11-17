@@ -1,299 +1,355 @@
-<!-- resources/views/credits/_form_dynamic.blade.php -->
-
 <div x-data="creditsForm({ 
-        initialCredits: {{ $credits ?? '[]' }}, 
-        initialMusicPath: '{{ $musicPath ?? '' }}' })" class="text-white">
-    @if($errors->any())
-    <div class="mb-4 bg-red-900/50 border-l-4 border-red-500 text-red-300 p-4 rounded-r-lg" role="alert">
-        <p class="font-bold">> Data Input Anomaly Detected:</p>
-        <ul class="mt-2 list-disc list-inside text-sm">
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
-    <!-- Daftar Section/Grup Credits -->
+    initialCredits: {{ $credits ?? '[]' }}, 
+    initialMusicPath: '{{ $musicPath ?? '' }}' 
+})" class="font-mono text-sm">
+
+{{-- Error Handling --}}
+@if($errors->any())
+<div class="mb-6 bg-red-900/20 border-l-4 border-red-500 text-red-400 p-4" role="alert">
+    <p class="font-bold flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+        > SYSTEM_ERROR: Data Input Anomaly
+    </p>
+    <ul class="mt-2 list-disc list-inside text-xs opacity-80">
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+<div class="space-y-6">
     <template x-for="(credit, creditIndex) in credits" :key="credit.uniqueKey">
-        <div class="p-4 border border-gray-700 rounded-lg mb-6 bg-gray-900/50 relative">
+        {{-- Card Container --}}
+        <div class="relative p-4 border border-border-color bg-surface rounded-sm group hover:border-primary transition-colors duration-300">
+            
+            {{-- Hidden ID --}}
             <input type="hidden" :name="'credits[' + creditIndex + '][id]'" x-model="credit.id">
+            
+            {{-- Hapus Section Button --}}
             <button @click="removeCredit(creditIndex)" type="button"
-                class="absolute top-2 right-2 text-gray-500 hover:text-red-500 p-1 leading-none text-2xl cursor-pointer">&times;</button>
+                class="absolute top-0 right-0 p-2 text-secondary hover:text-red-500 transition-colors"
+                title="Remove Section">
+                [X]
+            </button>
 
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-300">Section Title / Role</label>
-                <input type="text" :name="'credits[' + creditIndex + '][role]'" x-model="credit.role" required
-                    placeholder="e.g., Lead Analysts"
-                    class="mt-1 block w-full bg-gray-800 border-gray-600 rounded-md shadow-sm text-white focus:border-cyan-500 focus:ring-cyan-500">
-            </div>
-
-            <!-- Kontainer untuk Names dengan toggle -->
-            <div class="pl-4 border-l-2 border-gray-700" x-data="{ editMode: 'visual' }">
-                <div class="flex justify-between items-center mb-2">
-                    <h4 class="text-sm text-gray-400">Names</h4>
-                    <div class="flex text-xs border border-gray-700 rounded-md">
-                        <button @click.prevent="editMode = 'visual'; switchToVisual(creditIndex)" :class="editMode === 'visual' ? 'bg-primary text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'" class="px-2 py-1 rounded-l-md">Visual</button>
-                        <button @click.prevent="editMode = 'raw'; switchToRaw(creditIndex)" :class="editMode === 'raw' ? 'bg-primary text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'" class="px-2 py-1 rounded-r-md">Raw JSON</button>
-                    </div>
-                </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 
-                <!-- Mode Visual (Add/Remove) -->
-                <div x-show="editMode === 'visual'" class="space-y-2">
-                    <template x-for="(name, nameIndex) in credit.names" :key="`${creditIndex}-${nameIndex}`">
-                        <!-- Dibuat responsif -->
-                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                            <input type="text" :name="'credits[' + creditIndex + '][names][' + nameIndex + ']'" x-model="credit.names[nameIndex]" required placeholder="Full Name" class="flex-grow bg-gray-800 border-gray-600 rounded-md shadow-sm text-white">
-                            <button @click.prevent="removeName(creditIndex, nameIndex)" type="button" class="text-red-400 hover:text-red-300 text-sm self-end sm:self-center px-2 py-1 rounded-md bg-gray-700/50 hover:bg-red-900/50">Remove</button>
-                        </div>
-                    </template>
-                    <button @click.prevent="addName(creditIndex)" type="button" class="mt-2 text-xs text-primary hover:underline">+ Add Name</button>
-                </div>
-
-                <!-- Mode Raw JSON -->
-                <div x-show="editMode === 'raw'" style="display: none;">
-                    <textarea x-model="credit.namesJson" 
-                              @input.debounce.500ms="updateNamesFromJson(creditIndex)"
-                              class="w-full h-48 bg-gray-900/50 border-gray-600 rounded-md text-primary font-mono text-sm"
-                              placeholder='[&#10;    "Nama Pertama",&#10;    "Nama Kedua"&#10;]'>
-                    </textarea>
-                    <!-- Tambahkan tombol Format JSON -->
-                    <div class="flex justify-between items-center mt-1">
-                        <p class="text-xs text-gray-500">Edit the list as a JSON array of strings.</p>
-                        <button @click.prevent="formatJson(creditIndex)" type="button" class="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 rounded-md">Format JSON</button>
+                {{-- KOLOM KIRI: ROLE & LOGOS --}}
+                <div class="lg:col-span-4 space-y-4 border-r border-border-color/30 pr-0 lg:pr-6">
+                    
+                    {{-- Input Role --}}
+                    <div>
+                        <label class="block text-primary mb-1">> SECTION TITLE / ROLE</label>
+                        <input type="text" :name="'credits[' + creditIndex + '][role]'" x-model="credit.role" required
+                            placeholder="e.g., Lead Analysts"
+                            class="form-control w-full"> {{-- Pakai class form-control dari app.css --}}
                     </div>
-                </div>
-            </div>
 
-            <div class="mt-4 pl-4 border-l-2 border-gray-700">
-                <h4 class="text-sm text-gray-400 mb-2">Logos for this Section</h4>
-                <template x-for="(logo, logoIndex) in credit.logos" :key="logoIndex">
-                    <!-- Dibuat tumpuk di mobile, berdampingan di layar besar -->
-                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-2">
-                        <select :name="'credits[' + creditIndex + '][logos][' + logoIndex + '][type]'"
-                            x-model="logo.type" class="bg-gray-800 border-gray-600 rounded-md text-sm">
-                            <option value="file">File</option>
-                            <option value="url">URL</option>
-                        </select>
-                        <div class="flex-grow">
-                            <template x-if="logo.type === 'url'"><input type="url"
-                                    :name="'credits[' + creditIndex + '][logos][' + logoIndex + '][path]'"
-                                    x-model="logo.path"
-                                    class="w-full bg-gray-800 border-gray-600 rounded-md"></template>
-                            <template x-if="logo.type === 'file'">
-                                <div>
-                                    <input type="hidden"
-                                        :name="'credits[' + creditIndex + '][logos][' + logoIndex + '][path]'"
-                                        :value="logo.path">
-                                    <div x-show="logo.path" class="my-2 flex items-center gap-2">
-                                        <img :src="'/' + logo.path" class="h-8 w-8 object-contain bg-white p-1 rounded">
-                                        <span x-text="logo.path.split('/').pop()"
-                                            class="text-xs text-gray-400 truncate"></span>
+                    {{-- Logos --}}
+                    <div>
+                        <div class="flex justify-between items-end mb-2">
+                            <label class="block text-secondary text-xs">> SECTION LOGOS</label>
+                            <button @click="addLogo(creditIndex)" type="button" class="text-xs text-primary hover:text-white hover:underline">
+                                [+ ADD LOGO]
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <template x-for="(logo, logoIndex) in credit.logos" :key="logoIndex">
+                                <div class="p-2 border border-dashed border-border-color bg-base/50 rounded relative">
+                                    <div class="flex gap-2 mb-2">
+                                        <select :name="'credits[' + creditIndex + '][logos][' + logoIndex + '][type]'"
+                                            x-model="logo.type" 
+                                            class="bg-base border border-border-color text-xs text-secondary p-1 focus:border-primary focus:outline-none">
+                                            <option value="file">File</option>
+                                            <option value="url">URL</option>
+                                        </select>
+                                        
+                                        {{-- Remove Logo --}}
+                                        <button @click="removeLogo(creditIndex, logoIndex)" type="button"
+                                            class="ml-auto text-red-500 hover:text-red-400 text-xs">
+                                            [RMV]
+                                        </button>
                                     </div>
-                                    <input type="file"
-                                        :name="'credits[' + creditIndex + '][logos][' + logoIndex + '][file]'"
-                                        class="cursor-pointer w-full text-sm text-gray-400 file:file-primary file:file-primary-hover file:border-0 file:rounded file:px-2 file:py-1 file:text-white">
+
+                                    {{-- Input URL --}}
+                                    <template x-if="logo.type === 'url'">
+                                        <input type="url"
+                                            :name="'credits[' + creditIndex + '][logos][' + logoIndex + '][path]'"
+                                            x-model="logo.path"
+                                            placeholder="https://..."
+                                            class="w-full bg-transparent border-b border-border-color text-xs text-white focus:border-primary focus:outline-none placeholder-secondary/30">
+                                    </template>
+
+                                    {{-- Input File --}}
+                                    <template x-if="logo.type === 'file'">
+                                        <div>
+                                            <input type="hidden"
+                                                :name="'credits[' + creditIndex + '][logos][' + logoIndex + '][path]'"
+                                                :value="logo.path">
+                                            
+                                            {{-- Preview Gambar Kecil --}}
+                                            <div x-show="logo.path" class="mb-2 flex items-center gap-2 bg-black p-1 border border-border-color">
+                                                <img :src="'/' + logo.path" class="h-6 w-6 object-contain">
+                                                <span x-text="logo.path.split('/').pop()" class="text-[10px] text-gray-500 truncate w-20"></span>
+                                            </div>
+                                            
+                                            <input type="file"
+                                                :name="'credits[' + creditIndex + '][logos][' + logoIndex + '][file]'"
+                                                class="block w-full text-[10px] text-secondary
+                                                file:mr-2 file:py-1 file:px-2
+                                                file:border-0 file:text-[10px]
+                                                file:bg-primary file:text-black hover:file:bg-green-400 cursor-pointer">
+                                        </div>
+                                    </template>
                                 </div>
                             </template>
                         </div>
-                        <button @click="removeLogo(creditIndex, logoIndex)" type="button"
-                            class="text-red-500 text-xs px-2 py-1 bg-gray-700/50 rounded-md hover:bg-red-900/50 self-end sm:self-center cursor-pointer">Remove</button>
                     </div>
-                </template>
-                <button @click="addLogo(creditIndex)" type="button"
-                    class="text-xs text-primary hover:underline cursor-pointer ">+ Add Logo</button>
+                </div>
+
+                {{-- KOLOM KANAN: NAMES LIST --}}
+                <div class="lg:col-span-8" x-data="{ editMode: 'visual' }">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-primary">> NAMES LIST</label>
+                        
+                        {{-- Toggle Mode --}}
+                        <div class="flex text-[10px] border border-border-color">
+                            <button @click.prevent="editMode = 'visual'; switchToVisual(creditIndex)" 
+                                :class="editMode === 'visual' ? 'bg-primary text-black font-bold' : 'bg-base text-secondary hover:text-white'" 
+                                class="px-2 py-1 transition-colors">VISUAL</button>
+                            <button @click.prevent="editMode = 'raw'; switchToRaw(creditIndex)" 
+                                :class="editMode === 'raw' ? 'bg-primary text-black font-bold' : 'bg-base text-secondary hover:text-white'" 
+                                class="px-2 py-1 transition-colors">RAW JSON</button>
+                        </div>
+                    </div>
+
+                    {{-- Mode Visual --}}
+                    <div x-show="editMode === 'visual'" class="space-y-2">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <template x-for="(name, nameIndex) in credit.names" :key="`${creditIndex}-${nameIndex}`">
+                                <div class="flex items-center gap-1 group/item">
+                                    <span class="text-secondary select-none">></span>
+                                    <input type="text" 
+                                        :name="'credits[' + creditIndex + '][names][' + nameIndex + ']'" 
+                                        x-model="credit.names[nameIndex]" 
+                                        placeholder="Operative Name" 
+                                        class="flex-grow form-underline">
+                                    <button @click.prevent="removeName(creditIndex, nameIndex)" type="button" 
+                                        class="text-red-500 opacity-0 group-hover/item:opacity-100 transition-opacity text-xs px-1">
+                                        [x]
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                        <button @click.prevent="addName(creditIndex)" type="button" 
+                            class="cursor-pointer mt-3 text-xs text-secondary hover:text-primary border border-dashed border-border-color hover:border-primary w-full py-1 text-center transition-colors">
+                            + APPEND NAME ENTRY
+                        </button>
+                    </div>
+
+                    {{-- Mode Raw JSON --}}
+                    <div x-show="editMode === 'raw'" style="display: none;">
+                        <textarea x-model="credit.namesJson" 
+                            @input.debounce.500ms="updateNamesFromJson(creditIndex)"
+                            class="w-full h-48 bg-black border border-border-color text-green-500 font-mono text-xs p-2 focus:border-primary focus:ring-0"
+                            placeholder='["Name 1", "Name 2"]'></textarea>
+                        <div class="flex justify-between items-center mt-1">
+                            <p class="text-[10px] text-secondary">// Edit array structure directly.</p>
+                            <button @click.prevent="formatJson(creditIndex)" type="button" class="text-[10px] text-primary hover:underline">[FORMAT]</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </template>
+</div>
 
+<div class="mt-4">
     <button @click="addCredit" type="button"
-        class="cursor-pointer mt-4 text-sm font-semibold text-white bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md">+
-        Add Section</button>
+        class="cursor-pointer w-full py-3 border-2 border-dashed border-border-color text-secondary hover:text-primary hover:border-primary transition-all uppercase tracking-widest text-sm font-bold">
+        [ + INITIALIZE NEW CREDIT SECTION ]
+    </button>
+</div>
 
-    <!-- Bagian Musik dan Tombol Save (SUDAH DIPERBARUI) -->
-    <div class="mt-8 pt-6 border-t border-gray-700" x-data="{ 
+<div class="mt-8 pt-6 border-t-2 border-border-color" x-data="{ 
     musicSource: '{{ (isset($musicPath) && Str::startsWith($musicPath, 'uploads/credits/music')) ? 'custom' : 'default' }}',
-    selectedMusic: '{{ (isset($musicPath) && Str::startsWith($musicPath, 'music/default')) ? $musicPath : '' }}'
+    selectedDefaultMusic: '{{ (isset($musicPath) && Str::startsWith($musicPath, 'music/default')) ? $musicPath : '' }}',
+    previewAudio: null,
+    nowPlaying: null,
+    togglePreview(path) {
+        if (!path) return;
+        const audioUrl = `{{ asset('') }}${path}`; // Perbaikan path asset
+
+        if (this.nowPlaying === path) {
+            if (this.previewAudio && !this.previewAudio.paused) {
+                this.previewAudio.pause();
+                this.nowPlaying = null;
+            } else if (this.previewAudio) {
+                this.previewAudio.play();
+                this.nowPlaying = path;
+            }
+            return;
+        }
+
+        if (this.previewAudio) {
+            this.previewAudio.pause();
+            this.previewAudio.currentTime = 0;
+        }
+
+        this.previewAudio = new Audio(audioUrl);
+        this.previewAudio.play();
+        this.nowPlaying = path;
+        this.previewAudio.onended = () => { this.nowPlaying = null; };
+    }
 }">
-        <h3 class="text-lg font-medium text-gray-100 mb-4">Background Music</h3>
+    <h3 class="text-lg font-bold text-primary mb-4">> AUDIO CONFIGURATION</h3>
 
-        <!-- Pilihan Sumber Musik -->
-        <div class="flex items-center space-x-4 mb-4">
-            <label class="flex items-center text-white">
-                <x-forms.radio name="music_source" value="default" x-model="musicSource"
-                    class="form-radio bg-gray-900 border-gray-700 text-primary">
-                <span class="ml-2">Use Default Music</span>
-                </x-forms.radio>
-            </label>
-            <label class="flex items-center text-white">
-                <x-forms.radio name="music_source" value="custom" x-model="musicSource"
-                    class="form-radio bg-gray-900 border-gray-700 text-primary">
-                <span class="ml-2">Upload Custom</span>
-                </x-forms.radio>
-            </label>
-        </div>
+    <div class="bg-surface border border-border-color p-4">
+        <div class="flex flex-col md:flex-row gap-6">
+            
+            {{-- Opsi Sumber --}}
+            <div class="w-full md:w-1/3 space-y-2">
+                <label class="block text-secondary text-xs mb-2">SOURCE TYPE:</label>
+                <label class="flex items-center cursor-pointer group">
+                    <x-forms.radio name="music_source" value="default" x-model="musicSource" class="form-radio text-primary focus:ring-primary bg-base border-border-color">
+                    <span class="ml-2 text-white group-hover:text-primary transition-colors">System Library</span>
+                    </x-forms.radio>
+                </label>
+                <label class="flex items-center cursor-pointer group">
+                    <x-forms.radio name="music_source" value="custom" x-model="musicSource" class="form-radio text-primary focus:ring-primary bg-base border-border-color">
+                    <span class="ml-2 text-white group-hover:text-primary transition-colors">Custom Upload</span>
+                    </x-forms.radio>
+                </label>
+            </div>
 
-        <!-- Dropdown Musik Bawaan dengan Tombol Preview -->
-        <div x-show="musicSource === 'default'" x-transition>
-            <label for="default_music_path" class="block text-sm font-medium text-gray-300">Select Music</label>
-            <div class="flex items-center gap-2 mt-1">
-                <select name="default_music_path" id="default_music_path" x-model="selectedDefaultMusic"
-                    class="block w-full bg-gray-800 border-gray-600 rounded-md text-white focus:border-primary focus:ring-primary">
-                    <option value="">-- No Music --</option>
-                    @foreach($defaultMusics as $music)
-                    <option value="{{ $music->path }}">{{ $music->name }}</option>
-                    @endforeach
-                </select>
-                <!-- Tombol Preview BARU -->
-                <button @click.prevent="togglePreview(selectedDefaultMusic)" :disabled="!selectedDefaultMusic"
-                    type="button" title="Preview Music"
-                    class="flex-shrink-0 px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                    <!-- Ikon Play -->
-                    <svg x-show="nowPlaying !== selectedDefaultMusic || !selectedDefaultMusic" class="w-5 h-5"
-                        fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z">
-                        </path>
-                    </svg>
-                    <!-- Ikon Pause -->
-                    <svg x-show="nowPlaying === selectedDefaultMusic" style="display: none;" class="w-5 h-5"
-                        fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M5.75 3a.75.75 0 00-.75.75v12.5c0 .414.336.75.75.75h1.5a.75.75 0 00.75-.75V3.75A.75.75 0 007.25 3h-1.5zm7 0a.75.75 0 00-.75.75v12.5c0 .414.336.75.75.75h1.5a.75.75 0 00.75-.75V3.75a.75.75 0 00-.75-.75h-1.5z">
-                        </path>
-                    </svg>
-                </button>
+            <div class="w-full md:w-2/3 pl-0 md:pl-6 md:border-l border-border-color/30">
+                
+                {{-- Dropdown Library --}}
+                <div x-show="musicSource === 'default'" x-transition>
+                    <label for="default_music_path" class="block text-sm font-medium text-primary mb-2">> SELECT TRACK</label>
+                    <div class="flex items-center gap-2">
+                        <select name="default_music_path" id="default_music_path" x-model="selectedDefaultMusic"
+                            class="form-control cursor-pointer"> {{-- Pakai class form-control --}}
+                            <option value="">[ NO AUDIO ]</option>
+                            @foreach($defaultMusics as $music)
+                            <option value="{{ $music->path }}">{{ $music->name }}</option>
+                            @endforeach
+                        </select>
+                        
+                        {{-- Tombol Preview --}}
+                        <button @click.prevent="togglePreview(selectedDefaultMusic)" :disabled="!selectedDefaultMusic"
+                            type="button"
+                            class="px-3 py-2 border border-primary text-primary hover:bg-primary hover:text-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                            :title="nowPlaying === selectedDefaultMusic ? 'Pause' : 'Preview'">
+                            <svg x-show="nowPlaying !== selectedDefaultMusic" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <svg x-show="nowPlaying === selectedDefaultMusic" style="display: none;" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Upload Custom --}}
+                <div x-show="musicSource === 'custom'" x-transition style="display: none;">
+                    <label for="music" class="block text-sm font-medium text-primary mb-2">> UPLOAD FILE</label>
+                    <input type="file" name="music" id="music" accept="audio/mp3,audio/wav,audio/mpeg"
+                        class="block w-full text-sm text-secondary
+                        file:mr-4 file:py-2 file:px-4
+                        file:border border-primary file:bg-black file:text-primary
+                        hover:file:bg-primary hover:file:text-green-800 cursor-pointer">
+                    <p class="text-xs text-secondary mt-2">Supported: MP3, WAV.</p>
+
+                    @if(isset($musicPath) && Str::startsWith($musicPath, 'uploads/credits/music'))
+                    <div class="mt-4 p-3 border border-border-color bg-base">
+                        <p class="text-xs text-primary mb-2">CURRENT FILE:</p>
+                        <audio controls class="w-full h-8">
+                            <source src="{{ url($musicPath) }}" type="audio/mpeg">
+                        </audio>
+                    </div>
+                    @endif
+                </div>
             </div>
         </div>
-
-
-        <!-- Upload Musik Custom -->
-        <div x-show="musicSource === 'custom'" x-transition>
-            <label for="music" class="block text-sm font-medium text-gray-300">Upload New Music (MP3, WAV)</label>
-            <input type="file" name="music" id="music" accept="audio/mp3,audio/wav,audio/mpeg"
-                class="cursor-pointer mt-1 block w-full text-sm text-gray-400 file:bg-primary file:text-white file:border-0 file:rounded file:px-4 file:py-2">
-            @error('music')
-            <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-            @enderror
-            @if(isset($musicPath) && Str::startsWith($musicPath, 'uploads/credits/music'))
-            <div class="mt-4">
-                <p class="text-xs text-gray-400 mb-2">Current Custom Music:</p>
-                <audio controls class="w-full">
-                    <source src="{{ url($musicPath) }}" type="audio/mpeg">
-                </audio>
-            </div>
-            @endif
-        </div>
-    </div>
-
-
-    <div class="flex items-center justify-end mt-8 pt-6 border-t border-gray-700">
-        <x-button type="submit">Save All Credits</x-button>
     </div>
 </div>
 
+{{-- SAVE BUTTON --}}
+<div class="flex items-center justify-end mt-8 pt-6 border-t border-border-color">
+    <x-button type="submit">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+        <span>SAVE SEQUENCE</span>
+    </x-button>
+</div>
+</div>
+
+{{-- SCRIPT --}}
 <script>
-    function creditsForm({ initialCredits, initialMusicPath }) {
-        return {
-            credits: [],
-            musicSource: (initialMusicPath && initialMusicPath.startsWith('uploads/credits/music')) ? 'custom' : 'default',
-            selectedDefaultMusic: (initialMusicPath && initialMusicPath.startsWith('music/default')) ? initialMusicPath : '',
-            previewAudio: null,
-            nowPlaying: null,
-
-            init() {
-                this.credits = (initialCredits && initialCredits.length > 0 ? initialCredits : [{ id: null, role: '', names: [''], logos: [] }])
-                    .map((c, i) => ({
-                        ...c,
-                        uniqueKey: c.id || Date.now() + i,
-                        names: c.names && c.names.length > 0 ? c.names : [''],
-                        namesJson: JSON.stringify(c.names && c.names.length > 0 ? c.names : [''], null, 4),
-                        logos: (c.logos || []).map(l => ({ type: l.startsWith('http') ? 'url' : 'file', path: l }))
-                    }));
-            },
-            
-            // --- FUNGSI SINKRONISASI JSON ---
-            switchToRaw(creditIndex) {
-                this.credits[creditIndex].namesJson = JSON.stringify(this.credits[creditIndex].names, null, 4);
-            },
-            switchToVisual(creditIndex) {
-                this.updateNamesFromJson(creditIndex);
-            },
-            updateNamesFromJson(creditIndex) {
-                try {
-                    const parsed = JSON.parse(this.credits[creditIndex].namesJson);
-                    if (Array.isArray(parsed)) {
-                        this.credits[creditIndex].names = parsed.map(String);
-                    }
-                } catch (e) {
-                    console.error("Invalid JSON format:", e);
+function creditsForm({ initialCredits, initialMusicPath }) {
+    return {
+        credits: [],
+        
+        init() {
+            this.credits = (initialCredits && initialCredits.length > 0 ? initialCredits : [{ id: null, role: '', names: [''], logos: [] }])
+                .map((c, i) => ({
+                    ...c,
+                    uniqueKey: c.id || Date.now() + i,
+                    names: c.names && c.names.length > 0 ? c.names : [''],
+                    namesJson: JSON.stringify(c.names && c.names.length > 0 ? c.names : [''], null, 4),
+                    logos: (c.logos || []).map(l => ({ type: l.startsWith('http') ? 'url' : 'file', path: l }))
+                }));
+        },
+        
+        // --- FUNGSI SINKRONISASI JSON ---
+        switchToRaw(creditIndex) {
+            this.credits[creditIndex].namesJson = JSON.stringify(this.credits[creditIndex].names, null, 4);
+        },
+        switchToVisual(creditIndex) {
+            this.updateNamesFromJson(creditIndex);
+        },
+        updateNamesFromJson(creditIndex) {
+            try {
+                const parsed = JSON.parse(this.credits[creditIndex].namesJson);
+                if (Array.isArray(parsed)) {
+                    this.credits[creditIndex].names = parsed.map(String);
                 }
-            },
-            // FUNGSI BARU: Rapikan JSON
-            formatJson(creditIndex) {
-                try {
-                    const parsed = JSON.parse(this.credits[creditIndex].namesJson);
-                    this.credits[creditIndex].namesJson = JSON.stringify(parsed, null, 4); // 4 spasi untuk indentasi
-                } catch (e) {
-                    console.error("Cannot format invalid JSON:", e);
-                    // Opsional: berikan feedback visual, misal shake the textarea
-                }
-            },
-
-            // --- FUNGSI PRATINJAU MUSIK ---
-            togglePreview(path) {
-                if (!path) return;
-                const audioUrl = `{{ url('default-music-file') }}/${path}`;
-
-                if (this.nowPlaying === path) {
-                    if (this.previewAudio && !this.previewAudio.paused) {
-                        this.previewAudio.pause();
-                        this.nowPlaying = null;
-                    } else if (this.previewAudio) {
-                        this.previewAudio.play();
-                        this.nowPlaying = path;
-                    }
-                    return;
-                }
-
-                if (this.previewAudio) {
-                    this.previewAudio.pause();
-                    this.previewAudio.currentTime = 0;
-                }
-
-                this.previewAudio = new Audio(audioUrl);
-                this.previewAudio.play();
-                this.nowPlaying = path;
-
-                this.previewAudio.onended = () => { this.nowPlaying = null; };
-            },
-
-            // --- FUNGSI DASAR MANAJEMEN ---
-            addCredit() {
-                this.credits.push({ 
-                    id: null, role: '', names: [''], logos: [], 
-                    uniqueKey: Date.now(),
-                    namesJson: JSON.stringify([''], null, 4)
-                });
-            },
-            removeCredit(index) {
-                if (this.credits.length > 1) {
-                    this.credits.splice(index, 1);
-                }
-            },
-            addName(creditIndex) {
-                this.credits[creditIndex].names.push('');
-            },
-            removeName(creditIndex, nameIndex) {
-                if (this.credits[creditIndex].names.length > 1) {
-                    this.credits[creditIndex].names.splice(nameIndex, 1);
-                }
-            },
-            addLogo(creditIndex) {
-                this.credits[creditIndex].logos.push({ type: 'file', path: '' });
-            },
-            removeLogo(creditIndex, logoIndex) {
-                this.credits[creditIndex].logos.splice(logoIndex, 1);
+            } catch (e) {
+                console.error("Invalid JSON format:", e);
             }
+        },
+        formatJson(creditIndex) {
+            try {
+                const parsed = JSON.parse(this.credits[creditIndex].namesJson);
+                this.credits[creditIndex].namesJson = JSON.stringify(parsed, null, 4);
+            } catch (e) {}
+        },
+
+        // --- FUNGSI MANAJEMEN ---
+        addCredit() {
+            this.credits.push({ 
+                id: null, role: '', names: [''], logos: [], 
+                uniqueKey: Date.now(),
+                namesJson: JSON.stringify([''], null, 4)
+            });
+        },
+        removeCredit(index) {
+            if (confirm('Delete this entire section?')) {
+                this.credits.splice(index, 1);
+            }
+        },
+        addName(creditIndex) {
+            this.credits[creditIndex].names.push('');
+        },
+        removeName(creditIndex, nameIndex) {
+            if (this.credits[creditIndex].names.length > 1) {
+                this.credits[creditIndex].names.splice(nameIndex, 1);
+            }
+        },
+        addLogo(creditIndex) {
+            this.credits[creditIndex].logos.push({ type: 'file', path: '' });
+        },
+        removeLogo(creditIndex, logoIndex) {
+            this.credits[creditIndex].logos.splice(logoIndex, 1);
         }
     }
+}
 </script>

@@ -64,6 +64,9 @@
 
     "Settings": "Pengaturan",
     "General application configuration.": "Konfigurasi Aplikasi Umum",
+    "// Affects system labels and messages.": "// Mempengaruhi label dan pesan sistem.",
+    "// Controls grid density in Archives & Entities.": "// Mengatur kepadatan grid (data yg tampil) di Arsip & Entitas.",
+    "// Requires page refresh to fully apply effects.": "// Memerlukan refresh halaman untuk mengaplikasikan efek sepenuhnya.",
     "System Settings": "Pengaturan Sistem",
     "Language Setting": "Pengaturan Bahasa",
     "Data Display Setting": "Pengaturan Tampilan Data",

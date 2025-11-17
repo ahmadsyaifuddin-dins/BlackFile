@@ -8,10 +8,9 @@
         {{-- Header Halaman --}}
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
             <h1 class="text-xl sm:text-2xl font-bold text-primary break-words">[ {{ $archive->name }} ]</h1>
-            <a href="{{ $backUrl }}"
-                class="flex-shrink-0 text-sm text-secondary hover:text-primary transition-colors duration-200">
+            <x-button href="{{ $backUrl }}" variant="outline">
                 &lt;-- Back to Vault
-            </a>
+            </x-button>
         </div>
 
         {{-- Tampilkan Gambar Pratinjau jika ada --}}

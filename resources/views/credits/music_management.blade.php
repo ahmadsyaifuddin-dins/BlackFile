@@ -13,7 +13,7 @@
                 <form action="{{ route('credits.default-music.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <input type="text" name="name" placeholder="Music Name" class="bg-gray-900 text-white rounded-md border-gray-700" required>
+                        <x-forms.input type="text" name="name" placeholder="Music Name" required />
                         <input type="file" name="music_file" class="text-gray-400 file:bg-primary file:border-0 file:text-white file:rounded-md file:px-4 file:py-2" required>
                         <x-button type="submit" class="!text-white">Upload</x-button>
                     </div>

@@ -143,8 +143,8 @@
 
                 <!-- Submenu: Default Music Management (Hanya untuk Director) -->
                 @if(strtolower(Auth::user()->role->name) === 'director')
-                <a href="{{ route('default-music.index') }}" class="block px-3 py-2 rounded-r-md transition-colors text-sm
-                    {{ request()->routeIs('default-music.index') 
+                <a href="{{ route('credits.default-music.index') }}" class="block px-3 py-2 rounded-r-md transition-colors text-sm
+                    {{ request()->routeIs('credits.default-music.index') 
                         ? 'bg-surface-light/50 text-white' 
                         : 'text-gray-400 hover:bg-surface-light/50 hover:text-white' }}">
                     - Musics Management

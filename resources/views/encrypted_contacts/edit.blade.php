@@ -9,10 +9,9 @@
                 <p class="text-sm text-secondary font-mono mt-1">Codename: <span class="text-white">{{
                         $contact->codename }}</span></p>
             </div>
-            <a href="{{ route('encrypted-contacts.show', $contact) }}"
-                class="w-full sm:w-auto text-center bg-surface-light border border-border-color text-secondary font-bold py-2 px-4 hover:text-primary hover:border-primary transition-colors">
+            <x-button href="{{ route('encrypted-contacts.show', $contact) }}">
                 &lt; CANCEL & VIEW FILE
-            </a>
+            </x-button>
         </div>
     </div>
 
@@ -31,7 +30,6 @@
             @csrf
             @method('PUT')
 
-            {{-- [PERBAIKAN] Variabel didefinisikan di sini, di luar form --}}
             @php
             $payload = $contact->encrypted_payload;
             $customFields = old('payload.custom_fields', $payload['custom_fields'] ?? []);
@@ -41,9 +39,6 @@
             @endphp
 
             {{-- Data Tidak Terenkripsi --}}
-            {{-- ================================================================ --}}
-            {{-- == BAGIAN BARU: MANAJEMEN FOTO PROFIL == --}}
-            {{-- ================================================================ --}}
             <div class="pt-6 border-t border-dashed border-border-color">
                 <h2 class="text-lg font-bold text-primary">> PROFILE PHOTO</h2>
                 @if($contact->profile_photo_path)
@@ -158,9 +153,6 @@
                     </div>
                 </div>
 
-                {{-- ================================================================ --}}
-                {{-- == FITUR BARU: BIDANG DATA DINAMIS == --}}
-                {{-- ================================================================ --}}
                 <div x-data="{ customFields: {{ json_encode($customFields) }} }"
                     class="pt-6 border-t-2 border-dashed border-border-color space-y-4">
                     <div class="flex justify-between items-center">
@@ -217,11 +209,9 @@
                 </div>
 
                 <div class="flex justify-between items-center pt-4">
-                    {{-- Tombol Simpan --}}
-                    <button type="submit"
-                        class="bg-primary text-black font-bold py-3 px-8 hover:bg-primary-hover transition-colors tracking-widest cursor-pointer">
+                    <x-button type="submit">
                         SAVE & RE-ENCRYPT
-                    </button>
+                    </x-button>
                 </div>
         </form>
     </div>
@@ -241,10 +231,9 @@
                     class="w-full bg-base border-2 border-border-color focus:border-primary focus:ring-0 text-white p-2">
             </div>
             <div class="flex justify-end pt-2">
-                <button type="submit"
-                    class="bg-primary text-black font-bold py-2 px-6 hover:bg-primary-hover transition-colors cursor-pointer">
+                <x-button type="submit">
                     AUTHORIZE & EDIT
-                </button>
+                </x-button>
             </div>
         </form>
     </div>

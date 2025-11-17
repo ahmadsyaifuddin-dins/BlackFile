@@ -79,9 +79,7 @@
                             </select>
                         </div>
                         <div class="text-right">
-                            <button type="submit"
-                                class="px-3 py-1 bg-primary text-base text-primary-hover font-bold rounded">[
-                                ESTABLISH LINK ]</button>
+                            <x-button type="submit">[ ESTABLISH LINK ]</x-button>
                         </div>
                     </form>
                 </div>
@@ -140,7 +138,7 @@
                         <input type="text" id="edit_codename" name="codename" x-model="selectedNodeData.label" required
                             class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
                     </div>
-                    {{-- [BARU] Dropdown untuk Kategori di form edit --}}
+                    {{-- Dropdown untuk Kategori di form edit --}}
                     <div>
                         <label for="edit_category" class="block text-primary text-sm">> ASSET CATEGORY</label>
                         <select id="edit_category" name="category" x-model="selectedNodeData.category"
@@ -156,11 +154,8 @@
 
                 <!-- Footer Aksi (Edit Mode) -->
                 <div class="p-4 border-t border-border-color flex items-center justify-end space-x-3">
-                    <button type="button" @click="isEditing = false"
-                        class="px-4 py-2 bg-secondary/20 text-secondary hover:bg-secondary/40 font-bold rounded">CANCEL</button>
-                    <button type="submit"
-                        class="px-4 py-2 bg-primary text-base text-primary-hover font-bold rounded">[ SAVE
-                        CHANGES ]</button>
+                    <x-button variant="secondary" type="button" @click="isEditing = false">CANCEL</x-button>
+                    <x-button type="submit">[ SAVE CHANGES ]</x-button>
                 </div>
             </form>
         </div>

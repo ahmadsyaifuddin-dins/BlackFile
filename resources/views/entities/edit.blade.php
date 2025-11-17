@@ -11,10 +11,9 @@
         <h2 class="text-2xl font-bold text-primary font-mono tracking-wider">
             > EDIT RECORD // {{ $entity->codename ?? $entity->name }}
         </h2>
-        <a href="{{ $backUrl }}"
-            class="w-full sm:w-auto text-center bg-surface-light border border-border-color text-secondary font-bold py-2 px-4 hover:text-primary hover:border-primary transition-colors">
+        <x-button variant="outline" href="{{ $backUrl }}">
             &lt; CANCEL & VIEW ENTITIES
-        </a>
+        </x-button>
     </div>
 
     {{-- Error Display --}}

@@ -3,10 +3,9 @@
         {{-- Header --}}
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <h2 class="text-2xl font-bold text-primary">Entities Database // Index</h2>
-            <a href="{{ route('entities.create') }}"
-                class="w-full sm:w-auto text-black text-center bg-primary text-primary font-bold py-2 px-4 rounded hover:bg-primary-hover transition-colors">
+            <x-button href="{{ route('entities.create') }}">
                 > Register New Entity
-            </a>
+            </x-button>
         </div>
 
         @if(session('success'))
@@ -130,14 +129,12 @@
                 </div>
                 {{-- Tombol Aksi --}}
                 <div class="flex items-center gap-2 mt-4">
-                    <button type="submit"
-                        class="w-full md:w-auto bg-primary text-black font-bold py-2 px-6 transition-colors cursor-pointer">
+                    <x-button type="submit">
                         FILTER
-                    </button>
-                    <a href="{{ route('entities.index') }}"
-                        class="w-full md:w-auto text-center border border-border-color text-secondary py-2 px-6 hover:bg-surface-light">
+                    </x-button>
+                    <x-button variant="outline" href="{{ route('entities.index') }}">
                         RESET
-                    </a>
+                    </x-button>
                 </div>
             </form>
         </div>

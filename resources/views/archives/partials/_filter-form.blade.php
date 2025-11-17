@@ -53,10 +53,9 @@
         </div>
         <div class="flex items-center justify-end gap-4 mt-4">
             <a href="{{ $searchRoute }}" class="text-sm text-secondary hover:text-primary">Reset</a>
-            <button type="submit"
-                class="px-4 py-2 text-sm border rounded-md transition-colors border-primary text-primary hover:bg-primary hover:text-base cursor-pointer">
+            <x-button type="submit" variant="outline">
                 Filter
-            </button>
+            </x-button>
         </div>
     </form>
 </div>

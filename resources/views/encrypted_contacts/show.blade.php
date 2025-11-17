@@ -9,10 +9,9 @@
                 <p class="text-sm text-secondary font-mono mt-1">Codename: <span class="text-white">{{
                         $contact->codename }}</span></p>
             </div>
-            <a href="{{ route('encrypted-contacts.index') }}"
-                class="w-full sm:w-auto text-center bg-surface-light border border-border-color text-secondary font-bold py-2 px-4 hover:text-primary hover:border-primary transition-colors">
+            <x-button href="{{ route('encrypted-contacts.index') }}">
                 &lt; RETURN TO VAULT
-            </a>
+            </x-button>
         </div>
     </div>
 
@@ -24,7 +23,7 @@
 
     {{-- Cek apakah data sudah didekripsi --}}
     @if($isDecrypted)
-    {{-- [PERUBAHAN] TAMPILAN DATA TERDEKRIPSI DENGAN TOMBOL HIDE/UNHIDE --}}
+    {{-- TAMPILAN DATA TERDEKRIPSI DENGAN TOMBOL HIDE/UNHIDE --}}
     <div x-data="{ unhidden: true }" class="bg-surface border border-border-color p-6 font-mono space-y-6">
         <div class="flex justify-between items-center border-b border-border-color pb-2 mb-4">
             <h2 class="text-lg font-bold text-primary">> DECRYPTED DATA PAYLOAD</h2>
@@ -103,9 +102,6 @@
             </div>
         </div>
 
-        {{-- ================================================================ --}}
-        {{-- == BAGIAN BARU: MENAMPILKAN BIDANG DATA DINAMIS == --}}
-        {{-- ================================================================ --}}
         @if(!empty($payload['custom_fields']))
         <div class="pt-4 border-t border-dashed border-border-color">
             <h3 class="text-md font-bold text-primary">> ADDITIONAL DATA FIELDS</h3>
@@ -148,10 +144,9 @@
                     class="w-full bg-base border-2 border-border-color focus:border-primary focus:ring-0 text-white p-2">
             </div>
             <div class="flex justify-end pt-2">
-                <button type="submit"
-                    class="bg-primary text-black font-bold py-2 px-6 hover:bg-primary-hover transition-colors cursor-pointer">
+                <x-button type="submit">
                     DECRYPT
-                </button>
+                </x-button>
             </div>
         </form>
     </div>

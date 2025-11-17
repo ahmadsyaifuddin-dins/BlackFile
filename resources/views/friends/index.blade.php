@@ -7,10 +7,9 @@
         <h2 class="text-2xl font-bold text-primary">
             > [ {{ $pageTitle ?? __('NETWORK ANALYSIS TERMINAL') }} ]
         </h2>
-        <a href="{{ route('friends.create') }}"
-            class="mt-2 sm:mt-0 px-4 py-2 bg-primary text-base text-black transition-colors font-bold tracking-widest rounded-md">
+        <x-button href="{{ route('friends.create') }}" class="mt-2 sm:mt-0">
             [ + {{ __('ESTABLISH CONNECTION') }} ]
-        </a>
+        </x-button>
     </div>
 
     <div>

@@ -74,10 +74,8 @@
 
     {{-- Tombol Aksi --}}
     <div class="flex justify-end pt-4">
-        <button type="submit"
-            class="bg-primary text-black font-bold py-3 px-8 rounded-none hover:bg-primary-hover transition-colors text-lg tracking-widest cursor-pointer">
-            {{-- Teks tombol dinamis --}}
+        <x-button type="submit">
             > {{ $entity ? 'SAVE CHANGES' : 'EXECUTE' }}
-        </button>
+        </x-button>
     </div>
 </form>

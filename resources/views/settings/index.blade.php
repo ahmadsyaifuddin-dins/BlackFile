@@ -58,12 +58,10 @@
             </div>
         </div>
 
-        {{-- Tombol Simpan Terpusat --}}
         <div class="mt-6 flex justify-end">
-            {{-- Warna teks diubah menjadi hitam agar kontras --}}
-            <button type="submit" class="bg-primary text-black font-bold py-3 px-8 hover:bg-primary-hover transition-colors tracking-widest cursor-pointer">
+            <x-button type="submit">
                 {{ __('SAVE ALL CHANGES') }}
-            </button>
+            </x-button>
         </div>
     </form>
 </x-app-layout>

@@ -62,9 +62,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/credits/access-log', [CreditController::class, 'viewLog'])->name('credits.viewLog');
 
-    Route::get('/default-music', [DefaultMusicController::class, 'index'])->name('default-music.index');
-    Route::post('/default-music', [DefaultMusicController::class, 'store'])->name('default-music.store');
-    Route::delete('/default-music/{defaultMusic}', [DefaultMusicController::class, 'destroy'])->name('default-music.destroy');
+    Route::get('/credits/default-music', [DefaultMusicController::class, 'index'])->name('credits.default-music.index');
+    Route::post('/credits/default-music', [DefaultMusicController::class, 'store'])->name('credits.default-music.store');
+    Route::delete('/credits/default-music/{defaultMusic}', [DefaultMusicController::class, 'destroy'])->name('credits.default-music.destroy');
 
     // Semua rute aplikasi Anda yang lain
     Route::resource('entities', EntityController::class);

@@ -159,14 +159,14 @@
                     isFavorited: {{ $archive->is_favorited ? 'true' : 'false' }},
                     count: {{ $archive->favorited_by_count }}
                  }" class="w-full sm:w-auto">
-                <button @click="
+                <x-button variant="outline" @click="
                     axios.post('{{ route('archives.favorite.toggle', $archive) }}')
                         .then(response => {
                             isFavorited = response.data.is_favorited;
                             count = response.data.favorited_by_count;
                         });
                 "
-                    class="w-full cursor-pointer sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-sm border rounded-md transition-colors border-primary text-primary hover:bg-primary hover:text-base">
+                >
                     <svg class="h-5 w-5 transition-colors duration-200"
                         :class="isFavorited ? 'text-red-500 fill-current' : 'text-secondary hover:text-red-400'"
                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -175,38 +175,35 @@
                     </svg>
                     <span x-text="isFavorited ? 'Unfavorite' : 'Add to Favorite'"></span>
                     <span x-text="'(' + count + ')'"></span>
-                </button>
+                </x-button>
             </div>
             @if ($archive->type === 'file')
-            <a href="{{ asset('uploads/' . $archive->file_path) }}" target="_blank"
-                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-sm border rounded-md transition-colors border-primary text-primary hover:bg-primary hover:text-base">
+            <x-button variant="outline" href="{{ asset('uploads/' . $archive->file_path) }}" target="_blank">
                 <svg class="h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
                 Download File
-            </a>
+            </x-button>
             @endif
-            <a href="{{ route('archives.edit', $archive) }}"
-                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-sm border rounded-md transition-colors border-primary text-primary hover:bg-primary hover:text-base">
+            <x-button variant="outline" href="{{ route('archives.edit', $archive) }}">
                 <svg class="h-4 w-4 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
                 Edit Entry
-            </a>
+            </x-button>
             <form action="{{ route('archives.destroy', $archive) }}" method="POST" class="w-full sm:w-auto"
                 onsubmit="return confirm('Confirm termination of this entry?');">
                 @csrf
                 @method('DELETE')
-                <button type="submit"
-                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-sm border rounded-md transition-colors border-primary text-primary hover:bg-primary hover:text-base cursor-pointer">
+                <x-button variant="outline" type="submit">
                     <svg class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                     Delete
-                </button>
+                </x-button>
             </form>
         </div>
     </div>

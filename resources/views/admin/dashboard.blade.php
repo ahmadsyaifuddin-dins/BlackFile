@@ -64,8 +64,9 @@
                 <p class="text-sm sm:text-xl font-bold text-white">> INVITE TOKENS</p>
                 <form action="{{ route('admin.invites.generate') }}" method="POST">
                     @csrf
-                    <button type="submit" class="px-3 py-1 text-black bg-primary whitespace-nowrap sm:text-base hover:bg-primary-hover font-bold tracking-widest rounded-md text-xs cursor-pointer">[
-                        + GENERATE TOKEN ]</button>
+                    <x-button type="submit">
+                       [ + GENERATE TOKEN ]
+                    </x-button>
                 </form>
             </div>
             <div class="space-y-3 max-h-96 overflow-y-auto pr-2">
@@ -179,11 +180,10 @@
                 </div>
             </div>
 
-            {{-- Tombol Submit --}}
             <div class="mt-6 text-right border-t border-border-color pt-4">
-                <button type="submit" class="px-6 py-2 text-black bg-primary hover:bg-green-800 font-bold tracking-widest rounded-md cursor-pointer transition-colors">
+                <x-button type="submit">
                     [ DISPATCH BROADCAST ]
-                </button>
+                </x-button>
             </div>
 
         </form>

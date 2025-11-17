@@ -40,23 +40,23 @@
                 <!-- Mode Visual (Add/Remove) -->
                 <div x-show="editMode === 'visual'" class="space-y-2">
                     <template x-for="(name, nameIndex) in credit.names" :key="`${creditIndex}-${nameIndex}`">
-                        <!-- PERBAIKAN: Dibuat responsif -->
+                        <!-- Dibuat responsif -->
                         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                             <input type="text" :name="'credits[' + creditIndex + '][names][' + nameIndex + ']'" x-model="credit.names[nameIndex]" required placeholder="Full Name" class="flex-grow bg-gray-800 border-gray-600 rounded-md shadow-sm text-white">
                             <button @click.prevent="removeName(creditIndex, nameIndex)" type="button" class="text-red-400 hover:text-red-300 text-sm self-end sm:self-center px-2 py-1 rounded-md bg-gray-700/50 hover:bg-red-900/50">Remove</button>
                         </div>
                     </template>
-                    <button @click.prevent="addName(creditIndex)" type="button" class="mt-2 text-xs text-cyan-400 hover:underline">+ Add Name</button>
+                    <button @click.prevent="addName(creditIndex)" type="button" class="mt-2 text-xs text-primary hover:underline">+ Add Name</button>
                 </div>
 
                 <!-- Mode Raw JSON -->
                 <div x-show="editMode === 'raw'" style="display: none;">
                     <textarea x-model="credit.namesJson" 
                               @input.debounce.500ms="updateNamesFromJson(creditIndex)"
-                              class="w-full h-48 bg-gray-900/50 border-gray-600 rounded-md text-cyan-300 font-mono text-sm"
+                              class="w-full h-48 bg-gray-900/50 border-gray-600 rounded-md text-primary font-mono text-sm"
                               placeholder='[&#10;    "Nama Pertama",&#10;    "Nama Kedua"&#10;]'>
                     </textarea>
-                    <!-- PERBAIKAN: Tambahkan tombol Format JSON -->
+                    <!-- Tambahkan tombol Format JSON -->
                     <div class="flex justify-between items-center mt-1">
                         <p class="text-xs text-gray-500">Edit the list as a JSON array of strings.</p>
                         <button @click.prevent="formatJson(creditIndex)" type="button" class="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 rounded-md">Format JSON</button>
@@ -67,7 +67,7 @@
             <div class="mt-4 pl-4 border-l-2 border-gray-700">
                 <h4 class="text-sm text-gray-400 mb-2">Logos for this Section</h4>
                 <template x-for="(logo, logoIndex) in credit.logos" :key="logoIndex">
-                    <!-- PERUBAHAN: Dibuat tumpuk di mobile, berdampingan di layar besar -->
+                    <!-- Dibuat tumpuk di mobile, berdampingan di layar besar -->
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-2">
                         <select :name="'credits[' + creditIndex + '][logos][' + logoIndex + '][type]'"
                             x-model="logo.type" class="bg-gray-800 border-gray-600 rounded-md text-sm">
@@ -187,10 +187,7 @@
 
 
     <div class="flex items-center justify-end mt-8 pt-6 border-t border-gray-700">
-        <button type="submit"
-            class="inline-flex items-center px-4 py-2 bg-primary border rounded-md font-semibold text-xs text-white uppercase bg-primary-hover cursor-pointer">
-            Save All Credits
-        </button>
+        <x-button type="submit">Save All Credits</x-button>
     </div>
 </div>
 

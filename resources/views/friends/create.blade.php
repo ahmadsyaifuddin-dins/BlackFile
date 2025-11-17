@@ -41,7 +41,7 @@
                         <input type="text" id="codename" name="codename" value="{{ old('codename') }}"
                             class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary placeholder-secondary/50 p-2 rounded">
                     </div>
-                    {{-- [BARU] Dropdown untuk Kategori Aset --}}
+                    {{-- Dropdown untuk Kategori Aset --}}
                     <div>
                         <label for="category" class="block text-primary text-sm">> {{ __('ASSET CATEGORY') }}</label>
                         <select id="category" name="category"
@@ -84,10 +84,9 @@
                 </div>
             </div>
             <div class="border-t border-border-color pt-6 flex justify-end">
-                <button type="submit"
-                    class="px-6 py-2 bg-primary text-black text-base transition-colors font-bold tracking-widest rounded-md cursor-pointer">
+                <x-button type="submit">
                     [ {{ __('ESTABLISH CONNECTION') }} ]
-                </button>
+                </x-button>
             </div>
         </form>
     </div>

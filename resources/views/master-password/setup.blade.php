@@ -33,9 +33,9 @@
             </div>
 
             <div class="flex justify-end pt-4">
-                <button type="submit" class="bg-primary text-black font-bold py-3 px-8 hover:bg-primary-hover transition-colors tracking-widest cursor-pointer">
+                <x-button type="submit">
                     INITIALIZE VAULT
-                </button>
+                </x-button>
             </div>
         </form>
     </div>

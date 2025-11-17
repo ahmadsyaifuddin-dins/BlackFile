@@ -13,10 +13,9 @@
         <div class="py-1">
             <div class="w-full sm:px-3 lg:px-3">
                 <div class="flex justify-end mb-4">
-                    <button @click="openCreateModal()"
-                        class="border-primary border hover:border-primary-hover text-white font-bold py-2 px-4 rounded transition duration-300 w-full sm:w-auto cursor-pointer">
+                    <x-button variant="outline" @click="openCreateModal()">
                         [ + FILE NEW PROTOTYPE ]
-                    </button>
+                    </x-button>
                 </div>
 
                 @if(session('success'))
@@ -48,7 +47,7 @@
                         </div>
                         @else
                         <div class="hidden sm:block">
-                            {{-- [FIXED] Table container with better responsive design --}}
+                            {{-- Table container with better responsive design --}}
                             <div class="rounded-lg border border-gray-700 overflow-hidden">
                                 <div class="overflow-x-auto">
                                     <table class="min-w-full font-mono divide-y divide-gray-700 table-fixed">
@@ -76,7 +75,7 @@
                                                 <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-400">
                                                     {{ ($prototypes->currentPage() - 1) * $prototypes->perPage() + $loop->iteration }}
                                                 </td>
-                                                {{-- [FIXED] Icon column with consistent sizing --}}
+                                                {{-- Icon column with consistent sizing --}}
                                                 <td class="px-4 py-4 whitespace-nowrap">
                                                     <div class="flex-shrink-0 h-10 w-10">
                                                         @if($prototype->icon_path)
@@ -91,7 +90,7 @@
                                                         @endif
                                                     </div>
                                                 </td>
-                                                {{-- [FIXED] Codename column with text truncation --}}
+                                                {{-- Codename column with text truncation --}}
                                                 <td class="px-4 py-4">
                                                     <div class="text-sm leading-5 text-primary font-semibold truncate" 
                                                          title="{{ $prototype->codename }}">
@@ -102,13 +101,13 @@
                                                         {{ Str::limit($prototype->name, 25, '...') }}
                                                     </div>
                                                 </td>
-                                                {{-- [FIXED] Developer column with truncation --}}
+                                                {{-- Developer column with truncation --}}
                                                 <td class="px-4 py-4 whitespace-nowrap text-sm leading-5 text-gray-300">
                                                     <div class="truncate" title="{{ $prototype->user->name }}">
                                                         {{ Str::limit($prototype->user->name, 20, '...') }}
                                                     </div>
                                                 </td>
-                                                {{-- [FIXED] Project type with truncation --}}
+                                                {{-- Project type with truncation --}}
                                                 <td class="px-4 py-4 whitespace-nowrap text-sm leading-5 text-gray-300">
                                                     <div class="truncate" title="{{ $prototype->project_type }}">
                                                         {{ Str::limit($prototype->project_type, 20, '...') }}
@@ -139,7 +138,7 @@
                             </div>
                         </div>
 
-                        {{-- [REDESIGNED] Professional Mobile Card UI --}}
+                        {{-- Professional Mobile Card UI --}}
                         <div class="sm:hidden space-y-3">
                             @foreach ($prototypes as $prototype)
                             <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden shadow-lg">

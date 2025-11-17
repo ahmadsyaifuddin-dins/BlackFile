@@ -4,10 +4,9 @@
         <h2 class="text-2xl font-bold text-primary font-mono tracking-wider">
             > REGISTER NEW ENTITY
         </h2>
-        <a href="{{ route('entities.index') }}"
-            class="w-full sm:w-auto text-center bg-surface-light border border-border-color text-secondary font-bold py-2 px-4 hover:text-primary hover:border-primary transition-colors">
+        <x-button variant="outline" href="{{ route('entities.index') }}">
             &lt; ABORT MISSION
-        </a>
+        </x-button>
     </div>
 
     {{-- Form Container --}}

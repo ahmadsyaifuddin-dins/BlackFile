@@ -7,10 +7,9 @@
                     > ADD NEW ENCRYPTED CONTACT
                 </h1>
             </div>
-            <a href="{{ route('encrypted-contacts.index') }}"
-                class="w-full sm:w-auto text-center bg-surface-light border border-border-color text-secondary font-bold py-2 px-4 hover:text-primary hover:border-primary transition-colors">
+            <x-button variant="outline" href="{{ route('encrypted-contacts.index') }}">
                 &lt; CANCEL & RETURN TO VAULT
-            </a>
+            </x-button>
         </div>
     </div>
 
@@ -166,10 +165,9 @@
             </div>
 
             <div class="flex justify-end pt-4">
-                <button type="submit"
-                    class="bg-primary text-black font-bold py-3 px-8 hover:bg-primary-hover transition-colors tracking-widest cursor-pointer">
+                <x-button type="submit">
                     SAVE & ENCRYPT
-                </button>
+                </x-button>
             </div>
         </form>
     </div>

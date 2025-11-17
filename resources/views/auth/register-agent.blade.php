@@ -73,7 +73,6 @@
                 <select id="role_id" name="role_id" required
                         class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
                     <option value="" disabled selected>-- Select Designation --</option>
-                    {{-- Loop dari variabel $roles yang dikirim Controller --}}
                     @foreach($roles as $role)
                         <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
                             {{ $role->alias }}
@@ -83,9 +82,7 @@
             </div>
             
             <div class="border-t border-border-color pt-6 flex justify-end">
-                <button type="submit" class="cursor-pointer px-6 py-2 bg-primary text-black transition-colors font-bold tracking-widest rounded-md text-sm">
-                    [ CREATE AGENT ]
-                </button>
+                <x-button type="submit">[ CREATE AGENT ]</x-button>
             </div>
         </form>
     </div>

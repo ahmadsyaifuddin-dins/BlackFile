@@ -8,10 +8,9 @@
                 </h1>
                 <p class="text-sm text-secondary font-mono mt-1">Personal encrypted contact directory.</p>
             </div>
-            {{-- [PERBAIKAN] Warna teks diubah menjadi hitam agar kontras --}}
-            <a href="{{ route('encrypted-contacts.create') }}" class="w-full sm:w-auto text-center bg-primary text-black font-bold py-2 px-4 hover:bg-primary-hover transition-colors">
+            <x-button href="{{ route('encrypted-contacts.create') }}">
                 > ADD NEW CONTACT
-            </a>
+            </x-button>
         </div>
     </div>
 
@@ -38,14 +37,10 @@
                             <td class="p-3 text-white font-bold whitespace-nowrap">{{ $contact->codename }}</td>
                             <td class="p-3 whitespace-nowrap">{{ $contact->created_at->format('d-m-Y H:i') }}</td>
                             <td class="p-3 text-right">
-                                {{-- ================================================================ --}}
-                                {{-- == PERBAIKAN: Tombol Aksi & Logika Hapus == --}}
-                                {{-- ================================================================ --}}
                                 <div class="flex justify-end items-center gap-4">
                                     <a href="{{ route('encrypted-contacts.show', $contact) }}" class="text-primary hover:text-white text-sm font-bold whitespace-nowrap">VIEW FILE</a>
                                     <a href="{{ route('encrypted-contacts.edit', $contact) }}" class="text-secondary hover:text-primary text-sm">EDIT</a>
                                     
-                                    {{-- Form Hapus yang Benar --}}
                                     <form action="{{ route('encrypted-contacts.destroy', $contact) }}" method="POST" onsubmit="return confirm('WARNING: This action is irreversible. Are you sure you want to terminate this contact file?');">
                                         @csrf
                                         @method('DELETE')

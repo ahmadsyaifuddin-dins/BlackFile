@@ -8,13 +8,13 @@
                 </h1>
                 <p class="text-sm text-secondary font-mono mt-1">Full access to all encrypted contact files across the network.</p>
             </div>
-            <a href="{{ route('encrypted-contacts.create') }}" class="w-full sm:w-auto text-center bg-primary text-black font-bold py-2 px-4 hover:bg-primary-hover transition-colors">
+            <x-button href="{{ route('encrypted-contacts.create') }}">
                 > ADD PERSONAL CONTACT
-            </a>
+            </x-button>
         </div>
     </div>
 
-    {{-- [PERUBAHAN] Bagian untuk Brankas Pribadi Director --}}
+    {{-- Bagian untuk Brankas Pribadi Director --}}
     <div class="mb-8 bg-surface border border-border-color p-4 font-mono">
         <h2 class="text-lg font-bold text-primary border-b border-border-color pb-2 mb-3">
             > MY PERSONAL VAULT
@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    {{-- [PERUBAHAN] Bagian untuk Pengawasan Agen Lain --}}
+    {{-- Bagian untuk Pengawasan Agen Lain --}}
     <div class="space-y-8">
         <h2 class="text-2xl font-bold text-secondary tracking-widest font-mono">
             AGENT VAULT OVERSIGHT

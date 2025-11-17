@@ -5,10 +5,9 @@
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
             <h1 class="text-xl sm:text-2xl font-bold text-primary">[ FAVORITE_ARCHIVES ]</h1>
             <div class="flex gap-3">
-                <a href="{{ route('archives.index') }}"
-                    class="px-4 py-2 text-sm border rounded-md transition-colors border-secondary text-secondary hover:bg-secondary hover:text-base">
+                <x-button variant="outline" href="{{ route('archives.index') }}">
                     &lt;-- Back to Vault
-                </a>
+                </x-button>
             </div>
         </div>
 
@@ -65,10 +64,7 @@
                 <div class="flex items-center justify-end gap-4 mt-4">
                     <a href="{{ route('favorites.archives') }}"
                         class="text-sm text-secondary hover:text-primary">Reset</a>
-                    <button type="submit"
-                        class="px-4 py-2 text-sm border rounded-md transition-colors border-primary text-primary hover:bg-primary hover:text-base cursor-pointer">
-                        Filter
-                    </button>
+                    <x-button variant="outline" type="submit">Filter</x-button>
                 </div>
             </form>
         </div>
@@ -86,9 +82,7 @@
             </div>
         </div>
 
-        {{-- ====================================================== --}}
-        {{-- ============ DESKTOP VIEW (TABLE) ==================== --}}
-        {{-- ====================================================== --}}
+        {{-- DESKTOP VIEW (TABLE) --}}
         <div class="hidden md:block">
             <div class="bg-surface border border-border rounded-md">
                 <div class="table-responsive">
@@ -217,9 +211,7 @@
             </div>
         </div>
 
-        {{-- ====================================================== --}}
-        {{-- ============= MOBILE VIEW (CARDS) ==================== --}}
-        {{-- ====================================================== --}}
+        {{-- MOBILE VIEW (CARDS) --}}
         <div class="md:hidden space-y-4">
             @forelse ($favorites as $archive)
             <div class="bg-surface border border-border rounded-md p-4 flex flex-col h-full">

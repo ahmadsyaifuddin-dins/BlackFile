@@ -5,10 +5,9 @@
         <h2 class="text-2xl font-bold text-primary text-glow mb-6">> [ AGENT DIRECTORY ]</h2>
 
         @if(strtolower(Auth::user()->role->name) === 'director')
-        <a href="{{ route('register.agent') }}"
-            class="w-full sm:w-auto text-center bg-primary text-black font-bold py-2 px-4 rounded hover:bg-primary-hover transition-colors">
+        <x-button href="{{ route('register.agent') }}">
             > Register New Agent
-        </a>
+        </x-button>
         @endif
     </div>
 

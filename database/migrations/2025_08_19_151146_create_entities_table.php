@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('description');
             $table->text('abilities')->nullable();
             $table->text('weaknesses')->nullable();
-            $table->text('status')->default('UNKNOWN');
+            $table->string('status')->default('UNKNOWN');
             $table->timestamps();
         });
     }

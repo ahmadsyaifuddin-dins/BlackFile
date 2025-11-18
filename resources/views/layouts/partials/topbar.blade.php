@@ -1,4 +1,4 @@
-<header class="bg-surface border-b border-border-color flex items-center justify-between px-4 py-3">
+<header class="bg-surface border-b border-border-color border-gray-600 flex items-center justify-between px-4 py-3">
     <div class="flex items-center space-x-3 min-w-0">
         <button @click="sidebarOpen = !sidebarOpen" class="md:hidden text-white focus:outline-none flex-shrink-0">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

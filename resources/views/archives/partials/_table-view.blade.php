@@ -87,13 +87,9 @@
                                     class="text-secondary text-primary-hover">Details</a>                                 
                                 <a href="{{ route('archives.edit', $archive) }}"
                                     class="text-yellow-500 hover:text-yellow-400">Edit</a>
-                                <form action="{{ route('archives.destroy', $archive) }}" method="POST"
-                                    class="inline-block"
-                                    onsubmit="return confirm('Confirm termination of this entry?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:text-red-400">Delete</button>
-                                </form>
+                                <x-button.delete :action="route('archives.destroy', $archive)" title="TERMINATE ARCHIVE?" message="Confirm termination of this entry?" target="{{ $archive->name }}">
+                                    Delete
+                                </x-button.delete>
                             </div>
                         </td>
                     </tr>

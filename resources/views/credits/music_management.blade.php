@@ -27,11 +27,9 @@
                     @foreach($musics as $music)
                         <div class="flex justify-between items-center p-3 bg-gray-900/50 rounded-md">
                             <span class="text-white">{{ $music->name }}</span>
-                            <form action="{{ route('credits.default-music.destroy', $music) }}" method="POST" onsubmit="return confirm('Are you sure?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-500 hover:text-red-400">Remove</button>
-                            </form>
+                            <x-button.delete :action="route('credits.default-music.destroy', $music)" title="TERMINATE MUSIC?" message="Confirm termination of music {{ $music->name }}?" target="{{ $music->name }}" class="text-red-500 hover:text-red-400">
+                                Remove
+                            </x-button.delete>
                         </div>
                     @endforeach
                 </div>

@@ -41,11 +41,9 @@
                                     <a href="{{ route('encrypted-contacts.show', $contact) }}" class="text-primary hover:text-white text-sm font-bold whitespace-nowrap">VIEW FILE</a>
                                     <a href="{{ route('encrypted-contacts.edit', $contact) }}" class="text-secondary hover:text-primary text-sm">EDIT</a>
                                     
-                                    <form action="{{ route('encrypted-contacts.destroy', $contact) }}" method="POST" onsubmit="return confirm('WARNING: This action is irreversible. Are you sure you want to terminate this contact file?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-500 hover:text-red-400 text-sm font-mono whitespace-nowrap cursor-pointer">> TERMINATE</button>
-                                    </form>
+                                    <x-button.delete :action="route('encrypted-contacts.destroy', $contact)" title="TERMINATE CONTACT?" message="WARNING: This action is irreversible. Are you sure you want to terminate this contact file?" target="{{ $contact->codename }}">
+                                        > TERMINATE
+                                    </x-button.delete>
                                 </div>
                             </td>
                         </tr>

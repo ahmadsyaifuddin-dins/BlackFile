@@ -18,19 +18,18 @@
         <div class="bg-surface border border-border-color p-4 font-mono">
             <form action="{{ route('entities.index') }}" method="GET">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    
+
                     {{-- Kolom 1: Search (Menggunakan Component Input + Icon Slot) --}}
                     <div class="lg:col-span-1 md:col-span-2">
                         <label for="search" class="sr-only">Search</label>
-                        <x-forms.input 
-                            name="search" 
-                            placeholder="Search entities..." 
-                            value="{{ request('search') }}">
-                            
+                        <x-forms.input name="search" placeholder="Search entities..." value="{{ request('search') }}">
+
                             {{-- Mengirim SVG ke dalam slot 'icon' --}}
                             <x-slot:icon>
-                                <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </x-slot:icon>
                         </x-forms.input>
@@ -38,46 +37,40 @@
 
                     {{-- Kolom 2: Filter Category --}}
                     <div>
-                        <x-forms.select 
-                            name="category" 
-                            :options="config('blackfile.entity_categories')" 
-                            :selected="request('category')" 
-                            placeholder="-- All Categories --" 
-                        />
+                        <x-forms.select name="category" :options="config('blackfile.entity_categories')"
+                            :selected="request('category')" placeholder="-- All Categories --" />
                     </div>
 
                     {{-- Kolom 3: Filter Rank --}}
                     <div>
-                        <x-forms.select 
-                            name="rank" 
-                            :options="config('blackfile.entity_ranks')" 
-                            :selected="request('rank')" 
-                            placeholder="-- All Ranks --" 
-                        />
+                        <x-forms.select name="rank" :options="config('blackfile.entity_ranks')"
+                            :selected="request('rank')" placeholder="-- All Ranks --" />
                     </div>
 
                     {{-- Kolom 4: Filter Origin --}}
                     <div>
-                        <x-forms.select 
-                            name="origin" 
-                            :options="config('blackfile.entity_origins')" 
-                            :selected="request('origin')" 
-                            placeholder="-- All Origins --" 
-                        />
+                        <x-forms.select name="origin" :options="config('blackfile.entity_origins')"
+                            :selected="request('origin')" placeholder="-- All Origins --" />
                     </div>
                 </div>
 
                 {{-- Tombol Aksi --}}
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 mt-4 pt-4 border-t border-border-color/30">  
+                <div
+                    class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 mt-4 pt-4 border-t border-border-color/30">
                     {{-- Tombol Reset --}}
                     {{-- Tambahkan 'w-full sm:w-auto' agar full width di HP --}}
-                    <x-button variant="outline" href="{{ route('entities.index') }}" class="w-full sm:w-auto justify-center">
+                    <x-button variant="outline" href="{{ route('entities.index') }}"
+                        class="w-full sm:w-auto justify-center">
                         [ CLEAR FILTERS ]
                     </x-button>
 
                     {{-- Tombol Submit --}}
                     <x-button type="submit" class="w-full sm:w-auto justify-center">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z">
+                            </path>
+                        </svg>
                         <span>EXECUTE FILTER</span>
                     </x-button>
                 </div>
@@ -108,33 +101,34 @@
 
                 <div class="p-4 flex flex-col sm:flex-row gap-4">
                     <div class="w-full sm:w-1/3 flex-shrink-0">
-                        <a href="{{ route('entities.show', $entity) }}?return_url={{ urlencode(request()->fullUrl()) }}">
+                        <a
+                            href="{{ route('entities.show', $entity) }}?return_url={{ urlencode(request()->fullUrl()) }}">
                             @php
-                                // 1. Coba ambil thumbnail yang spesifik
-                                $thumbnail = $entity->thumbnail;
-                                
-                                // 2. Jika tidak ada (null), fallback ke gambar pertama
-                                if (!$thumbnail && $entity->images->isNotEmpty()) {
-                                    $thumbnail = $entity->images->first();
-                                }
+                            // 1. Coba ambil thumbnail yang spesifik
+                            $thumbnail = $entity->thumbnail;
+
+                            // 2. Jika tidak ada (null), fallback ke gambar pertama
+                            if (!$thumbnail && $entity->images->isNotEmpty()) {
+                            $thumbnail = $entity->images->first();
+                            }
                             @endphp
                             @if($thumbnail)
-                                @php
-                                    $imagePath = Illuminate\Support\Str::startsWith($thumbnail->path, 'http')
-                                        ? $thumbnail->path
-                                        : asset('uploads/' . $thumbnail->path);
-                                @endphp
-                                <div class="aspect-square">
-                                    <img src="{{ $imagePath }}" alt="{{ $entity->codename }}"
-                                         :class="{ 'grayscale': !inView }"
-                                         class="w-full h-full object-cover transition-all duration-500 ease-in-out"
-                                         loading="lazy">
-                                </div>
+                            @php
+                            $imagePath = Illuminate\Support\Str::startsWith($thumbnail->path, 'http')
+                            ? $thumbnail->path
+                            : asset('uploads/' . $thumbnail->path);
+                            @endphp
+                            <div class="aspect-square">
+                                <img src="{{ $imagePath }}" alt="{{ $entity->codename }}"
+                                    :class="{ 'grayscale': !inView }"
+                                    class="w-full h-full object-cover transition-all duration-500 ease-in-out"
+                                    loading="lazy">
+                            </div>
                             @else
-                                <div
-                                    class="w-full h-32 bg-base flex items-center justify-center border border-dashed border-border-color">
-                                    <span class="text-secondary font-mono text-sm">[NO VISUALS]</span>
-                                </div>
+                            <div
+                                class="w-full h-32 bg-base flex items-center justify-center border border-dashed border-border-color">
+                                <span class="text-secondary font-mono text-sm">[NO VISUALS]</span>
+                            </div>
                             @endif
                         </a>
                     </div>
@@ -154,20 +148,23 @@
 
                 {{-- Footer Aksi dengan Tombol Hapus --}}
                 <div class="px-4 py-2 border-t-2 border-border-color flex items-center justify-end gap-4">
+
                     <a href="{{ route('entities.edit', $entity) }}?return_url={{ urlencode(request()->fullUrl()) }}"
                         class="text-secondary hover:text-primary text-sm font-mono whitespace-nowrap">EDIT</a>
 
-                    <form action="{{ route('entities.destroy', $entity) }}" method="POST"
-                        onsubmit="return confirm('WARNING: Are you sure you want to terminate this entity record? This action cannot be undone.');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                            class="text-red-500 hover:text-red-400 text-sm font-mono whitespace-nowrap">TERMINATE</button>
-                    </form>
+                    {{-- [IMPLEMENTASI BARU] --}}
+                    {{-- Variant 'text' adalah default, jadi tidak perlu ditulis --}}
+                    {{-- Icon default false, jadi tidak perlu ditulis --}}
+                    <x-button.delete :action="route('entities.destroy', $entity)" title="TERMINATE ENTITY?"
+                        message="Are you sure you want to terminate this entity record? This action cannot be undone."
+                        target="{{ $entity->name }}">
+                        TERMINATE
+                    </x-button.delete>
 
                     <a href="{{ route('entities.show', $entity) }}?return_url={{ urlencode(request()->fullUrl()) }}"
                         class="text-primary hover:text-white text-sm font-bold font-mono whitespace-nowrap">ACCESS
                         ENTITY</a>
+
                 </div>
             </div>
             @empty

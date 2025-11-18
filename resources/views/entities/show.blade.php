@@ -23,17 +23,30 @@
                 </h1>
             </div>
             
-            <div class="flex-shrink-0 flex flex-col md:flex-row md:items-center gap-3 w-full md:w-auto">
-                <x-button variant="outline" href="{{ $backToIndex }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">&lt; BACK</x-button>
-                <x-button variant="outline" href="{{ $editUrl }}" class="w-full md:w-auto text-center font-mono border border-border-color px-4 py-2 hover:bg-surface-light">> EDIT FILE</x-button>
+            <div class="flex flex-col md:flex-row md:items-center gap-3 w-full md:w-auto shrink-0">
+    
+                {{-- 1. TOMBOL BACK (Outline Green) --}}
+                <x-button variant="outline" href="{{ $backToIndex }}" class="w-full md:w-auto justify-center">
+                    &lt; BACK
+                </x-button>
+            
+                {{-- 2. TOMBOL EDIT (Outline Green) --}}
+                <x-button variant="outline" href="{{ $editUrl }}" class="w-full md:w-auto justify-center">
+                    > EDIT FILE
+                </x-button>
                 
-                <form action="{{ route('entities.destroy', $entity) }}" method="POST" class="w-full md:w-auto" onsubmit="return confirm('WARNING: Are you sure you want to terminate this entity record? This action cannot be undone.');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="w-full font-mono bg-red-900/50 border border-red-500/50 text-red-400 font-bold py-2 px-4 hover:bg-red-900/80 transition-colors rounded-lg">
-                        > TERMINATE
-                    </button>
-                </form>
+                {{-- 3. TOMBOL TERMINATE (Custom Red Style) --}}
+                <x-button.delete 
+                    :action="route('entities.destroy', $entity)" 
+                    title="TERMINATE ENTITY?"
+                    message="WARNING: Are you sure you want to terminate this entity record? This action cannot be undone."
+                    target="{{ $entity->name }}"
+                    {{-- Styling Khusus agar sesuai gambar (Red Background & Border) --}}
+                    class="w-full md:w-auto justify-center px-4 py-2 bg-red-900/50 border border-red-500/50 text-red-400 hover:bg-red-900/80 hover:text-white hover:border-red-500 font-bold rounded-md transition-colors"
+                >
+                    > TERMINATE
+                </x-button.delete>
+            
             </div>
         </div>
     </div>

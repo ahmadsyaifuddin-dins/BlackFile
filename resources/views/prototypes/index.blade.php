@@ -53,19 +53,26 @@
                                     <table class="min-w-full font-mono divide-y divide-gray-700 table-fixed">
                                         <thead class="bg-gray-800">
                                             <tr>
-                                                <th class="px-3 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-12">
+                                                <th
+                                                    class="px-3 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-12">
                                                     #</th>
-                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-16">
+                                                <th
+                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-16">
                                                     Icon</th>
-                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-80">
+                                                <th
+                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-80">
                                                     Codename</th>
-                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-40">
+                                                <th
+                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-40">
                                                     Develop By</th>
-                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-32">
+                                                <th
+                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-32">
                                                     Project Type</th>
-                                                <th class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-24">
+                                                <th
+                                                    class="px-4 py-3 text-left text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-24">
                                                     Status</th>
-                                                <th class="px-4 py-3 text-center text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-32">
+                                                <th
+                                                    class="px-4 py-3 text-center text-xs leading-4 font-medium text-gray-400 uppercase tracking-wider w-32">
                                                     Actions</th>
                                             </tr>
                                         </thead>
@@ -73,7 +80,8 @@
                                             @foreach ($prototypes as $prototype)
                                             <tr class="hover:bg-gray-800 transition-colors">
                                                 <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-400">
-                                                    {{ ($prototypes->currentPage() - 1) * $prototypes->perPage() + $loop->iteration }}
+                                                    {{ ($prototypes->currentPage() - 1) * $prototypes->perPage() +
+                                                    $loop->iteration }}
                                                 </td>
                                                 {{-- Icon column with consistent sizing --}}
                                                 <td class="px-4 py-4 whitespace-nowrap">
@@ -84,7 +92,8 @@
                                                             alt="{{ $prototype->codename }} icon">
                                                         @else
                                                         {{-- Placeholder jika tidak ada ikon --}}
-                                                        <div class="h-10 w-10 rounded-md bg-gray-700 flex items-center justify-center text-primary font-bold text-lg">
+                                                        <div
+                                                            class="h-10 w-10 rounded-md bg-gray-700 flex items-center justify-center text-primary font-bold text-lg">
                                                             {{ substr($prototype->name, 0, 1) }}
                                                         </div>
                                                         @endif
@@ -92,12 +101,12 @@
                                                 </td>
                                                 {{-- Codename column with text truncation --}}
                                                 <td class="px-4 py-4">
-                                                    <div class="text-sm leading-5 text-primary font-semibold truncate" 
-                                                         title="{{ $prototype->codename }}">
+                                                    <div class="text-sm leading-5 text-primary font-semibold truncate"
+                                                        title="{{ $prototype->codename }}">
                                                         {{ $prototype->codename }}
                                                     </div>
-                                                    <div class="text-xs leading-5 text-gray-400 truncate" 
-                                                         title="{{ $prototype->name }}">
+                                                    <div class="text-xs leading-5 text-gray-400 truncate"
+                                                        title="{{ $prototype->name }}">
                                                         {{ Str::limit($prototype->name, 25, '...') }}
                                                     </div>
                                                 </td>
@@ -114,20 +123,37 @@
                                                     </div>
                                                 </td>
                                                 <td class="px-4 py-4 whitespace-nowrap">
-                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-cyan-900 text-cyan-300">
+                                                    <span
+                                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-cyan-900 text-cyan-300">
                                                         {{ $prototype->status }}
                                                     </span>
                                                 </td>
                                                 <td class="px-4 py-4 whitespace-nowrap text-center text-sm font-medium">
                                                     <div class="flex justify-center gap-1">
+
+                                                        {{-- View Button --}}
+                                                        {{-- Menggunakan variant 'text' custom untuk tabel --}}
                                                         <a href="{{ route('prototypes.show', $prototype) }}"
-                                                            class="text-indigo-400 hover:text-indigo-600 transition text-xs px-1">View</a>
+                                                            class="text-indigo-400 hover:text-indigo-300 transition text-xs px-1 font-bold font-mono">
+                                                            VIEW
+                                                        </a>
+
+                                                        {{-- Edit Button (Trigger AlpineJS) --}}
                                                         <button type="button"
                                                             @click="openEditModal({{ json_encode($prototype) }})"
-                                                            class="text-yellow-400 hover:text-yellow-600 transition appearance-none bg-transparent border-none cursor-pointer text-xs mr-1">Edit</button>
-                                                        <button type="button"
-                                                            @click="$dispatch('open-delete-modal', { actionUrl: '{{ route('prototypes.destroy', $prototype) }}', itemName: '{{ $prototype->codename }}' })"
-                                                            class="text-red-400 hover:text-red-600 transition appearance-none bg-transparent border-none cursor-pointer text-xs">Delete</button>
+                                                            class="text-yellow-500 hover:text-yellow-400 transition bg-transparent border-none cursor-pointer text-xs font-bold font-mono mr-1">
+                                                            EDIT
+                                                        </button>
+
+                                                        {{-- Delete Button (Using x-button.delete) --}}
+                                                        <x-button.delete
+                                                            :action="route('prototypes.destroy', $prototype)"
+                                                            title="SCRAP PROTOTYPE?"
+                                                            message="Confirm deletion of prototype {{ $prototype->codename }}? All associated data will be purged."
+                                                            target="{{ $prototype->codename }}" class="text-xs">
+                                                            DELETE
+                                                        </x-button.delete>
+
                                                     </div>
                                                 </td>
                                             </tr>
@@ -143,7 +169,8 @@
                             @foreach ($prototypes as $prototype)
                             <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden shadow-lg">
                                 {{-- Card Header with Gradient Background --}}
-                                <div class="bg-gradient-to-r from-gray-800 to-gray-750 px-4 py-3 border-b border-gray-600">
+                                <div
+                                    class="bg-gradient-to-r from-gray-800 to-gray-750 px-4 py-3 border-b border-gray-600">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center gap-3">
                                             {{-- Icon with better styling --}}
@@ -153,25 +180,28 @@
                                                     src="{{ asset($prototype->icon_path) }}"
                                                     alt="{{ $prototype->codename }} icon">
                                                 @else
-                                                <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center text-white font-bold text-sm shadow-md">
+                                                <div
+                                                    class="h-10 w-10 rounded-lg bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center text-white font-bold text-sm shadow-md">
                                                     {{ strtoupper(substr($prototype->codename, 0, 2)) }}
                                                 </div>
                                                 @endif
                                             </div>
-                                            
+
                                             {{-- Project Number --}}
                                             <div class="text-xs text-gray-400 font-mono bg-gray-700 px-2 py-1 rounded">
-                                                #{{ ($prototypes->currentPage() - 1) * $prototypes->perPage() + $loop->iteration }}
+                                                #{{ ($prototypes->currentPage() - 1) * $prototypes->perPage() +
+                                                $loop->iteration }}
                                             </div>
                                         </div>
-                                        
+
                                         {{-- Status Badge --}}
-                                        <span class="px-3 py-1 text-xs font-bold rounded-full bg-cyan-500 text-cyan-50 shadow-sm">
+                                        <span
+                                            class="px-3 py-1 text-xs font-bold rounded-full bg-cyan-500 text-cyan-50 shadow-sm">
                                             {{ strtoupper($prototype->status) }}
                                         </span>
                                     </div>
                                 </div>
-                                
+
                                 {{-- Main Content --}}
                                 <div class="px-4 py-4">
                                     {{-- Project Title Section --}}
@@ -183,20 +213,22 @@
                                             {{ $prototype->name }}
                                         </p>
                                     </div>
-                                    
+
                                     {{-- Project Details Grid --}}
                                     <div class="grid grid-cols-2 gap-3 mb-4">
                                         <div class="bg-gray-750 rounded-lg p-3">
-                                            <div class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">
+                                            <div
+                                                class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">
                                                 Developer
                                             </div>
                                             <div class="text-sm text-gray-200 font-medium truncate">
                                                 {{ $prototype->user->name }}
                                             </div>
                                         </div>
-                                        
+
                                         <div class="bg-gray-750 rounded-lg p-3">
-                                            <div class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">
+                                            <div
+                                                class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">
                                                 Type
                                             </div>
                                             <div class="text-sm text-gray-200 font-medium truncate">
@@ -204,7 +236,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     {{-- Last Updated --}}
                                     <div class="bg-gray-750 rounded-lg p-3 mb-4">
                                         <div class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">
@@ -215,35 +247,42 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 {{-- Action Buttons --}}
                                 <div class="bg-gray-750 px-4 py-3 border-t border-gray-600">
                                     <div class="flex justify-end gap-2">
                                         <a href="{{ route('prototypes.show', $prototype) }}"
                                             class="inline-flex items-center px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md">
-                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                </path>
                                             </svg>
                                             VIEW
                                         </a>
-                                        
+
                                         <button type="button" @click="openEditModal({{ json_encode($prototype) }})"
                                             class="inline-flex items-center px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-white text-xs font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md">
-                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
                                             </svg>
                                             EDIT
                                         </button>
-                                        
-                                        <button type="button"
-                                            @click="$dispatch('open-delete-modal', { actionUrl: '{{ route('prototypes.destroy', $prototype) }}', itemName: '{{ $prototype->codename }}' })"
+
+                                        <x-button.delete :action="route('prototypes.destroy', $prototype)"
+                                            title="SCRAP PROTOTYPE?"
+                                            icon=true
+                                            message="Confirm deletion of prototype {{ $prototype->codename }}?"
+                                            target="{{ $prototype->codename }}"
                                             class="inline-flex items-center px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md">
-                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                            </svg>
                                             DELETE
-                                        </button>
+                                        </x-button.delete>
                                     </div>
                                 </div>
                             </div>
@@ -262,6 +301,5 @@
         {{-- The modal component remains unchanged --}}
         <x-prototype-form-modal :show-errors="$errors->any()" />
 
-        <x-confirmation-modal />
     </div>
 </x-app-layout>

@@ -55,16 +55,12 @@
                                 @if($user->slug)
                                     <a href="{{ route('credits.public', $user->slug) }}" class="text-primary hover:underline text-sm" target="_blank">View Public</a>
                                 @endif
-                                <a href="{{ route('credits.edit', $user->id) }}" class="inline-flex items-center px-3 py-1 bg-gray-600 border rounded-md text-xs text-white uppercase hover:bg-gray-500">
+                                <a href="{{ route('credits.edit', $user->id) }}" class="inline-flex items-center px-3 py-1 bg-gray-600 rounded-md text-xs text-white uppercase hover:bg-gray-500">
                                     Edit
                                 </a>
-                                <form action="{{ route('credits.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete all credits for {{ $user->name }}?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-700 border rounded-md text-xs text-white uppercase hover:bg-red-600">
-                                        Delete
-                                    </button>
-                                </form>
+                                <x-button.delete :action="route('credits.destroy', $user->id)" title="TERMINATE CREDITS?" message="Confirm termination of all credits for {{ $user->name }}?" target="{{ $user->name }}" class="inline-flex items-center px-3 py-1 bg-red-700 rounded-md text-xs text-white uppercase hover:bg-red-600 hover:text-white">
+                                    Delete
+                                </x-button.delete>
                             </div>
                         </div>
                     @empty

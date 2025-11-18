@@ -1,13 +1,13 @@
 @php
-    // fallback ke index
-    $backUrl = request('return_url') ?? route('archives.index');
+// fallback ke index
+$backUrl = request('return_url') ?? route('archives.index');
 @endphp
 <x-app-layout title="Detail Arsip: {{ $archive->name }}">
     <div class="max-w-4xl mx-auto space-y-6">
 
         {{-- Header Halaman --}}
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-            <h1 class="text-xl sm:text-2xl font-bold text-primary break-words">[ {{ $archive->name }} ]</h1>
+            <h1 class="text-lg sm:text-xl font-bold text-primary break-words">{{ $archive->name }}</h1>
             <x-button href="{{ $backUrl }}" variant="outline">
                 &lt;-- Back to Vault
             </x-button>
@@ -164,8 +164,7 @@
                             isFavorited = response.data.is_favorited;
                             count = response.data.favorited_by_count;
                         });
-                "
-                >
+                ">
                     <svg class="h-5 w-5 transition-colors duration-200"
                         :class="isFavorited ? 'text-red-500 fill-current' : 'text-secondary hover:text-red-400'"
                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -192,18 +191,11 @@
                 </svg>
                 Edit Entry
             </x-button>
-            <form action="{{ route('archives.destroy', $archive) }}" method="POST" class="w-full sm:w-auto"
-                onsubmit="return confirm('Confirm termination of this entry?');">
-                @csrf
-                @method('DELETE')
-                <x-button variant="outline" type="submit">
-                    <svg class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    Delete
-                </x-button>
-            </form>
+            <x-button.delete :action="route('archives.destroy', $archive)" variant="button" :icon="true"
+                title="TERMINATE ARCHIVE?" message="Confirm termination of this entry? This action cannot be undone."
+                target="{{ $archive->name }}" class="w-full sm:w-auto justify-center">
+                DELETE
+            </x-button.delete>
         </div>
     </div>
 </x-app-layout>

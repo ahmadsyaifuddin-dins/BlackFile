@@ -1,7 +1,9 @@
 <div x-data="creditsForm({ 
     initialCredits: {{ $credits ?? '[]' }}, 
     initialMusicPath: '{{ $musicPath ?? '' }}' 
-})" class="font-mono text-sm">
+})" 
+@confirm-remove-credit.window="finalizeRemoveCredit($event.detail)" 
+class="font-mono text-sm">
 
     {{-- Error Handling --}}
     @if($errors->any())

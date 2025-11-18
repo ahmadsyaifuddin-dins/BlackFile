@@ -203,7 +203,7 @@ class ArchiveController extends Controller
             'name' => $validated['name'],
             'description' => $validated['description'],
             'type' => $validated['type'],
-            'is_public' => $request->has('is_public'),
+            'is_public' => filter_var($request->input('is_public', false), FILTER_VALIDATE_BOOLEAN),
             'category' => $validated['category'],
             'category_other' => $validated['category_other'] ?? null,
             'preview_image_url' => $validated['preview_image_url'] ?? null, 
@@ -279,8 +279,7 @@ class ArchiveController extends Controller
         $archive->name = $validated['name'];
         $archive->description = $validated['description'];
 
-        // 2. Update field 'is_public' secara terpisah dengan memeriksa request asli
-        $archive->is_public = $request->has('is_public');
+        $archive->is_public = filter_var($request->input('is_public', false), FILTER_VALIDATE_BOOLEAN);
 
         $archive->category = $validated['category'];
         $archive->category_other = $validated['category_other'] ?? null;

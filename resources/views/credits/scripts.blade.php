@@ -47,8 +47,26 @@
                 });
             },
             removeCredit(index) {
-                if (confirm('Delete this entire section?')) {
+            // Dispatch event untuk membuka modal global
+                this.$dispatch('open-delete-modal', {
+                    title: 'REMOVE SECTION?',
+                    message: 'Are you sure you want to remove this entire credit section? All names and logos inside it will be lost.',
+                    target: this.credits[index].role || 'Untitled Section', // Menampilkan nama role sebagai target
+                    
+                    // Beritahu modal untuk tidak submit form, tapi kirim event balik
+                    eventName: 'confirm-remove-credit', 
+                    eventData: index // Kirim index array yang mau dihapus
+                });
+            },
+            // 2. Fungsi EKSEKUTOR
+            finalizeRemoveCredit(index) {
+                if (this.credits.length > 0) {
                     this.credits.splice(index, 1);
+                    
+                    // Opsional: Jika habis semua, sisakan 1 kosong (agar form tidak hilang total)
+                    if (this.credits.length === 0) {
+                        this.addCredit(); 
+                    }
                 }
             },
             addName(creditIndex) {

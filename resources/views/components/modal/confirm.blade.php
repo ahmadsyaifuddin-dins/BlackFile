@@ -1,16 +1,20 @@
 <div x-data="{ 
     isOpen: false, 
     actionUrl: '', 
-    title: 'CONFIRM TERMINATION', 
-    message: 'Are you sure you want to proceed? This action cannot be undone.',
-    targetName: ''
+    title: '', 
+    message: '',
+    targetName: '',
+    eventName: null, // Untuk handle callback JS
+    eventData: null  // Data yang dikirim balik (misal: index array)
 }"
 @open-delete-modal.window="
     isOpen = true; 
-    actionUrl = $event.detail.url; 
+    actionUrl = $event.detail.url || '#'; 
     title = $event.detail.title || 'CONFIRM TERMINATION';
-    message = $event.detail.message || 'Are you sure you want to proceed? This action cannot be undone.';
+    message = $event.detail.message || 'Are you sure? This action cannot be undone.';
     targetName = $event.detail.target || '';
+    eventName = $event.detail.eventName || null;
+    eventData = $event.detail.eventData || null;
 "
 x-show="isOpen"
 @keydown.escape.window="isOpen = false"
@@ -77,15 +81,26 @@ x-cloak>
         </button>
 
         {{-- Form Actual Delete --}}
-        <form :action="actionUrl" method="POST" class="w-full sm:w-auto">
-            @csrf
-            @method('DELETE')
-            <button type="submit"
-                class="cursor-pointer w-full sm:w-auto px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded shadow-lg shadow-red-900/20 transition-all text-xs font-bold tracking-wider flex items-center justify-center gap-2 group">
-                <span>CONFIRM DELETION</span>
+        <template x-if="!eventName">
+            <form :action="actionUrl" method="POST" class="w-full sm:w-auto">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                    class="cursor-pointer w-full sm:w-auto px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded shadow-lg shadow-red-900/20 transition-all text-xs font-bold tracking-wider flex items-center justify-center gap-2 group">
+                    <span>CONFIRM DELETION</span>
                 <svg class="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg>
             </button>
         </form>
+        </template>
+
+        <template x-if="eventName">
+            {{-- Dispatch Event Balik ke Alpine --}}
+            <button type="button" 
+                @click="$dispatch(eventName, eventData); isOpen = false"
+                class="cursor-pointer px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold tracking-wider flex items-center justify-center gap-2">
+                <span>CONFIRM</span>
+            </button>
+        </template>
     </div>
 </div>
 </div>

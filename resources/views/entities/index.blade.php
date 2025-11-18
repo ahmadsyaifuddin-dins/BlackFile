@@ -17,14 +17,13 @@
         {{-- FORM FILTER DENGAN LAYOUT GRID --}}
         <div class="bg-surface border border-border-color p-4 font-mono">
             <form action="{{ route('entities.index') }}" method="GET">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {{-- Menjadi 5 kolom di layar besar untuk menampung Status --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
 
-                    {{-- Kolom 1: Search (Menggunakan Component Input + Icon Slot) --}}
+                    {{-- Kolom 1: Search --}}
                     <div class="lg:col-span-1 md:col-span-2">
                         <label for="search" class="sr-only">Search</label>
                         <x-forms.input name="search" placeholder="Search entities..." value="{{ request('search') }}">
-
-                            {{-- Mengirim SVG ke dalam slot 'icon' --}}
                             <x-slot:icon>
                                 <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
@@ -35,30 +34,36 @@
                         </x-forms.input>
                     </div>
 
-                    {{-- Kolom 2: Filter Category --}}
+                    {{-- Kolom 2: Filter Category (Dari DB) --}}
                     <div>
-                        <x-forms.select name="category" :options="config('blackfile.entity_categories')"
-                            :selected="request('category')" placeholder="-- All Categories --" />
+                        <x-forms.select name="category" :options="$categories" :searchable="true" :selected="request('category')"
+                            placeholder="All Categories" />
                     </div>
 
-                    {{-- Kolom 3: Filter Rank --}}
+                    {{-- Kolom 3: Filter Rank (Dari DB) --}}
                     <div>
-                        <x-forms.select name="rank" :options="config('blackfile.entity_ranks')"
-                            :selected="request('rank')" placeholder="-- All Ranks --" />
+                        <x-forms.select name="rank" :options="$ranks" :searchable="true" :selected="request('rank')"
+                            placeholder="All Ranks" />
                     </div>
 
-                    {{-- Kolom 4: Filter Origin --}}
+                    {{-- Kolom 4: Filter Origin (Dari DB) --}}
                     <div>
-                        <x-forms.select name="origin" :options="config('blackfile.entity_origins')"
-                            :selected="request('origin')" placeholder="-- All Origins --" />
+                        <x-forms.select name="origin" :options="$origins" :searchable="true" :selected="request('origin')"
+                            placeholder="All Origins" />
+                    </div>
+
+                    {{-- Kolom 5: Filter Status (BARU - Dari DB) --}}
+                    <div>
+                        <x-forms.select name="status" :options="$statuses" :searchable="true" :selected="request('status')"
+                            placeholder="All Statuses" />
                     </div>
                 </div>
 
                 {{-- Tombol Aksi --}}
                 <div
                     class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 mt-4 pt-4 border-t border-border-color/30">
+
                     {{-- Tombol Reset --}}
-                    {{-- Tambahkan 'w-full sm:w-auto' agar full width di HP --}}
                     <x-button variant="outline" href="{{ route('entities.index') }}"
                         class="w-full sm:w-auto justify-center">
                         [ CLEAR FILTERS ]
@@ -77,24 +82,18 @@
             </form>
         </div>
 
-
         {{-- Grid Kartu Dossier --}}
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             @forelse($entities as $entity)
-            {{--
-            - Menambahkan 'x-data="{ inView: false }"' untuk melacak status visibilitas.
-            - Menambahkan 'x-intersect:enter="inView = true"' -> Saat elemen masuk layar, set inView jadi true.
-            - Menambahkan 'x-intersect:leave="inView = false"' -> Saat elemen keluar layar, set inView jadi false.
-            - Menambahkan class 'entity-card' sebagai target untuk JavaScript.
-            --}}
             <div x-data="{ inView: false }" x-intersect:enter="inView = true" x-intersect:leave="inView = false"
                 class="entity-card bg-surface border-2 border-border-color hover:border-primary transition-colors duration-300 rounded-none group">
                 <div class="px-4 py-2 border-b-2 border-border-color flex justify-between items-center">
-                    <h3
-                        class="font-bold text-lg text-primary group-hover:text-white tracking-widest font-mono truncate">
+                    <h3 class="font-bold text-lg text-primary group-hover:text-white tracking-widest font-mono truncate">
                         {{ $entity->codename ?? $entity->name }}
                     </h3>
-                    <span class="text-xs font-mono px-2 py-1 border border-secondary text-secondary rounded-full">
+                
+                    {{-- Panggil accessor $entity->status_style langsung disini --}}
+                    <span class="text-xs font-mono px-2 py-1 border rounded-full {{ $entity->status_style }}">
                         {{ $entity->status }}
                     </span>
                 </div>
@@ -104,10 +103,7 @@
                         <a
                             href="{{ route('entities.show', $entity) }}?return_url={{ urlencode(request()->fullUrl()) }}">
                             @php
-                            // 1. Coba ambil thumbnail yang spesifik
                             $thumbnail = $entity->thumbnail;
-
-                            // 2. Jika tidak ada (null), fallback ke gambar pertama
                             if (!$thumbnail && $entity->images->isNotEmpty()) {
                             $thumbnail = $entity->images->first();
                             }
@@ -146,15 +142,10 @@
                     </div>
                 </div>
 
-                {{-- Footer Aksi dengan Tombol Hapus --}}
                 <div class="px-4 py-2 border-t-2 border-border-color flex items-center justify-end gap-4">
-
                     <a href="{{ route('entities.edit', $entity) }}?return_url={{ urlencode(request()->fullUrl()) }}"
                         class="text-secondary hover:text-primary text-sm font-mono whitespace-nowrap">EDIT</a>
 
-                    {{-- [IMPLEMENTASI BARU] --}}
-                    {{-- Variant 'text' adalah default, jadi tidak perlu ditulis --}}
-                    {{-- Icon default false, jadi tidak perlu ditulis --}}
                     <x-button.delete :action="route('entities.destroy', $entity)" title="TERMINATE ENTITY?"
                         message="Are you sure you want to terminate this entity record? This action cannot be undone."
                         target="{{ $entity->name }}">
@@ -164,7 +155,6 @@
                     <a href="{{ route('entities.show', $entity) }}?return_url={{ urlencode(request()->fullUrl()) }}"
                         class="text-primary hover:text-white text-sm font-bold font-mono whitespace-nowrap">ACCESS
                         ENTITY</a>
-
                 </div>
             </div>
             @empty

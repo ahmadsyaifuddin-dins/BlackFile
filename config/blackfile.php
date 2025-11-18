@@ -177,13 +177,15 @@ return [
     'entity_statuses' => [
         'UNKNOWN'     => 'UNKNOWN',
         'ACTIVE'      => 'ACTIVE',
-        'CONTAINED (Tertahan)'   => 'CONTAINED (Tertahan)',
+        'CONTAINED'   => 'CONTAINED', // Tertahan
         'STANDBY'     => 'STANDBY',
-        'UNCONTAINED (Masih Buron / Aktif Secara Musiman)' => 'UNCONTAINED (Masih Buron / Aktif Secara Musiman)',
+        'UNCONTAINED' => 'UNCONTAINED', // Masih Buron / Aktif Secara Musiman
         'NEUTRALIZED' => 'NEUTRALIZED',
-        'MIA'         => 'MISSING IN ACTION', // Contoh penambahan status baru
+        'MIA'         => 'MISSING IN ACTION',
         'TERMINATED'  => 'TERMINATED',
-        'FAILING (Rantai Penahanan Sedang Putus)' => 'FAILING (Rantai Penahanan Sedang Putus)',
+        'FAILING' 	  => 'FAILING', // Rantai Penahanan Sedang Putus
+        'SEALED'	  => 'SEALED', // (Akses dilarang keras / Disegel dengan beton)
+        'DORMANT'     => 'DORMANT', //'(Tertidur Abadi)'
     ],
 
     /*

@@ -21,6 +21,12 @@ class EntityController extends Controller
      */
     public function index(Request $request)
     {
+        // Ambil opsi filter langsung dari Database (Distinct Values)
+        $categories = Entity::whereNotNull('category')->distinct()->orderBy('category')->pluck('category', 'category');
+        $ranks      = Entity::whereNotNull('rank')->distinct()->orderBy('rank')->pluck('rank', 'rank');
+        $origins    = Entity::whereNotNull('origin')->distinct()->orderBy('origin')->pluck('origin', 'origin');
+        $statuses   = Entity::whereNotNull('status')->distinct()->orderBy('status')->pluck('status', 'status');
+
         $query = Entity::query();
 
         if ($request->filled('search')) {
@@ -44,15 +50,19 @@ class EntityController extends Controller
             $query->where('origin', $request->origin);
         }
 
-        // [LOGIKA BARU] Eager load relasi 'thumbnail' dan 'images'
-        // Ini akan mengoptimalkan query di halaman index
+        // Tambahkan filter Status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
         $query->with(['images', 'thumbnail']);
 
         $perPage = Auth::user()->settings['per_page'] ?? 9;
 
         $entities = $query->orderBy('id', 'asc')->paginate($perPage);
 
-        return view('entities.index', compact('entities'));
+        // Passing variabel filter ke view
+        return view('entities.index', compact('entities', 'categories', 'ranks', 'origins', 'statuses'));
     }
 
     /**
@@ -119,7 +129,7 @@ class EntityController extends Controller
             }
         }
 
-        // 4. [LOGIKA BARU] Update entitas dengan ID thumbnail
+        // 4. Update entitas dengan ID thumbnail
         if ($newThumbnailId) {
             $entity->thumbnail_image_id = $newThumbnailId;
             $entity->save();

@@ -3,7 +3,7 @@
     <div class="border-y-2 border-dashed border-primary/50 py-4 mb-8">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
             <div>
-                <h1 class="text-2xl font-bold text-primary tracking-widest font-mono">
+                <h1 class="text-lg md:text-xl font-bold text-primary tracking-widest font-mono">
                     > EDIT ENCRYPTED FILE
                 </h1>
                 <p class="text-sm text-secondary font-mono mt-1">Codename: <span class="text-white">{{ $contact->codename }}</span></p>

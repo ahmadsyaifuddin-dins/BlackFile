@@ -2,7 +2,7 @@
     <div class="space-y-6">
         {{-- Header --}}
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-            <h2 class="text-2xl font-bold text-primary">Entities Database // Index</h2>
+            <h2 class="text-xl md:text-2xl text-glow font-bold text-primary">Entities Database // Index</h2>
             <x-button href="{{ route('entities.create') }}">
                 > Register New Entity
             </x-button>
@@ -14,7 +14,6 @@
         </div>
         @endif
 
-        {{-- FORM FILTER DENGAN LAYOUT GRID --}}
         {{-- FORM FILTER DENGAN LAYOUT GRID --}}
         <div class="bg-surface border border-border-color p-4 font-mono">
             <form action="{{ route('entities.index') }}" method="GET">

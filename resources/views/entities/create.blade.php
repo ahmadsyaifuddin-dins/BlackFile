@@ -1,7 +1,7 @@
 <x-app-layout title="Register New Entity">
     {{-- Header --}}
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-3">
-        <h2 class="text-2xl font-bold text-primary font-mono tracking-wider">
+        <h2 class="text-xl md:text-2xl font-bold text-primary font-mono tracking-wider">
             > REGISTER NEW ENTITY
         </h2>
         <x-button variant="outline" href="{{ route('entities.index') }}">

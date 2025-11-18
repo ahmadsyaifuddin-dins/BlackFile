@@ -35,7 +35,7 @@
 <x-app-layout title="{{ __('System Settings') }}">
     {{-- Header Halaman --}}
     <div class="border-y-2 border-dashed border-primary/50 py-4 mb-8">
-        <h1 class="text-4xl font-bold text-primary tracking-widest font-mono text-glow">
+        <h1 class="text-xl md:text-2xl font-bold text-primary tracking-widest font-mono text-glow">
             > {{ __('System Settings') }}
         </h1>
         <p class="text-sm text-secondary font-mono mt-1"> {{ __('General application configuration.') }}</p>

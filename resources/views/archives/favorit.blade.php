@@ -3,7 +3,7 @@
 
         {{-- Header Halaman --}}
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-            <h1 class="text-xl sm:text-2xl font-bold text-primary">[ FAVORITE_ARCHIVES ]</h1>
+            <h1 class="text-xl text-glow sm:text-2xl font-bold text-primary">[ FAVORITE_ARCHIVES ]</h1>
             <div>
                 {{-- Menggunakan component x-button untuk konsistensi UI --}}
                 <x-button variant="outline" href="{{ route('archives.index') }}">

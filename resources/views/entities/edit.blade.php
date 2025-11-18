@@ -8,7 +8,7 @@
 <x-app-layout :title="'Edit: ' . ($entity->codename ?? $entity->name)">
     {{-- Header --}}
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-3">
-        <h2 class="text-2xl font-bold text-primary font-mono tracking-wider">
+        <h2 class="text-lg md:text-xl font-bold text-primary font-mono tracking-wider">
             > EDIT RECORD // {{ $entity->codename ?? $entity->name }}
         </h2>
         <x-button variant="outline" href="{{ $backUrl }}">

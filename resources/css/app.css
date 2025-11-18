@@ -8,6 +8,7 @@
 | sekarang ditangani langsung di dalam file `vite.config.js`.
 |
 */
+@import '@fortawesome/fontawesome-free/css/all.css';
 @import 'tailwindcss';
 
 /* BAGIAN 1: TEMA DASAR & KONFIGURASI VARIABEL */

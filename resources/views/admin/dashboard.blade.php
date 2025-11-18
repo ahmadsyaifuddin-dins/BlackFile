@@ -3,7 +3,7 @@
         Command Center
     </x-slot:title>
 
-    <h2 class="text-2xl font-bold text-primary mb-6"> > [ COMMAND CENTER ] </h2>
+    <h2 class="text-xl text-glow md:text-2xl font-bold text-primary mb-6"> > [ COMMAND CENTER ] </h2>
 
     @if(session('success'))
     <div class="mb-4 bg-primary/10 border-l-4 border-primary text-primary-hover p-4 rounded-r-lg" role="alert">

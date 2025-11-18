@@ -1,6 +1,6 @@
 <x-app-layout title="Add New Archive">
     <div class="max-w-3xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
+        <div class="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <h1 class="text-lg sm:text-2xl font-bold text-primary">[ ADD_NEW_ENTRY ]</h1>
             <x-button variant="outline" href="{{ route('archives.index') }}">
                 &lt;-- Back to Vault

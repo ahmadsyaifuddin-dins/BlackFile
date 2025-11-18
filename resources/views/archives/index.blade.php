@@ -3,7 +3,7 @@
 
         {{-- Header Halaman --}}
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-            <h1 class="text-xl sm:text-2xl font-bold text-primary">[ ARCHIVES_VAULT ]</h1>
+            <h1 class="text-xl sm:text-2xl text-glow font-bold text-primary">[ ARCHIVES_VAULT ]</h1>
             <x-button variant="outline" href="{{ route('archives.create') }}">
                 + ADD_NEW_ENTRY
             </x-button>

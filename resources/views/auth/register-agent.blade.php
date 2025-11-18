@@ -4,14 +4,14 @@
     </x-slot:title>
 
     <div class="p-4 md:p-6 bg-surface border border-border-color rounded-lg">
-        <div class="mb-6 flex justify-between items-start">
+        <div class="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <div>
-                <h2 class="text-2xl font-bold text-primary">
+                <h2 class="text-xl md:text-2xl font-bold text-primary">
                     > [ NEW AGENT FORM ]
                 </h2>
                 <p class="text-sm text-secondary font-mono mt-1">Initialize registration protocol for new operative.</p>
             </div>
-            <x-button variant="outline" href="{{ url()->previous() }}">
+            <x-button class="w-full sm:w-auto justify-center" variant="outline" href="{{ url()->previous() }}">
                 &lt; Back
             </x-button>
         </div>

@@ -3,7 +3,7 @@
     <div class="border-y-2 border-dashed border-primary/50 py-4 mb-8">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
             <div>
-                <h1 class="text-2xl font-bold text-primary tracking-widest font-mono">
+                <h1 class="text-lg md:text-xl font-bold text-primary tracking-widest font-mono">
                     > VIEWING ENCRYPTED FILE
                 </h1>
                 <p class="text-sm text-secondary font-mono mt-1">Codename: <span class="text-white">{{
@@ -140,8 +140,7 @@
             @csrf
             <div>
                 <label for="master_password" class="block text-sm text-secondary mb-2">Master Password:</label>
-                <input type="password" name="master_password" id="master_password" required autofocus
-                    class="w-full bg-base border-2 border-border-color focus:border-primary focus:ring-0 text-white p-2">
+                <x-forms.input type="password" name="master_password" id="master_password" required autofocus/>
             </div>
             <div class="flex justify-end pt-2">
                 <x-button type="submit">

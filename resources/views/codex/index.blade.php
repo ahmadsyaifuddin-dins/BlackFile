@@ -1,7 +1,7 @@
 <x-app-layout title="BlackFile Codex">
     {{-- Header Halaman --}}
     <div class="border-y-2 border-dashed border-primary/50 py-4 mb-8">
-        <h1 class="text-4xl font-bold text-primary tracking-widest font-mono text-glow">
+        <h1 class="text-2xl md:text-3xl font-bold text-primary tracking-widest font-mono text-glow">
             > BLACKFILE CODEX
         </h1>
         <p class="text-sm text-secondary font-mono mt-1"> {{ __('A centralized glossary of classified terminology.') }}</p>

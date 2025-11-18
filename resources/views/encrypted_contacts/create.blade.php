@@ -2,7 +2,7 @@
     {{-- Header --}}
     <div class="border-y-2 border-dashed border-primary/50 py-4 mb-8">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-            <h1 class="text-2xl font-bold text-primary tracking-widest font-mono text-glow">
+            <h1 class="text-lg md:text-xl font-bold text-primary tracking-widest font-mono">
                 > ADD NEW ENCRYPTED CONTACT
             </h1>
             <x-button variant="outline" href="{{ route('encrypted-contacts.index') }}">

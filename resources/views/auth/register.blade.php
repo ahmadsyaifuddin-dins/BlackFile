@@ -1,7 +1,7 @@
 <x-guest-layout>
     <h2 class="text-xl sm:text-2xl text-primary font-bold mb-6 text-center">[ REGISTER NEW DOSSIER ]</h2>
 
-    {{-- [LOGIKA BARU] Cek apakah ada sesi 'pending_approval' --}}
+    {{-- Cek apakah ada sesi 'pending_approval' --}}
     @if(session('pending_approval'))
         {{-- Tampilan setelah berhasil mendaftar tanpa token --}}
         <div class="text-center text-glow space-y-4">
@@ -34,38 +34,38 @@
             @csrf
             <div>
                 <label for="name" class="block text-primary text-sm">> REAL NAME</label>
-                <input type="text" id="name" name="name" value="{{ old('name') }}" required class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
+                <x-forms.input type="text" id="name" name="name" value="{{ old('name') }}" required />
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="username" class="block text-primary text-sm">> USERNAME</label>
-                    <input type="text" id="username" name="username" value="{{ old('username') }}" required class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
+                    <x-forms.input type="text" id="username" name="username" value="{{ old('username') }}" required />
                 </div>
                 <div>
                     <label for="codename" class="block text-primary text-sm">> CODENAME</label>
-                    <input type="text" id="codename" name="codename" value="{{ old('codename') }}" required class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
+                    <x-forms.input type="text" id="codename" name="codename" value="{{ old('codename') }}" required />
                 </div>
             </div>
             <div>
                 <label for="email" class="block text-primary text-sm">> EMAIL</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
+                <x-forms.input type="email" id="email" name="email" value="{{ old('email') }}" required />
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="password" class="block text-primary text-sm">> PASSCODE</label>
-                    <input type="password" id="password" name="password" required class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
+                    <x-forms.input type="password" id="password" name="password" required />
                 </div>
                 <div>
                     <label for="password_confirmation" class="block text-primary text-sm">> CONFIRM PASSCODE</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" required class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
+                    <x-forms.input type="password" id="password_confirmation" name="password_confirmation" required />
                 </div>
             </div>
             <div>
                 <label for="invite_code" class="block text-primary text-sm">> INVITE TOKEN (Optional)</label>
-                <input type="text" id="invite_code" name="invite_code" value="{{ old('invite_code', $inviteCode) }}" class="mt-1 block w-full bg-surface border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
+                <x-forms.input type="text" id="invite_code" name="invite_code" value="{{ old('invite_code', $inviteCode) }}" />
             </div>
             <div class="pt-4">
-                <button type="submit" class="w-full px-6 py-2 bg-black text-primary text-base hover:bg-primary-hover transition-colors font-bold tracking-widest rounded-md text-sm">
+                <button type="submit" class="cursor-pointer w-full px-6 py-2 bg-black text-primary text-base hover:brightness-150 brig transition-colors font-bold tracking-widest rounded-md">
                     [ SUBMIT APPLICATION ]
                 </button>
             </div>

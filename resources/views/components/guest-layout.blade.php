@@ -13,7 +13,7 @@
             </a>
         </div>
 
-        <div class="w-full sm:max-w-md mt-6 px-6 py-8 bg-surface border-2 border-border-color shadow-md overflow-hidden sm:rounded-lg">
+        <div class="w-full sm:max-w-md mt-6 px-6 py-8 bg-surface border-2 border-border-color border-gray-600 shadow-md overflow-hidden sm:rounded-lg">
             {{-- Di sinilah konten dari login.blade.php akan dimasukkan --}}
             {{ $slot }}
         </div>

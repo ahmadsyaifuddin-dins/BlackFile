@@ -52,16 +52,21 @@
             ">
                 @csrf
                 <div>
-                    <label for="username" class="block text-primary">AGENT ID (USERNAME)</label>
-                    <input id="username"
-                        class="block mt-1 w-full bg-surface border-border-color focus:border-primary focus:ring-primary"
-                        type="text" name="username" value="{{ old('username') }}" required autofocus />
+                    <label for="username" class="block text-primary text-sm mb-1">AGENT ID (USERNAME)</label>
+                    <x-forms.input id="username" type="text" name="username" :value="old('username')" required autofocus>
+                        <x-slot:icon>
+                            <i class="fas fa-user-secret text-gray-500"></i>
+                        </x-slot:icon>
+                    </x-forms.input>
                 </div>
+                
                 <div class="mt-4">
-                    <label for="password" class="block text-primary">PASSCODE</label>
-                    <input id="password"
-                        class="block mt-1 w-full bg-surface border-border-color focus:border-primary focus:ring-primary"
-                        type="password" name="password" required />
+                    <label for="password" class="block text-primary text-sm mb-1">PASSCODE</label>
+                    <x-forms.input id="password" type="password" name="password" required>
+                        <x-slot:icon>
+                            <i class="fas fa-lock text-gray-500"></i>
+                        </x-slot:icon>
+                    </x-forms.input>
                 </div>
                 
                 <div class="block mt-4">
@@ -69,12 +74,11 @@
                         Remember me
                     </x-forms.checkbox>
                 </div>
-
+                
                 <div class="flex items-center justify-end mt-6">
-                    <button type="submit"
-                        class="w-full px-4 py-2 bg-black text-primary text-base hover:bg-primary-hover font-bold tracking-widest cursor-pointer">
+                    <x-button type="submit" class="w-full justify-center">
                         > INITIATE CONNECTION
-                    </button>
+                    </x-button>
                 </div>
             </form>
             <p class="text-xs text-secondary mt-2">Don't have an account? <a href="{{ route('register') }}" class="text-primary hover:underline">Register</a></p>

@@ -4,7 +4,7 @@
     </x-slot:title>
 
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-        <h2 class="text-2xl font-bold text-primary">
+        <h2 class="text-lg md:text-xl font-bold text-primary text-glow">
             > [ {{ $pageTitle ?? __('NETWORK ANALYSIS TERMINAL') }} ]
         </h2>
         <x-button href="{{ route('friends.create') }}" class="mt-2 sm:mt-0">

@@ -2,7 +2,7 @@
     <x-slot:title>Agent Directory</x-slot:title>
 
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-3">
-        <h2 class="text-2xl font-bold text-primary text-glow mb-6">> [ AGENT DIRECTORY ]</h2>
+        <h2 class="text-xl md:text-2xl font-bold text-primary text-glow mb-6">> [ AGENT DIRECTORY ]</h2>
 
         @if(strtolower(Auth::user()->role->name) === 'director')
         <x-button href="{{ route('register.agent') }}">

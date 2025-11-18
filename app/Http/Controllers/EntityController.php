@@ -77,7 +77,7 @@ class EntityController extends Controller
             'description' => 'required|string',
             'abilities' => 'nullable|string',
             'weaknesses' => 'nullable|string',
-            'status' => 'required|in:ACTIVE,STANDBY,CONTAINED,NEUTRALIZED,UNKNOWN,MYTHOS',
+            'status' => 'nullable|string|max:255',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'image_url' => 'nullable|url',
@@ -172,13 +172,12 @@ class EntityController extends Controller
             'description' => 'required|string',
             'abilities' => 'nullable|string',
             'weaknesses' => 'nullable|string',
-            'status' => 'required|in:ACTIVE,STANDBY,CONTAINED,NEUTRALIZED,UNKNOWN,MYTHOS',
+            'status' => 'nullable|string|max:255',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'image_url' => 'nullable|url',
             'images_to_delete' => 'nullable|array',
             'images_to_delete.*' => 'exists:entity_images,id',
-            // [BARU] Validasi input thumbnail
             'thumbnail_selection' => 'nullable|string',
         ]);
 

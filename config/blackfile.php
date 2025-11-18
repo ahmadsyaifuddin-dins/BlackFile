@@ -168,6 +168,26 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Entity Statuses
+    |--------------------------------------------------------------------------
+    |
+    | Daftar ini digunakan untuk mengisi dropdown status di fitur Entities.
+    |
+    */
+    'entity_statuses' => [
+        'UNKNOWN'     => 'UNKNOWN',
+        'ACTIVE'      => 'ACTIVE',
+        'CONTAINED (Tertahan)'   => 'CONTAINED (Tertahan)',
+        'STANDBY'     => 'STANDBY',
+        'UNCONTAINED (Masih Buron / Aktif Secara Musiman)' => 'UNCONTAINED (Masih Buron / Aktif Secara Musiman)',
+        'NEUTRALIZED' => 'NEUTRALIZED',
+        'MIA'         => 'MISSING IN ACTION', // Contoh penambahan status baru
+        'TERMINATED'  => 'TERMINATED',
+        'FAILING (Rantai Penahanan Sedang Putus)' => 'FAILING (Rantai Penahanan Sedang Putus)',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Archive Categories
     |--------------------------------------------------------------------------
     |

@@ -75,22 +75,9 @@
         />
 
         {{-- Status (Manual Array) --}}
-        {{-- Kita definisikan opsi status langsung di sini --}}
-        @php
-            $statusOptions = [
-                'UNKNOWN' => 'UNKNOWN',
-                'ACTIVE' => 'ACTIVE',
-                'CONTAINED' => 'CONTAINED',
-                'NEUTRALIZED' => 'NEUTRALIZED',
-            ];
-        @endphp
-        <x-forms.select 
-            label="> STATUS:"
-            name="status"
-            :options="$statusOptions"
-            :selected="old('status', $entity->status ?? 'UNKNOWN')"
-        />
-        
+        <div>
+            <x-forms.select label="> STATUS:" name="status" :options="config('blackfile.entity_statuses')" :selected="old('status', $entity->status ?? 'UNKNOWN')" placeholder="-- Select Status --" :searchable="true" />
+        </div>
     </div>
 
     {{-- BAGIAN 3: DETAIL TEXTAREAS (Custom Component Kamu) --}}

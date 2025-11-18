@@ -6,20 +6,17 @@
 
     <div x-data="{ sidebarOpen: false }">
         {{-- 
-            PERUBAHAN KUNCI #1:
             - Mengganti 'min-h-screen' menjadi 'h-screen' untuk mengunci tinggi container ke tinggi viewport.
             - Menambahkan 'overflow-hidden' untuk mencegah scroll di level ini.
         --}}
         <div class="relative h-screen flex overflow-hidden bg-base">
             
-            {{-- Sidebar (Tidak perlu diubah) --}}
             {{-- 'h-full' di dalam sidebar sekarang akan mengacu pada 'h-screen' dari parent ini --}}
             <div class="sidebar-fixed whitespace-nowrap">
                 @include('layouts.partials.sidebar')
             </div>
 
             {{-- 
-                PERUBAHAN KUNCI #2:
                 - Menambahkan 'overflow-y-auto' ke wrapper konten utama.
                 - Ini membuat HANYA area ini yang akan memiliki scrollbar jika kontennya panjang.
             --}}

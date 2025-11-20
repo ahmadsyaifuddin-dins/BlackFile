@@ -6,7 +6,7 @@
         </h1>
         <p class="text-sm text-secondary font-mono mt-1"> {{ __('A centralized glossary of classified terminology.') }}</p>
     </div>
-
+    
     {{-- Konten Codex --}}
     <div class="space-y-10 font-mono">
         {{-- Loop untuk setiap kategori --}}

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Tools\UsernameTrackerController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArchiveController;
 use Illuminate\Support\Facades\Route;
@@ -15,9 +16,11 @@ use App\Http\Controllers\EncryptedContactController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\MasterPasswordController;
+use App\Http\Controllers\OsintToolController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PrototypeController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\Tools\ExifIntelController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -70,6 +73,22 @@ Route::middleware('auth')->group(function () {
     Route::resource('entities', EntityController::class);
     Route::resource('prototypes', PrototypeController::class);
     Route::get('/codex', [CodexController::class, 'index'])->name('codex.index');
+
+    // --- OSINT TOOLS ARSENAL ---
+    Route::prefix('tools')->name('tools.')->group(function () {
+        Route::get('/', [OsintToolController::class, 'index'])->name('index');
+        
+        // Rute placeholder untuk fitur yang akan kita bangun nanti
+        Route::get('/identity-seeker', [UsernameTrackerController::class, 'index'])->name('username');
+        // API Helper untuk mengecek URL tanpa kena CORS Browser
+        Route::post('/check-availability', [UsernameTrackerController::class, 'check'])->name('check');
+
+        // === TOOL 2: EXIF INTEL ===
+        Route::get('/exif-intel', [ExifIntelController::class, 'index'])->name('exif');
+        Route::post('/exif-intel/analyze', [ExifIntelController::class, 'analyze'])->name('exif.analyze');
+        
+        Route::get('/narrative-radar', [OsintToolController::class, 'commentAnalyzer'])->name('comment');
+    });
 
     // Rute Friends Network
     Route::get('/friends', [FriendController::class, 'index'])->name('friends.index');
@@ -126,7 +145,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// [DISEMPURNAKAN] Rute untuk proxy avatar dengan Caching
+// Rute untuk proxy avatar dengan Caching
 Route::get('/avatar-proxy/{name}', function (string $name) {
     // Kunci unik untuk cache
     $cacheKey = 'avatar.proxy.' . Str::slug($name);

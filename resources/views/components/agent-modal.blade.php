@@ -1,14 +1,16 @@
-<div x-data="{ 
-        isModalOpen: false, 
-        selectedNodeData: { id: '', label: '', name: '', role: '', category: '', specialization: '' },
-        showSubAssetForm: false,
-        isEditing: false // State baru untuk mode edit
-    }" x-show="isModalOpen" @open-node-modal.window="
+<div x-data="{
+    isModalOpen: false,
+    selectedNodeData: { id: '', label: '', name: '', role: '', category: '', specialization: '' },
+    showSubAssetForm: false,
+    isEditing: false // State baru untuk mode edit
+}" x-show="isModalOpen"
+    @open-node-modal.window="
         isModalOpen = true; 
         selectedNodeData = $event.detail;
         showSubAssetForm = false;
         isEditing = false; // Selalu reset ke mode view
-    " @keydown.escape.window="isModalOpen = false" class="fixed inset-0 z-30 flex items-center justify-center p-4"
+    "
+    @keydown.escape.window="isModalOpen = false" class="fixed inset-0 z-30 flex items-center justify-center p-4"
     style="display: none;">
     <!-- Backdrop -->
     <div x-show="isModalOpen" x-transition.opacity class="absolute inset-0 bg-black/75"></div>
@@ -67,13 +69,13 @@
                             <input type="text" id="sub_codename" name="codename" required
                                 class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
                         </div>
-                        {{-- [BARU] Dropdown untuk Kategori di form edit --}}
+                        {{-- Dropdown untuk Kategori di form edit --}}
                         <div>
                             <label for="sub_category" class="block text-secondary text-sm">> ASSET CATEGORY</label>
                             <select id="sub_category" name="category"
-                                    class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
+                                class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
                                 <option value="">-- Select Category --</option>
-                                @foreach(config('blackfile.asset_categories') as $category)
+                                @foreach (config('blackfile.asset_categories') as $category)
                                     <option value="{{ $category }}">{{ $category }}</option>
                                 @endforeach
                             </select>
@@ -91,7 +93,7 @@
                     <div class="flex flex-col-reverse sm:flex-row sm:justify-between sm:items-center gap-3">
                         <!-- Tombol Hapus -->
                         <div>
-                            <button type="button" 
+                            <button type="button"
                                 @click="$dispatch('open-delete-modal', { 
                                     url: '/friends/' + selectedNodeData.id.substring(1),
                                     title: 'TERMINATE ASSET?',
@@ -99,12 +101,13 @@
                                     target: selectedNodeData.label || 'Selected Node'
                                 })"
                                 class="w-full sm:w-auto px-4 py-2 bg-red-600/20 border border-red-600/50 text-red-400 hover:bg-red-600 hover:text-white font-bold text-sm rounded transition-all duration-200 flex items-center justify-center gap-2 group">
-                                
+
                                 {{-- Ikon Sampah SVG --}}
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
-                                
+
                                 <span>[ DELETE ]</span>
                             </button>
                         </div>
@@ -143,7 +146,8 @@
                     </div>
                     <div>
                         <label for="edit_codename" class="block text-primary text-sm">> CODENAME</label>
-                        <input type="text" id="edit_codename" name="codename" x-model="selectedNodeData.label" required
+                        <input type="text" id="edit_codename" name="codename" x-model="selectedNodeData.label"
+                            required
                             class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
                     </div>
                     {{-- Dropdown untuk Kategori di form edit --}}
@@ -153,8 +157,8 @@
                             class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary text-secondary p-2 rounded">
                             <option value="">-- Select Category --</option>
                             {{-- Loop dari config file --}}
-                            @foreach(config('blackfile.asset_categories') as $category)
-                            <option value="{{ $category }}">{{ $category }}</option>
+                            @foreach (config('blackfile.asset_categories') as $category)
+                                <option value="{{ $category }}">{{ $category }}</option>
                             @endforeach
                         </select>
                     </div>

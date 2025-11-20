@@ -3,15 +3,18 @@
     <label class="block text-sm font-medium text-primary mb-1">> Category</label>
     <select x-model="form.category" @change="checkCategory" class="form-control cursor-pointer">
         <option value="">-- Select Category --</option>
-        @foreach($categories as $cat)
-            <option value="{{ $cat }}">{{ $cat }}</option>
+        @foreach ($categories as $cat)
+            @if ($cat !== 'Other')
+                <option value="{{ $cat }}">{{ $cat }}</option>
+            @endif
         @endforeach
         <option value="Other">Other</option>
     </select>
 
     <div x-show="form.category === 'Other'" x-transition class="mt-4 pl-4 border-l-2 border-border-color">
         <label class="block text-sm font-medium text-secondary mb-1">> Specify Other Category</label>
-        <input type="text" x-model="form.category_other" class="form-control" placeholder="e.g., Top Secret Protocol">
+        <input type="text" x-model="form.category_other" class="form-control"
+            placeholder="e.g., Top Secret Protocol">
         <template x-if="errors.category_other">
             <p class="mt-1 text-xs text-red-500" x-text="errors.category_other[0]"></p>
         </template>
@@ -40,6 +43,8 @@
     </div>
     <label class="relative inline-flex items-center cursor-pointer">
         <input type="checkbox" x-model="form.is_public" class="sr-only peer">
-        <div class="w-11 h-6 bg-gray-800 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+        <div
+            class="w-11 h-6 bg-gray-800 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+        </div>
     </label>
 </div>

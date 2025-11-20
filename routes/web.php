@@ -1,13 +1,11 @@
 <?php
 
-use App\Http\Controllers\Tools\UsernameTrackerController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArchiveController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthManual\LoginController;
-use App\Http\Controllers\AuthManual\RegisterController;
 use App\Http\Controllers\AuthManual\LogoutController;
 use App\Http\Controllers\AuthManual\RegisterAgentController;
+use App\Http\Controllers\AuthManual\RegisterController;
 use App\Http\Controllers\CodexController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\DashboardController;
@@ -21,9 +19,11 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PrototypeController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Tools\ExifIntelController;
+use App\Http\Controllers\Tools\UsernameTrackerController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
 /*
@@ -77,7 +77,7 @@ Route::middleware('auth')->group(function () {
     // --- OSINT TOOLS ARSENAL ---
     Route::prefix('tools')->name('tools.')->group(function () {
         Route::get('/', [OsintToolController::class, 'index'])->name('index');
-        
+
         // Rute placeholder untuk fitur yang akan kita bangun nanti
         Route::get('/identity-seeker', [UsernameTrackerController::class, 'index'])->name('username');
         // API Helper untuk mengecek URL tanpa kena CORS Browser
@@ -86,7 +86,7 @@ Route::middleware('auth')->group(function () {
         // === TOOL 2: EXIF INTEL ===
         Route::get('/exif-intel', [ExifIntelController::class, 'index'])->name('exif');
         Route::post('/exif-intel/analyze', [ExifIntelController::class, 'analyze'])->name('exif.analyze');
-        
+
         Route::get('/narrative-radar', [OsintToolController::class, 'commentAnalyzer'])->name('comment');
     });
 
@@ -108,11 +108,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/agents', [UserController::class, 'index'])->name('agents.index');
     Route::get('/agents/{user}', [UserController::class, 'show'])->name('agents.show');
 
-    // --- RUTE BARU UNTUK SETUP MASTER PASSWORD ---
+    // --- RUTE UNTUK SETUP MASTER PASSWORD ---
     Route::get('/master-password/setup', [MasterPasswordController::class, 'create'])->name('master-password.setup');
     Route::post('/master-password/setup', [MasterPasswordController::class, 'store'])->name('master-password.store');
 
-    // --- RUTE BARU UNTUK BRANKAS KONTAK TERENKRIPSI ---
+    // --- RUTE UNTUK BRANKAS KONTAK TERENKRIPSI ---
     Route::resource('encrypted-contacts', EncryptedContactController::class);
     Route::post('/encrypted-contacts/{encryptedContact}/unlock', [EncryptedContactController::class, 'unlock'])->name('encrypted-contacts.unlock');
 
@@ -126,6 +126,8 @@ Route::middleware('auth')->group(function () {
     // Grup rute yang dilindungi oleh role tertentu (Director atau Technician)
     // Menggunakan 'role' middleware kustom Anda
     Route::middleware('role:Director,Technician')->group(function () {
+
+        Route::post('/admin/system-setting/toggle', [AdminController::class, 'toggleSetting'])->name('admin.setting.toggle');
 
         Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::patch('/admin/users/{user}/approve', [AdminController::class, 'approveUser'])->name('admin.users.approve');
@@ -148,7 +150,7 @@ Route::middleware('auth')->group(function () {
 // Rute untuk proxy avatar dengan Caching
 Route::get('/avatar-proxy/{name}', function (string $name) {
     // Kunci unik untuk cache
-    $cacheKey = 'avatar.proxy.' . Str::slug($name);
+    $cacheKey = 'avatar.proxy.'.Str::slug($name);
 
     // Coba ambil dari cache, jika tidak ada, jalankan fungsi untuk mengambilnya
     $imageData = Cache::remember($cacheKey, now()->addHours(24), function () use ($name) {
@@ -163,14 +165,15 @@ Route::get('/avatar-proxy/{name}', function (string $name) {
             // Simpan body dan header ke dalam cache
             return [
                 'body' => $response->body(),
-                'content_type' => $response->header('Content-Type')
+                'content_type' => $response->header('Content-Type'),
             ];
         }
+
         return null; // Jika gagal, cache akan menyimpan null
     });
 
     // Jika data tidak ada (baik di cache maupun dari request baru)
-    if (!$imageData) {
+    if (! $imageData) {
         abort(404, 'Avatar not found.');
     }
 

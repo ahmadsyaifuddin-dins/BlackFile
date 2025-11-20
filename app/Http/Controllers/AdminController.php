@@ -1,15 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Mail\AgentNotification;
 use App\Models\Invite;
 use App\Models\Role;
+use App\Models\SystemSetting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
-use App\Mail\AgentNotification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -37,8 +39,26 @@ class AdminController extends Controller
             ->orderBy('codename')
             ->get();
 
+        $entityNotifyEnabled = SystemSetting::check('entity_notify_enabled', true);
+
         // Tambahkan 'agents' ke view
-        return view('admin.dashboard', compact('pendingApplicants', 'invites', 'agents'));
+        return view('admin.dashboard', compact('pendingApplicants', 'invites', 'agents', 'entityNotifyEnabled'));
+    }
+
+    // Method AJAX untuk toggle
+    public function toggleSetting(Request $request)
+    {
+        $request->validate([
+            'key' => 'required|string',
+            'value' => 'required|boolean',
+        ]);
+
+        SystemSetting::updateOrCreate(
+            ['key' => $request->key],
+            ['value' => $request->value ? '1' : '0']
+        );
+
+        return response()->json(['status' => 'success']);
     }
 
     /**
@@ -51,7 +71,7 @@ class AdminController extends Controller
             'message' => 'required|string',
             'target' => 'required|in:all,selected',
             'agents' => 'required_if:target,selected|array',
-            'agents.*' => 'exists:users,id', 
+            'agents.*' => 'exists:users,id',
         ]);
 
         $subject = $data['subject'];
@@ -83,12 +103,12 @@ class AdminController extends Controller
             } catch (\Exception $e) {
                 // Jika 1 email gagal, catat error dan lanjut ke email berikutnya
                 // Anda bisa log errornya di sini jika perlu
-                Log::error("Failed to send email to {$agent->email}: " . $e->getMessage());
+                Log::error("Failed to send email to {$agent->email}: ".$e->getMessage());
                 // Untuk saat ini, kita abaikan saja agar tidak menghentikan proses
             }
         }
 
-        return back()->with('success', 'Notification broadcast has been sent to ' . $targetAgents->count() . ' agents.');
+        return back()->with('success', 'Notification broadcast has been sent to '.$targetAgents->count().' agents.');
     }
 
     public function approveUser(User $user)
@@ -122,7 +142,7 @@ class AdminController extends Controller
     public function generateInvite()
     {
         Invite::create([
-            'code' => 'inviteByAbsolute-' . Str::random(16),
+            'code' => 'inviteByAbsolute-'.Str::random(16),
             'created_by' => Auth::id(),
             'expires_at' => now()->addHour(),
         ]);
@@ -130,13 +150,13 @@ class AdminController extends Controller
         return redirect()->route('admin.dashboard')->with('success', 'New 1-hour invite token has been generated.');
     }
 
-    
     public function getApplicantDetails(User $user)
     {
         // Pastikan hanya applicant yang bisa dilihat
         if ($user->confirmed || strtolower($user->role->name) !== 'applicant') {
             abort(404);
         }
+
         return response()->json($user);
     }
 }

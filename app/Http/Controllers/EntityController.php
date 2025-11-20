@@ -3,16 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Entity;
+use App\Models\EntityImage;
+use App\Models\SystemSetting;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-use App\Models\EntityImage;
-use Illuminate\Support\Facades\Auth;
-
-use App\Models\User;
-use App\Mail\NewEntityAlert;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
 
 class EntityController extends Controller
 {
@@ -23,14 +22,14 @@ class EntityController extends Controller
     {
         // Ambil opsi filter langsung dari Database (Distinct Values)
         $categories = Entity::whereNotNull('category')->distinct()->orderBy('category')->pluck('category', 'category');
-        $ranks      = Entity::whereNotNull('rank')->distinct()->orderBy('rank')->pluck('rank', 'rank');
-        $origins    = Entity::whereNotNull('origin')->distinct()->orderBy('origin')->pluck('origin', 'origin');
-        $statuses   = Entity::whereNotNull('status')->distinct()->orderBy('status')->pluck('status', 'status');
+        $ranks = Entity::whereNotNull('rank')->distinct()->orderBy('rank')->pluck('rank', 'rank');
+        $origins = Entity::whereNotNull('origin')->distinct()->orderBy('origin')->pluck('origin', 'origin');
+        $statuses = Entity::whereNotNull('status')->distinct()->orderBy('status')->pluck('status', 'status');
 
         $query = Entity::query();
 
         if ($request->filled('search')) {
-            $searchTerm = '%' . $request->search . '%';
+            $searchTerm = '%'.$request->search.'%';
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'like', $searchTerm)
                     ->orWhere('codename', 'like', $searchTerm)
@@ -91,7 +90,7 @@ class EntityController extends Controller
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'image_url' => 'nullable|url',
-            'thumbnail_selection' => 'nullable|string', 
+            'thumbnail_selection' => 'nullable|string',
         ]);
 
         // 1. Buat entitas dulu (tanpa thumbnail_image_id)
@@ -123,7 +122,7 @@ class EntityController extends Controller
                 ]);
 
                 // Jika 'new_index_X' dipilih sebagai thumbnail
-                if ($thumbnailSelection === 'new_index_' . $index) {
+                if ($thumbnailSelection === 'new_index_'.$index) {
                     $newThumbnailId = $image->id;
                 }
             }
@@ -136,14 +135,35 @@ class EntityController extends Controller
         }
 
         try {
-            $recipients = User::where('id', '!=', Auth::id())->get();
-            if ($recipients->isNotEmpty()) {
-                Mail::to($recipients)->send(new NewEntityAlert($entity));
+            // 1. Cek apakah fitur notifikasi diaktifkan via SystemSetting (Default: True/On)
+            if (SystemSetting::check('entity_notify_enabled', true)) {
+
+                // 2. Ambil penerima spesifik:
+                //    - User yang sudah 'confirmed' (Active)
+                //    - BUKAN user yang sedang login (Auth::id())
+                //    - BUKAN role 'admin' (Director tidak perlu dikirim notif inputannya sendiri/sesama admin)
+                $recipients = User::where('confirmed', true)
+                    ->where('id', '!=', Auth::id())
+                    ->whereHas('role', function ($query) {
+                        $query->where('name', '!=', 'admin');
+                    })
+                    ->get();
+
+                // 3. Kirim email hanya jika ada agent yang valid
+                if ($recipients->isNotEmpty()) {
+                    // Menggunakan Mailable yang sudah ada
+                    Mail::to($recipients)->send(new \App\Mail\NewEntityAlert($entity));
+                }
             }
+            // Jika SystemSetting 'entity_notify_enabled' bernilai FALSE/OFF,
+            // blok ini dilewati dan tidak ada email yang terkirim.
+
         } catch (\Exception $e) {
-            Log::error('SMTP Notification Failed for new entity ' . $entity->id . ': ' . $e->getMessage());
-            return redirect()->route('entities.index')
-                ->with('warning', 'Entity created, but failed to send email alerts. Check log.');
+            // Kita log errornya, tapi jangan biarkan error email membatalkan penyimpanan data entitas
+            Log::error('SMTP Notification Failed for entity '.$entity->codename.': '.$e->getMessage());
+
+            // Opsional: Beri flash message warning jika ingin memberi tahu admin bahwa email gagal
+            // return redirect()->route('entities.index')->with('warning', 'Entity saved, but email alert failed.');
         }
 
         return redirect()->route('entities.index')->with('success', 'Entity created successfully.');
@@ -155,6 +175,7 @@ class EntityController extends Controller
     public function show(Entity $entity)
     {
         $entity->load('images');
+
         return view('entities.show', compact('entity'));
     }
 
@@ -164,7 +185,8 @@ class EntityController extends Controller
     public function edit(Entity $entity)
     {
         // Eager load images agar bisa ditampilkan di form
-        $entity->load('images'); 
+        $entity->load('images');
+
         return view('entities.edit', compact('entity'));
     }
 
@@ -204,7 +226,7 @@ class EntityController extends Controller
                 ->get();
 
             foreach ($imagesToDelete as $image) {
-                if (!filter_var($image->path, FILTER_VALIDATE_URL)) {
+                if (! filter_var($image->path, FILTER_VALIDATE_URL)) {
                     Storage::disk('public_uploads')->delete($image->path);
                 }
                 $image->delete();
@@ -236,9 +258,9 @@ class EntityController extends Controller
                     'path' => $path,
                     'caption' => 'Uploaded Evidence',
                 ]);
-                
+
                 // Jika 'new_index_X' dipilih, catat ID-nya
-                if ($thumbnailSelection === 'new_index_' . $index) {
+                if ($thumbnailSelection === 'new_index_'.$index) {
                     $newThumbnailId = $image->id;
                 }
             }
@@ -261,12 +283,11 @@ class EntityController extends Controller
         $entityData = $request->except(['images', 'images_to_delete', 'image_url', 'thumbnail_selection']);
         // [BARU] Sertakan ID thumbnail final
         $entityData['thumbnail_image_id'] = $finalThumbnailId;
-        
+
         $entity->update($entityData);
 
         return redirect()->route('entities.show', $entity)->with('success', 'Entity record updated successfully.');
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -274,7 +295,7 @@ class EntityController extends Controller
     public function destroy(Entity $entity)
     {
         foreach ($entity->images as $image) {
-            if (!filter_var($image->path, FILTER_VALIDATE_URL)) {
+            if (! filter_var($image->path, FILTER_VALIDATE_URL)) {
                 Storage::disk('public_uploads')->delete($image->path);
             }
         }

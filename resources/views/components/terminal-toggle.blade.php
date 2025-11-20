@@ -5,7 +5,7 @@
     loading: false,
     async toggle() {
         this.loading = true;
-        // Simulasi delay network agar animasi loading terlihat 'techy'
+        // Simulasi delay network (opsional)
         // await new Promise(r => setTimeout(r, 300));
 
         const newState = !this.on;
@@ -34,23 +34,23 @@
             this.loading = false;
         }
     }
-}"
-    class="relative flex items-center justify-between p-4 bg-base border border-border-color rounded-md group overflow-hidden transition-all duration-300"
+}" {{-- [MODIFIED] Classes untuk Responsivitas --}}
+    class="relative flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 gap-4 sm:gap-0 bg-base border border-border-color rounded-md group overflow-hidden transition-all duration-300"
     :class="on ? 'border-primary/40 shadow-[0_0_15px_rgba(34,197,94,0.05)]' : 'hover:border-primary/30'">
 
-    {{-- Background Scanline Effect (Hiasan Halus) --}}
+    {{-- Background Scanline Effect --}}
     <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[shimmer_2s_infinite]"
         style="pointer-events: none;"></div>
 
     {{-- Label Section --}}
-    <div class="flex flex-col relative z-10">
+    <div class="flex flex-col relative z-10 w-full sm:w-auto">
         <span class="text-sm font-bold text-white tracking-wider flex items-center gap-2">
             > {{ $label }}
         </span>
 
         {{-- BADASS STATUS TEXT --}}
         <div class="flex items-center gap-2 mt-2 transition-all duration-500">
-            {{-- Status Light (Blinking Dot) --}}
+            {{-- Status Light --}}
             <div class="h-1.5 w-1.5 rounded-full transition-all duration-300 shadow-sm"
                 :class="on ?
                     'bg-green-500 shadow-[0_0_8px_#22c55e] animate-pulse' :
@@ -67,11 +67,12 @@
     </div>
 
     {{-- The Toggle Switch --}}
+    {{-- Tambahkan 'self-end' jika ingin toggle di kanan pada mobile, atau biarkan default (kiri) --}}
     <button @click="toggle" :disabled="loading"
-        class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-1 focus:ring-primary focus:ring-offset-1 focus:ring-offset-black z-10 cursor-pointer"
+        class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-1 focus:ring-primary focus:ring-offset-1 focus:ring-offset-black z-10 cursor-pointer flex-shrink-0"
         :class="on ? 'bg-primary/20 border border-primary' : 'bg-gray-800 border border-gray-600'">
 
-        {{-- Loading Spinner (Overlay) --}}
+        {{-- Loading Spinner --}}
         <div x-show="loading" x-transition class="absolute inset-0 flex items-center justify-center z-20">
             <svg class="animate-spin h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                 viewBox="0 0 24 24">

@@ -24,20 +24,21 @@
 
                 <a href="{{ route('tools.username') }}" class="group relative block h-full">
                     <div
-                        class="absolute inset-0 border border-border-color bg-surface transition-all duration-300 group-hover:border-primary group-hover:shadow-[0_0_15px_rgba(46,160,67,0.15)]">
+                        class="absolute inset-0 border border-border-color bg-surface transition-all duration-300 group-hover:border-green-500 group-hover:shadow-[0_0_15px_rgba(46,160,67,0.15)]">
                     </div>
                     <div class="relative p-6 flex flex-col h-full">
                         <div class="flex justify-between items-start mb-4">
                             <div
-                                class="p-3 bg-base border border-border-color rounded group-hover:text-primary group-hover:border-primary transition-colors">
+                                class="p-3 bg-base border border-border-color rounded group-hover:text-green-500 group-hover:border-green-500 transition-colors">
                                 <i class="fa-solid fa-user-secret text-2xl"></i>
                             </div>
-                            <span class="px-2 py-1 text-[10px] font-bold border border-primary text-primary uppercase">
+                            <span
+                                class="px-2 py-1 text-[10px] font-bold border border-green-500 text-green-500 uppercase">
                                 RECON
                             </span>
                         </div>
 
-                        <h3 class="text-xl font-bold text-gray-200 mb-2 group-hover:text-primary transition-colors">
+                        <h3 class="text-xl font-bold text-gray-200 mb-2 group-hover:text-green-500 transition-colors">
                             Identity Seeker
                         </h3>
 

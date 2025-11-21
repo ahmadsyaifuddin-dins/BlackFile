@@ -135,7 +135,6 @@
         <div class="relative z-10 mt-8 max-w-7xl mx-auto grid grid-cols-1 gap-8">
 
             {{-- 1. TERMINAL --}}
-            {{-- 1. TERMINAL --}}
             <div class="bg-black border border-gray-700 rounded-lg shadow-2xl relative h-64 md:h-80 overflow-hidden">
 
                 {{-- SCANLINE LAYER (Absolut di atas segalanya, tapi di dalam overflow-hidden parent) --}}

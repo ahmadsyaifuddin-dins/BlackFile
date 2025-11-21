@@ -134,6 +134,31 @@ trait BattleCalculatorTrait
             $difficultyScore = $hStats['str'] * 1.5;
         }
 
+        $isMentalAttack = ($hStats['int'] > 50 || $hStats['nrg'] > 50);
+
+        // Definisi Benda Mati: Durability Tinggi (>60) tapi Intelligence Sangat Rendah (<30)
+        // Atau cek nama spesifik
+        $isInanimate = ($vStats['dur'] > 60 && $vStats['int'] < 30) ||
+                       str_contains(strtolower($victim->name), 'scp-173') ||
+                       str_contains(strtolower($victim->name), 'statue') ||
+                       str_contains(strtolower($victim->name), 'machine') ||
+                       str_contains(strtolower($victim->name), 'robot');
+
+        if ($isMentalAttack && $isInanimate) {
+            $logs[] = 'WARNING: Cognitohazard detected.';
+            $logs[] = "Scanning Subject [{$victim->name}] consciousness...";
+            $logs[] = 'Subject lacks biological mind or soul.';
+            $logs[] = 'Hazard effect ineffective against inanimate object.';
+
+            return response()->json([
+                'winner_id' => $victim->id,
+                'winner_name' => $victim->name,
+                'win_probability' => 100,
+                'logs' => $logs,
+                'reason' => 'Construct Immunity: Target is immune to psychological/soul-based hazards.',
+            ]);
+        }
+
         $survivalScore *= (rand(90, 110) / 100);
 
         if ($survivalScore >= $difficultyScore) {

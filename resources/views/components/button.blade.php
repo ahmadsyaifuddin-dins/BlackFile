@@ -6,7 +6,7 @@
 
 @php
     $baseClass = 'btn';
-    
+
     $variantClass = match ($variant) {
         'outline' => 'btn-outline',
         'secondary' => 'btn-secondary',

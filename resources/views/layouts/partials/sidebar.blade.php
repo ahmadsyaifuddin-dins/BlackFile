@@ -1,4 +1,5 @@
-<aside class="h-full bg-surface border-r bg-black border-border-color border-gray-600 flex flex-col transition-transform duration-300 ease-in-out
+<aside
+    class="h-full bg-surface border-r bg-black border-border-color border-gray-600 flex flex-col transition-transform duration-300 ease-in-out
            fixed inset-y-0 left-0 -translate-x-full md:relative md:translate-x-0 z-20 w-64"
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'">
     <div
@@ -21,78 +22,94 @@
     </div>
 
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto text-primary">
-        <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-           {{ request()->routeIs('dashboard') 
-                ? 'bg-surface-light text-primary border-l-4 border-primary' 
-                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+        <a href="{{ route('dashboard') }}"
+            class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('dashboard')
+               ? 'bg-surface-light text-primary border-l-4 border-primary'
+               : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Dashboard') }}</span>
         </a>
 
-        @if(strtolower(Auth::user()->role->name) === 'director' || strtolower(Auth::user()->role->name) ===
-        'technician')
-        <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-           {{ request()->routeIs('admin.dashboard') 
-                ? 'bg-surface-light text-primary border-l-4 border-primary' 
-                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
-            <span>> {{ __('Command Center') }}</span>
-        </a>
+        @if (strtolower(Auth::user()->role->name) === 'director' || strtolower(Auth::user()->role->name) === 'technician')
+            <a href="{{ route('admin.dashboard') }}"
+                class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('admin.dashboard')
+               ? 'bg-surface-light text-primary border-l-4 border-primary'
+               : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+                <span>> {{ __('Command Center') }}</span>
+            </a>
         @endif
 
-        <a href="{{ route('friends.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-           {{ request()->routeIs('friends.index') 
-                ? 'bg-surface-light text-primary border-l-4 border-primary' 
-                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+        <a href="{{ route('friends.index') }}"
+            class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('friends.index')
+               ? 'bg-surface-light text-primary border-l-4 border-primary'
+               : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Friends Network') }}</span>
         </a>
 
-        <a href="{{ route('central-tree') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-           {{ request()->routeIs('central-tree') 
-                ? 'bg-surface-light text-primary border-l-4 border-primary' 
-                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+        <a href="{{ route('central-tree') }}"
+            class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('central-tree')
+               ? 'bg-surface-light text-primary border-l-4 border-primary'
+               : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Central Tree') }}</span>
         </a>
 
-        <a href="{{ route('agents.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-           {{ request()->routeIs('agents.*') 
-                ? 'bg-surface-light text-primary border-l-4 border-primary' 
-                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+        <a href="{{ route('agents.index') }}"
+            class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('agents.*')
+               ? 'bg-surface-light text-primary border-l-4 border-primary'
+               : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Agents Directory') }}</span>
         </a>
 
-        <a href="{{ route('prototypes.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-           {{ request()->routeIs('prototypes.*') 
-                ? 'bg-surface-light text-primary border-l-4 border-primary' 
-                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+        <a href="{{ route('prototypes.index') }}"
+            class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('prototypes.*')
+               ? 'bg-surface-light text-primary border-l-4 border-primary'
+               : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Prototypes Projects') }}</span>
         </a>
 
-        <a href="{{ route('tools.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-            {{ request()->routeIs('tools.*') 
-                ? 'bg-surface-light text-primary border-l-4 border-primary' 
+        <a href="{{ route('tools.index') }}"
+            class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+            {{ request()->routeIs('tools.*')
+                ? 'bg-surface-light text-primary border-l-4 border-primary'
                 : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('OSINT Arsenal') }}</span>
         </a>
 
-        <a href="{{ route('entities.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-            {{ request()->routeIs('entities.*') 
-        ? 'bg-surface-light text-primary border-l-4 border-primary' 
-        : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+        <a href="{{ route('entities.index') }}"
+            class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+            {{ request()->routeIs('entities.*')
+                ? 'bg-surface-light text-primary border-l-4 border-primary'
+                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Entities Database') }}</span>
         </a>
 
-        <a href="{{ route('encrypted-contacts.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-            {{ request()->routeIs('encrypted-contacts.*') 
-        ? 'bg-surface-light text-primary border-l-4 border-primary' 
-        : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+        <a href="{{ route('battle.index') }}"
+            class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+            {{ request()->routeIs('battle.*')
+                ? 'bg-surface-light text-primary border-l-4 border-primary'
+                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+            <span>> {{ __('Conflict Simulation') }}</span>
+        </a>
+
+        <a href="{{ route('encrypted-contacts.index') }}"
+            class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+            {{ request()->routeIs('encrypted-contacts.*')
+                ? 'bg-surface-light text-primary border-l-4 border-primary'
+                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Kontak Terenkripsi') }}</span>
         </a>
 
-        <div
-            x-data="{ open: {{ request()->routeIs('archives.*') || request()->routeIs('favorites.archives') ? 'true' : 'false' }} }">
+        <div x-data="{ open: {{ request()->routeIs('archives.*') || request()->routeIs('favorites.archives') ? 'true' : 'false' }} }">
             <!-- Tombol untuk membuka/menutup submenu -->
-            <button @click="open = !open" class="w-full flex items-center justify-between space-x-3 px-3 py-2 rounded-r-md transition-colors text-left
-        {{ request()->routeIs('archives.*') || request()->routeIs('favorites.archives') 
-            ? 'bg-surface-light text-primary border-l-4 border-primary' 
+            <button @click="open = !open"
+                class="w-full flex items-center justify-between space-x-3 px-3 py-2 rounded-r-md transition-colors text-left
+        {{ request()->routeIs('archives.*') || request()->routeIs('favorites.archives')
+            ? 'bg-surface-light text-primary border-l-4 border-primary'
             : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
                 <span class="flex items-center space-x-3">
                     <span>> {{ __('Archives') }}</span>
@@ -107,17 +124,19 @@
             <!-- Daftar Submenu -->
             <div x-show="open" x-transition class="mt-1 space-y-1 pl-6">
                 <!-- Submenu: Archives Files -->
-                <a href="{{ route('archives.index') }}" class="block px-3 py-2 rounded-r-md transition-colors text-sm
-            {{ request()->routeIs('archives.index') 
-                ? 'bg-surface-light/50 text-white' 
+                <a href="{{ route('archives.index') }}"
+                    class="block px-3 py-2 rounded-r-md transition-colors text-sm
+            {{ request()->routeIs('archives.index')
+                ? 'bg-surface-light/50 text-white'
                 : 'text-gray-400 hover:bg-surface-light/50 hover:text-white' }}">
                     - {{ __('Archives Files') }}
                 </a>
 
                 <!-- Submenu: Archives Favorites -->
-                <a href="{{ route('favorites.archives') }}" class="block px-3 py-2 rounded-r-md transition-colors text-sm
-            {{ request()->routeIs('favorites.archives') 
-                ? 'bg-surface-light/50 text-white' 
+                <a href="{{ route('favorites.archives') }}"
+                    class="block px-3 py-2 rounded-r-md transition-colors text-sm
+            {{ request()->routeIs('favorites.archives')
+                ? 'bg-surface-light/50 text-white'
                 : 'text-gray-400 hover:bg-surface-light/50 hover:text-white' }}">
                     - {{ __('Archives Favorites') }}
                 </a>
@@ -126,9 +145,10 @@
 
         <div x-data="{ open: {{ request()->routeIs('credits.*') ? 'true' : 'false' }} }">
             <!-- Tombol untuk membuka/menutup submenu -->
-            <button @click="open = !open" class="w-full flex items-center justify-between space-x-3 px-3 py-2 rounded-r-md transition-colors text-left
-                {{ request()->routeIs('credits.*') 
-                    ? 'bg-surface-light text-primary border-l-4 border-primary' 
+            <button @click="open = !open"
+                class="w-full flex items-center justify-between space-x-3 px-3 py-2 rounded-r-md transition-colors text-left
+                {{ request()->routeIs('credits.*')
+                    ? 'bg-surface-light text-primary border-l-4 border-primary'
                     : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
                 <span class="flex items-center space-x-3">
                     <span>> {{ __('Epilogue') }}</span>
@@ -143,63 +163,69 @@
             <!-- Daftar Submenu -->
             <div x-show="open" x-transition class="mt-1 space-y-1 pl-6">
                 <!-- Submenu: Manage Credits -->
-                <a href="{{ route('credits.index') }}" class="block px-3 py-2 rounded-r-md transition-colors text-sm
-                    {{ request()->routeIs('credits.index', 'credits.edit', 'credits.create') 
-                        ? 'bg-surface-light/50 text-white' 
+                <a href="{{ route('credits.index') }}"
+                    class="block px-3 py-2 rounded-r-md transition-colors text-sm
+                    {{ request()->routeIs('credits.index', 'credits.edit', 'credits.create')
+                        ? 'bg-surface-light/50 text-white'
                         : 'text-gray-400 hover:bg-surface-light/50 hover:text-white' }}">
                     - Manage Credits
                 </a>
 
                 <!-- Submenu: Access Log (Hanya untuk Director) -->
-                @if(strtolower(Auth::user()->role->name) === 'director')
-                <a href="{{ route('credits.viewLog') }}" class="block px-3 py-2 rounded-r-md transition-colors text-sm
-                    {{ request()->routeIs('credits.viewLog') 
-                        ? 'bg-surface-light/50 text-white' 
+                @if (strtolower(Auth::user()->role->name) === 'director')
+                    <a href="{{ route('credits.viewLog') }}"
+                        class="block px-3 py-2 rounded-r-md transition-colors text-sm
+                    {{ request()->routeIs('credits.viewLog')
+                        ? 'bg-surface-light/50 text-white'
                         : 'text-gray-400 hover:bg-surface-light/50 hover:text-white' }}">
-                    - Access Log
-                </a>
+                        - Access Log
+                    </a>
                 @endif
 
                 <!-- Submenu: Default Music Management (Hanya untuk Director) -->
-                @if(strtolower(Auth::user()->role->name) === 'director')
-                <a href="{{ route('credits.default-music.index') }}" class="block px-3 py-2 rounded-r-md transition-colors text-sm
-                    {{ request()->routeIs('credits.default-music.index') 
-                        ? 'bg-surface-light/50 text-white' 
+                @if (strtolower(Auth::user()->role->name) === 'director')
+                    <a href="{{ route('credits.default-music.index') }}"
+                        class="block px-3 py-2 rounded-r-md transition-colors text-sm
+                    {{ request()->routeIs('credits.default-music.index')
+                        ? 'bg-surface-light/50 text-white'
                         : 'text-gray-400 hover:bg-surface-light/50 hover:text-white' }}">
-                    - Musics Management
-                </a>
+                        - Musics Management
+                    </a>
                 @endif
             </div>
         </div>
 
         {{-- Tampilkan menu ini HANYA jika role user adalah Director dan Technician --}}
-        @if(strtolower(Auth::user()->role->name) === 'director' || strtolower(Auth::user()->role->name) ===
-        'technician')
-        <a href="{{ route('register.agent') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-        {{ request()->routeIs('register.agent') 
-            ? 'bg-surface-light text-primary border-l-4 border-primary' 
+        @if (strtolower(Auth::user()->role->name) === 'director' || strtolower(Auth::user()->role->name) === 'technician')
+            <a href="{{ route('register.agent') }}"
+                class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+        {{ request()->routeIs('register.agent')
+            ? 'bg-surface-light text-primary border-l-4 border-primary'
             : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
-            <span>> {{ __('Register Agent') }}</span>
-        </a>
+                <span>> {{ __('Register Agent') }}</span>
+            </a>
         @endif
 
-        <a href="{{ route('codex.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-            {{ request()->routeIs('codex.index') 
-        ? 'bg-surface-light text-primary border-l-4 border-primary' 
-        : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
+        <a href="{{ route('codex.index') }}"
+            class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+            {{ request()->routeIs('codex.index')
+                ? 'bg-surface-light text-primary border-l-4 border-primary'
+                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Codex') }}</span>
         </a>
 
-        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-           {{ request()->routeIs('logs.*') 
-                ? 'bg-surface-light border-l-4 border-primary' 
-                : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50 text-gray-700' }}">
+        <a href="#"
+            class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+           {{ request()->routeIs('logs.*')
+               ? 'bg-surface-light border-l-4 border-primary'
+               : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50 text-gray-700' }}">
             <span>> {{ __('Activity Logs') }}</span>
         </a>
 
-        <a href="{{ route('settings.index') }}" class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
-        {{ request()->routeIs('settings.index') 
-            ? 'bg-surface-light text-primary border-l-4 border-primary' 
+        <a href="{{ route('settings.index') }}"
+            class="flex items-center space-x-3 px-3 py-2 rounded-r-md transition-colors
+        {{ request()->routeIs('settings.index')
+            ? 'bg-surface-light text-primary border-l-4 border-primary'
             : 'border-l-4 border-transparent hover:bg-surface-light hover:border-primary/50' }}">
             <span>> {{ __('Settings') }}</span>
         </a>

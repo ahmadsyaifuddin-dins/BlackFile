@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthManual\LoginController;
 use App\Http\Controllers\AuthManual\LogoutController;
 use App\Http\Controllers\AuthManual\RegisterAgentController;
 use App\Http\Controllers\AuthManual\RegisterController;
+use App\Http\Controllers\BattleController;
 use App\Http\Controllers\CodexController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\DashboardController;
@@ -71,8 +72,19 @@ Route::middleware('auth')->group(function () {
 
     // Semua rute aplikasi Anda yang lain
     Route::resource('entities', EntityController::class);
+
+    Route::get('/simulation', [BattleController::class, 'index'])->name('battle.index');
+    Route::post('/simulation/run', [BattleController::class, 'simulate'])->name('battle.run');
+
     Route::resource('prototypes', PrototypeController::class);
     Route::get('/codex', [CodexController::class, 'index'])->name('codex.index');
+
+    Route::prefix('entities')->name('entities.')->group(function () {
+        // Route Menuju Halaman Edit Stats
+        Route::get('/{entity}/assessment', [EntityController::class, 'assessment'])->name('assessment');
+        // Route Proses Simpan
+        Route::put('/{entity}/assessment', [EntityController::class, 'updateAssessment'])->name('update_assessment');
+    });
 
     // --- OSINT TOOLS ARSENAL ---
     Route::prefix('tools')->name('tools.')->group(function () {

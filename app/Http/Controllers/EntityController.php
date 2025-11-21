@@ -213,7 +213,6 @@ class EntityController extends Controller
             'thumbnail_selection' => 'nullable|string',
         ]);
 
-        // [LOGIKA BARU]
         $thumbnailSelection = $request->input('thumbnail_selection');
         $newThumbnailId = null;
         $finalThumbnailId = $entity->thumbnail_image_id; // Mulai dengan ID yang ada
@@ -302,5 +301,47 @@ class EntityController extends Controller
         $entity->delete();
 
         return redirect()->route('entities.index')->with('success', 'Entity record has been terminated.');
+    }
+
+    /**
+     * Menampilkan Halaman Tactical Assessment Console
+     */
+    public function assessment(Entity $entity)
+    {
+        // Pastikan stats tidak null saat dikirim ke view (untuk menghindari error JS)
+        if (! $entity->combat_stats) {
+            $entity->combat_stats = [
+                'strength' => 0, 'speed' => 0, 'durability' => 0,
+                'intelligence' => 0, 'energy' => 0, 'combat_skill' => 0,
+            ];
+        }
+
+        return view('entities.assessment', compact('entity'));
+    }
+
+    /**
+     * Menyimpan Data Stats Baru
+     */
+    public function updateAssessment(Request $request, Entity $entity)
+    {
+        $validated = $request->validate([
+            'power_tier' => 'required|integer|min:1|max:10',
+            'combat_type' => 'required|in:AGGRESSOR,HAZARD',
+            'stats.strength' => 'required|integer|min:0|max:100',
+            'stats.speed' => 'required|integer|min:0|max:100',
+            'stats.durability' => 'required|integer|min:0|max:100',
+            'stats.intelligence' => 'required|integer|min:0|max:100',
+            'stats.energy' => 'required|integer|min:0|max:100',
+            'stats.combat_skill' => 'required|integer|min:0|max:100',
+        ]);
+
+        $entity->update([
+            'power_tier' => $validated['power_tier'],
+            'combat_type' => $validated['combat_type'],
+            'combat_stats' => $validated['stats'], // Laravel otomatis encode ke JSON karena casting di Model
+        ]);
+
+        return redirect()->route('entities.show', $entity)
+            ->with('success', 'Tactical Profile updated successfully.');
     }
 }

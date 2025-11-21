@@ -8,45 +8,40 @@
             style="background-image: radial-gradient(#10b981 1px, transparent 1px); background-size: 40px 40px;"></div>
 
         {{-- Header --}}
-        <div class="relative z-10 flex flex-col items-center justify-center mb-10 text-center">
-            {{-- TOMBOL MUTE AUDIO --}}
-            <div class="absolute top-4 right-4 z-50">
+        <div
+            class="relative z-10 w-full max-w-7xl mx-auto mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-center md:text-left order-2 md:order-1">
+                <h1
+                    class="text-3xl md:text-5xl font-black tracking-widest text-primary uppercase drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]">
+                    PROJECT: ARENA
+                </h1>
+                <p
+                    class="text-secondary text-xs md:text-sm tracking-[0.3em] mt-2 border-b border-primary/30 pb-2 inline-block">
+                    TACTICAL CONFLICT SIMULATION MODULE // V.3.3
+                </p>
+            </div>
+            <div class="order-1 md:order-2">
                 <button @click="toggleAudio()"
-                    class="flex items-center gap-2 px-3 py-1 bg-black/50 border border-gray-700 rounded text-xs font-mono hover:border-primary transition-colors"
-                    :class="isMuted ? 'text-gray-500' : 'text-primary'">
-
-                    {{-- Ikon Speaker --}}
+                    class="flex items-center gap-2 px-4 py-2 bg-black/80 border border-gray-700 rounded-full text-[10px] font-bold tracking-wider hover:border-primary transition-all shadow-lg backdrop-blur-sm cursor-pointer"
+                    :class="isMuted ? 'text-gray-500 border-gray-800' : 'text-primary border-primary/50'">
                     <template x-if="!isMuted">
                         <div class="flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                            </svg>
-                            <span>SFX: ON</span>
+                            <span class="relative flex h-2 w-2">
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                            </span>
+                            <span>AUDIO: ON</span>
                         </div>
                     </template>
-
-                    {{-- Ikon Mute --}}
                     <template x-if="isMuted">
                         <div class="flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                            </svg>
-                            <span>SFX: OFF</span>
+                            <div class="h-2 w-2 rounded-full bg-gray-600"></div>
+                            <span>AUDIO: OFF</span>
                         </div>
                     </template>
                 </button>
             </div>
-            <h1
-                class="text-3xl md:text-5xl font-black tracking-widest text-primary uppercase drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]">
-                PROJECT: ARENA
-            </h1>
-            <p class="text-secondary text-sm md:text-base tracking-[0.3em] mt-2 border-b border-primary/30 pb-2">
-                TACTICAL CONFLICT SIMULATION MODULE // V.3.0
-            </p>
         </div>
 
         {{-- BATTLE GRID --}}

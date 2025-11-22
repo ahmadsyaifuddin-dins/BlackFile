@@ -6,6 +6,7 @@ use App\Models\Entity;
 use App\Models\EntityImage;
 use App\Models\SystemSetting;
 use App\Models\User;
+use App\Services\BlackFileIntelService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -344,5 +345,41 @@ class EntityController extends Controller
 
         return redirect()->route('entities.show', $entity)
             ->with('success', 'Tactical Profile updated successfully.');
+    }
+
+    /**
+     * Generate AI Assessment via AJAX
+     */
+    public function generateAiAssessment(Entity $entity, BlackFileIntelService $aiService)
+    {
+        // 1. Panggil Service AI
+        $result = $aiService->generateAssessment(
+            $entity->name,
+            $entity->description,
+            $entity->abilities ?? 'Unknown',
+            $entity->origin ?? 'Unknown',
+            $entity->category
+        );
+
+        // 2. Jika gagal, return error JSON
+        if (! $result) {
+            return response()->json(['error' => 'Failed to communicate with Tactical AI HQ.'], 500);
+        }
+
+        // 3. Mapping agar sesuai dengan format Alpine JS
+        // BlackFile Rulebook combat types ke mapping sederhana form kamu (AGGRESSOR / HAZARD)
+        $simplifiedType = 'AGGRESSOR';
+        if (in_array(strtoupper($result['combat_type']), ['HAZARD', 'MYSTIC', 'COSMIC'])) {
+            // Opsional: Jika kamu mau mapping tipe AI yang kompleks ke 2 tipe form kamu
+            // Jika form kamu cuma punya AGGRESSOR dan HAZARD, kita bisa paksa logic sederhana
+            $simplifiedType = ($result['combat_type'] == 'HAZARD') ? 'HAZARD' : 'AGGRESSOR';
+        }
+
+        return response()->json([
+            'power_tier' => $result['power_tier'],
+            'combat_type' => $simplifiedType, // Atau gunakan $result['combat_type'] jika opsi select ditambah
+            'combat_stats' => $result['combat_stats'],
+            'reasoning' => $result['reasoning'],
+        ]);
     }
 }

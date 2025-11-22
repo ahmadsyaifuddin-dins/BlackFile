@@ -73,6 +73,9 @@ Route::middleware('auth')->group(function () {
     // Semua rute aplikasi Anda yang lain
     Route::resource('entities', EntityController::class);
 
+    Route::post('/entities/{entity}/generate-ai', [EntityController::class, 'generateAiAssessment'])
+        ->name('entities.generate_ai');
+
     Route::get('/simulation', [BattleController::class, 'index'])->name('battle.index');
     Route::post('/simulation/run', [BattleController::class, 'simulate'])->name('battle.run');
 

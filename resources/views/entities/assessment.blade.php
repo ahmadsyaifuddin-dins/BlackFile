@@ -73,25 +73,92 @@
 
                 <hr class="border-gray-800">
 
-                {{-- SECTION 2: QUICK PRESETS --}}
-                <div>
-                    <label class="block text-xs text-primary mb-3 uppercase tracking-wider font-bold">>> LOAD TACTICAL
-                        PRESET (QUICK FILL)</label>
-                    <div class="flex flex-wrap gap-2">
-                        <button type="button" @click="applyPreset('human')"
-                            class="px-3 py-1 text-xs border border-gray-600 hover:bg-gray-800 hover:text-white transition text-gray-400">HUMAN
-                            STANDARD</button>
-                        <button type="button" @click="applyPreset('soldier')"
-                            class="px-3 py-1 text-xs border border-gray-600 hover:bg-gray-800 hover:text-white transition text-gray-400">ELITE
-                            SOLDIER</button>
-                        <button type="button" @click="applyPreset('monster')"
-                            class="px-3 py-1 text-xs border border-gray-600 hover:bg-red-900/30 hover:text-red-400 hover:border-red-500 transition text-gray-400">MONSTER/KETER</button>
-                        <button type="button" @click="applyPreset('god')"
-                            class="px-3 py-1 text-xs border border-gray-600 hover:bg-yellow-900/30 hover:text-yellow-400 hover:border-yellow-500 transition text-gray-400">DEITY/ABSOLUTE</button>
-                        <span class="text-gray-700">|</span>
-                        <button type="button" @click="applyPreset('object')"
-                            class="px-3 py-1 text-xs border border-gray-600 hover:bg-blue-900/30 hover:text-blue-400 hover:border-blue-500 transition text-gray-400">INANIMATE
-                            HAZARD</button>
+                {{-- SECTION 2: QUICK PRESETS & AI BUTTON --}}
+                {{-- Kita gunakan Flexbox dengan 'items-end' agar tombol AI sejajar dengan tombol preset di desktop --}}
+                <div
+                    class="flex flex-col md:flex-row justify-between items-end gap-6 mb-8 border-b border-gray-800 pb-6">
+
+                    {{-- Manual Presets (Kiri) --}}
+                    <div class="w-full md:w-auto">
+                        <label class="block text-[10px] text-gray-500 mb-2 uppercase tracking-[0.2em] font-bold">
+                            >> SELECT TACTICAL PRESET
+                        </label>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" @click="applyPreset('human')"
+                                class="px-3 py-1.5 text-[10px] font-mono border border-gray-700 bg-gray-900 hover:bg-gray-800 hover:border-gray-500 hover:text-white transition-all duration-200 text-gray-400 rounded-sm">
+                                HUMAN STANDARD
+                            </button>
+                            <button type="button" @click="applyPreset('soldier')"
+                                class="px-3 py-1.5 text-[10px] font-mono border border-gray-700 bg-gray-900 hover:bg-gray-800 hover:border-gray-500 hover:text-white transition-all duration-200 text-gray-400 rounded-sm">
+                                ELITE SOLDIER
+                            </button>
+                            <button type="button" @click="applyPreset('monster')"
+                                class="px-3 py-1.5 text-[10px] font-mono border border-red-900/30 bg-red-900/10 hover:bg-red-900/30 hover:text-red-400 hover:border-red-500 transition-all duration-200 text-red-700 rounded-sm">
+                                MONSTER/KETER
+                            </button>
+                            <button type="button" @click="applyPreset('god')"
+                                class="px-3 py-1.5 text-[10px] font-mono border border-yellow-900/30 bg-yellow-900/10 hover:bg-yellow-900/30 hover:text-yellow-400 hover:border-yellow-500 transition-all duration-200 text-yellow-700 rounded-sm">
+                                DEITY/ABSOLUTE
+                            </button>
+                            <button type="button" @click="applyPreset('object')"
+                                class="px-3 py-1.5 text-[10px] font-mono border border-blue-900/30 bg-blue-900/10 hover:bg-blue-900/30 hover:text-blue-400 hover:border-blue-500 transition-all duration-200 text-blue-700 rounded-sm">
+                                INANIMATE HAZARD
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- AI GENERATE BUTTON (Kanan) --}}
+                    <div class="w-full md:w-auto flex flex-col items-end">
+                        <button type="button" @click="generateAiStats()" :disabled="isLoading" {{-- Styling Badass dimulai disini --}}
+                            class="relative group overflow-hidden flex items-center gap-3 px-6 py-3 rounded-md font-bold text-sm tracking-wider shadow-lg transition-all duration-300
+            
+            {{-- Warna Default: Gradient Indigo Gelap ke Ungu (Kesan AI/Magic Tech) --}}
+            bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-900 border border-indigo-500/50 text-indigo-100
+            
+            {{-- Hover State: Glow Effect & Border Terang --}}
+            hover:shadow-[0_0_20px_rgba(99,102,241,0.6)] hover:border-indigo-300 hover:text-white hover:scale-[1.02]
+            
+            {{-- Active/Click State: Tekan sedikit ke dalam --}}
+            active:scale-95
+            
+            {{-- Cursor Logic --}}
+            cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:shadow-none disabled:grayscale">
+
+                            {{-- Background Animation (Optional: Kilauan berjalan) --}}
+                            <div
+                                class="absolute inset-0 bg-white/5 skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out">
+                            </div>
+
+                            {{-- Loading Spinner --}}
+                            <svg x-show="isLoading" class="animate-spin h-5 w-5 text-indigo-300"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+
+                            {{-- Icon Petir Statis (Hanya muncul jika TIDAK loading) --}}
+                            <svg x-show="!isLoading" xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5 text-indigo-400 group-hover:text-yellow-300 transition-colors"
+                                viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
+                                    clip-rule="evenodd" />
+                            </svg>
+
+                            {{-- Text --}}
+                            <span class="relative z-10"
+                                x-text="isLoading ? 'ESTABLISHING LINK...' : 'INITIATE AI ANALYSIS'"></span>
+                        </button>
+
+                        {{-- Reasoning Display (Style Terminal) --}}
+                        <div x-show="aiReason" x-transition.opacity
+                            class="mt-3 text-[10px] font-mono text-indigo-300 text-right bg-indigo-900/30 px-2 py-1 border-l-2 border-indigo-500">
+                            <span class="font-bold text-indigo-400">>> SYSTEM LOG:</span> <span
+                                x-text="aiReason"></span>
+                        </div>
                     </div>
                 </div>
 
@@ -144,6 +211,11 @@
                 // Data Awal
                 tier: entity.power_tier || 10,
                 type: entity.combat_type || 'AGGRESSOR',
+                isLoading: false, // State untuk loading
+                aiReason: null, // Menampung alasan dari AI
+
+                generateUrl: "{{ route('entities.generate_ai', ':id') }}".replace(':id', entity.id),
+                csrfToken: "{{ csrf_token() }}",
 
                 // Daftar Key Stats untuk Loop x-for
                 statKeys: ['strength', 'speed', 'durability', 'intelligence', 'energy', 'combat_skill'],
@@ -156,6 +228,40 @@
                     intelligence: entity.combat_stats?.intelligence || 0,
                     energy: entity.combat_stats?.energy || 0,
                     combat_skill: entity.combat_stats?.combat_skill || 0,
+                },
+
+                // [BARU] Fungsi AJAX ke Controller
+                async generateAiStats() {
+                    this.isLoading = true;
+                    this.aiReason = null;
+
+                    try {
+                        const response = await fetch(this.generateUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': this.csrfToken
+                            },
+                            body: JSON
+                                .stringify({}) // Body kosong tidak masalah, karena data diambil dari DB backend berdasarkan ID
+                        });
+
+                        if (!response.ok) throw new Error('Network response was not ok');
+
+                        const data = await response.json();
+
+                        // Update UI dengan Data AI
+                        this.tier = data.power_tier;
+                        this.type = data.combat_type;
+                        this.stats = data.combat_stats;
+                        this.aiReason = "AI Analysis: " + data.reasoning;
+
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Gagal menghubungi Tactical AI HQ. Cek console.');
+                    } finally {
+                        this.isLoading = false;
+                    }
                 },
 
                 applyPreset(presetName) {

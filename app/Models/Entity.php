@@ -13,6 +13,9 @@ class Entity extends Model
 
     protected $casts = [
         'combat_stats' => 'array',
+        'power_tier' => 'integer',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     protected $fillable = [

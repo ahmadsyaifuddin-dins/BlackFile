@@ -130,32 +130,30 @@
         <div class="relative z-10 mt-8 max-w-7xl mx-auto grid grid-cols-1 gap-8">
 
             {{-- 1. TERMINAL --}}
-            <div class="bg-black border border-gray-700 rounded-lg shadow-2xl relative h-64 md:h-80 overflow-hidden">
+            <div
+                class="bg-black border border-gray-700 rounded-lg shadow-2xl relative h-64 md:h-80 overflow-hidden flex flex-col">
 
-                {{-- SCANLINE LAYER (Absolut di atas segalanya, tapi di dalam overflow-hidden parent) --}}
-                <div class="scanline pointer-events-none"></div>
+                {{-- SCANLINE LAYER --}}
+                <div class="scanline pointer-events-none absolute inset-0 w-full h-full z-50"></div>
 
-                {{-- CONTENT LAYER (Scrollable) --}}
-                <div class="h-full p-4 md:p-6 font-mono text-sm overflow-y-auto no-scrollbar relative z-10">
+                {{-- A. HEADER SECTION (Diam/Tidak ikut scroll) --}}
+                <div
+                    class="px-4 pt-4 md:px-6 md:pt-6 pb-2 bg-black z-20 border-b border-gray-800 shrink-0 flex justify-between items-center">
+                    <span class="text-gray-500 font-mono text-sm">> BATTLE_LOG.SYS</span>
+                    <span x-text="isSimulating ? 'STATUS: RUNNING' : 'STATUS: IDLE'" class="font-mono text-sm"
+                        :class="isSimulating ? 'text-green-400 animate-pulse' : 'text-gray-600'"></span>
+                </div>
 
-                    {{-- Static Header --}}
-                    <div
-                        class="text-gray-500 mb-2 border-b border-gray-800 pb-2 flex justify-between sticky top-0 bg-black/80 backdrop-blur-sm z-20">
-                        <span>> BATTLE_LOG.SYS</span>
-                        <span x-text="isSimulating ? 'STATUS: RUNNING' : 'STATUS: IDLE'"
-                            :class="isSimulating ? 'text-green-400 animate-pulse' : 'text-gray-600'"></span>
-                    </div>
+                {{-- B. LOGS CONTENT AREA (Hanya ini yang di-scroll) --}}
+                <div class="flex-1 overflow-y-auto no-scrollbar p-4 md:p-6 pt-2 relative z-10 font-mono text-sm">
 
-                    {{-- Dynamic Logs --}}
-                    <div class="space-y-1 font-mono" id="terminal-content" x-ref="terminalContainer">
-
+                    <div class="space-y-1" id="terminal-content" x-ref="terminalContainer">
                         {{-- Loop Log --}}
                         <template x-for="(log, index) in displayedLogs" :key="index">
                             <div class="flex gap-2 log-entry" :style="`animation-delay: ${index * 50}ms`">
                                 <span class="text-gray-600 select-none shrink-0"
                                     x-text="'[' + String(index + 1).padStart(3, '0') + ']'"></span>
 
-                                {{-- Pewarnaan Log --}}
                                 <span
                                     :class="{
                                         'text-primary font-bold': log.includes('WINNER') || log.includes(
@@ -170,15 +168,15 @@
                             </div>
                         </template>
 
-                        {{-- Loading State yang lebih Keren --}}
+                        {{-- Loading State --}}
                         <div x-show="isSimulating" class="text-primary mt-2 terminal-cursor flex flex-col gap-1">
                             <span>> ESTABLISHING SECURE UPLINK...</span>
                             <span class="text-xs text-gray-500 animate-pulse">Warning: Neural Network latency
                                 detected...</span>
                         </div>
                     </div>
-
                 </div>
+
             </div>
 
             {{-- 2. HISTORY TABLE --}}

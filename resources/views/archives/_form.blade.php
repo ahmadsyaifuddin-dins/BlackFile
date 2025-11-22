@@ -8,7 +8,6 @@
     $endpoint = $isEdit ? route('archives.update', $archive) : route('archives.store');
     $method   = $isEdit ? 'PUT' : 'POST';
     
-    // Parse links dengan aman untuk edit mode
     $linksArray = [];
     if ($isEdit && $archive->type === 'url' && $archive->links) {
         $linksArray = is_array($archive->links) ? $archive->links : [];
@@ -31,6 +30,7 @@
         },
         file: null,
         isUploading: false,
+        isGeneratingAi: false, // State untuk loading AI
         uploadPercentage: 0,
         errors: {},
         errorMessage: '',
@@ -40,7 +40,6 @@
         availableCategories: @js($categories),
 
         init() {
-            // Check jika category tidak ada di available categories
             if (this.form.category && 
                 !this.availableCategories.includes(this.form.category) && 
                 this.form.category !== 'Other') {
@@ -58,6 +57,31 @@
             this.file = e.target.files[0] || null;
         },
 
+        // FITUR BARU: Generate AI Description
+        generateAiDescription() {
+            if (!this.form.name) {
+                alert('Mohon isi nama entri terlebih dahulu!');
+                return;
+            }
+
+            this.isGeneratingAi = true;
+            
+            axios.post('{{ route('archives.generate-ai-desc') }}', {
+                title: this.form.name
+            })
+            .then(response => {
+                // Isi textarea description dengan hasil AI
+                this.form.description = response.data.description;
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Gagal generate deskripsi AI. Cek console.');
+            })
+            .finally(() => {
+                this.isGeneratingAi = false;
+            });
+        },
+
         submitHandler() {
             this.isUploading = true;
             this.uploadPercentage = 0;
@@ -69,21 +93,17 @@
                 fd.append('_method', 'PUT');
             }
 
-            // Append semua form data
             Object.keys(this.form).forEach(key => {
                 const value = this.form[key];
-                
                 if (value === null || value === undefined) return;
                 
                 if (key === 'is_public') {
-                    // Pastikan konversi boolean ke string '1' atau '0'
                     fd.append(key, (value === true || value === 'true' || value === 1 || value === '1') ? '1' : '0');
                 } else {
                     fd.append(key, value);
                 }
             });
 
-            // Append file jika ada
             if (this.form.type === 'file' && this.file) {
                 fd.append('archive_file', this.file);
             }
@@ -104,12 +124,9 @@
             })
             .catch(err => {
                 this.isUploading = false;
-                
                 if (err.response?.status === 422) {
                     this.errors = err.response.data.errors || {};
                     this.errorMessage = 'Please correct the errors below.';
-                    
-                    // Scroll to top untuk melihat error
                     this.$el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 } else {
                     this.errorMessage = err.response?.data?.message || 'Upload failed! Please try again.';

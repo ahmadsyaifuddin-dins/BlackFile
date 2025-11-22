@@ -7,11 +7,12 @@ use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Str;
 
 class ArchiveController extends Controller
 {
@@ -28,9 +29,9 @@ class ArchiveController extends Controller
         // 1. PERSIAPAN DATA UNTUK DROPDOWN FILTER
         // Ambil semua kategori unik yang sudah ada di database, urutkan, dan filter nilai kosong.
         $categories = Archive::whereNotNull('category')
-                     ->orderBy('category')
-                     ->distinct()
-                     ->pluck('category');
+            ->orderBy('category')
+            ->distinct()
+            ->pluck('category');
         // Ambil hanya user yang memiliki arsip, urutkan berdasarkan nama
         $owners = User::whereHas('archives')->orderBy('name')->get();
 
@@ -72,7 +73,6 @@ class ArchiveController extends Controller
         $query->when($request->filled('owner'), function ($q) use ($request) {
             $q->where('user_id', $request->owner);
         });
-
 
         $perPage = Auth::user()->settings['per_page'] ?? 15;
 
@@ -150,7 +150,7 @@ class ArchiveController extends Controller
 
         return view('archives.favorit', [
             'favorites' => $favorites,
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 
@@ -169,14 +169,13 @@ class ArchiveController extends Controller
         return view('archives.show', compact('archive'));
     }
 
-
     public function create()
     {
         // Ambil kategori dari file config dan kirim ke view
         $categories = Config::get('blackfile.archive_categories', []);
+
         return view('archives.create', compact('categories'));
     }
-
 
     public function store(Request $request)
     {
@@ -206,7 +205,7 @@ class ArchiveController extends Controller
             'is_public' => filter_var($request->input('is_public', false), FILTER_VALIDATE_BOOLEAN),
             'category' => $validated['category'],
             'category_other' => $validated['category_other'] ?? null,
-            'preview_image_url' => $validated['preview_image_url'] ?? null, 
+            'preview_image_url' => $validated['preview_image_url'] ?? null,
         ];
 
         if ($validated['type'] === 'file' && $request->hasFile('archive_file')) {
@@ -220,7 +219,7 @@ class ArchiveController extends Controller
 
         if ($validated['type'] === 'url') {
             // Cek apakah 'links' tidak null sebelum diproses
-            if (!empty($validated['links'])) {
+            if (! empty($validated['links'])) {
                 $linksArray = array_filter(array_map('trim', explode("\n", $validated['links'])));
                 $dataToStore['links'] = $linksArray;
             }
@@ -229,7 +228,7 @@ class ArchiveController extends Controller
         $archive = Archive::create($dataToStore);
 
         // [LOGIKA UNTUK TAGS]
-        if (!empty($validated['tags'])) {
+        if (! empty($validated['tags'])) {
             $this->syncTags($validated['tags'], $archive);
         }
 
@@ -237,9 +236,10 @@ class ArchiveController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'message' => 'Arsip berhasil ditambahkan.',
-                'redirect_url' => route('archives.index')
+                'redirect_url' => route('archives.index'),
             ], 201); // 201 Created
         }
+
         // Jika request biasa (tanpa JavaScript), lakukan redirect seperti biasa
         return redirect()->route('archives.index')->with('success', 'Arsip berhasil ditambahkan.');
     }
@@ -253,6 +253,7 @@ class ArchiveController extends Controller
 
         // Kirim juga data kategori ke view edit
         $categories = Config::get('blackfile.archive_categories', []);
+
         return view('archives.edit', compact('archive', 'categories'));
     }
 
@@ -287,7 +288,7 @@ class ArchiveController extends Controller
 
         // 3. Update field 'links' jika arsipnya bertipe URL
         if ($archive->type === 'url') {
-            if (!empty($validated['links'])) {
+            if (! empty($validated['links'])) {
                 $linksArray = array_filter(array_map('trim', explode("\n", $validated['links'])));
                 $archive->links = $linksArray;
             } else {
@@ -300,31 +301,31 @@ class ArchiveController extends Controller
 
         // [LOGIKA UNTUK TAGS]
         $this->syncTags($validated['tags'] ?? null, $archive);
-        
+
         // Redirect handling (honor return_url jika disediakan)
         $return = $request->input('return_url');
 
         if ($return) {
             // Terima: (a) path relatif yang diawali '/', atau (b) absolute URL yang mulai dengan APP_URL
             $appUrl = rtrim(config('app.url'), '/');
-    
-            if (!Str::startsWith($return, '/') && !Str::startsWith($return, $appUrl)) {
+
+            if (! Str::startsWith($return, '/') && ! Str::startsWith($return, $appUrl)) {
                 // bukan path relatif dan bukan domain kita -> tolak (hindari open-redirect)
                 $return = null;
             }
         }
-    
+
         $return = $return ?? route('archives.index');
 
         return redirect()->to($return)->with('success', 'Arsip berhasil diperbarui.');
     }
 
-    // [TAMBAHKAN METHOD BANTU]
     private function syncTags(?string $tagsString, Archive $archive): void
     {
         if (is_null($tagsString)) {
             // Jika string tag kosong/null, hapus semua tag dari arsip
             $archive->tags()->sync([]);
+
             return;
         }
 
@@ -350,7 +351,6 @@ class ArchiveController extends Controller
         $this->authorize('delete', $archive);
 
         if ($archive->type === 'file' && $archive->file_path) {
-            // --- MENGGUNAKAN KONFIGURASI ANDA ---
             // Hapus file dari disk 'public_uploads'
             Storage::disk('public_uploads')->delete($archive->file_path);
         }
@@ -358,5 +358,53 @@ class ArchiveController extends Controller
         $archive->delete();
 
         return redirect()->route('archives.index')->with('success', 'Arsip berhasil dihapus.');
+    }
+
+    public function generateAiDescription(Request $request)
+    {
+        $request->validate(['title' => 'required|string']);
+        $title = $request->input('title');
+        $apiKey = env('GEMINI_API_KEY_ARCHIVE');
+
+        // Prompt yang dioptimalkan untuk BlackFile
+        $prompt = "
+            Peran: Kamu adalah sistem backend otomatis untuk database arsip bernama BlackFile.
+            Tugas: Buatkan deskripsi detail dalam Bahasa Indonesia untuk file/entri: '{$title}'.
+                
+            Aturan Output:
+            1. DILARANG memberikan kalimat pembuka/basa-basi (seperti 'Tentu', 'Berikut adalah', 'Halo').
+            2. Langsung berikan output deskripsi.
+            3. Jika ini Film: Berikan Sinopsis plot, Genre, Tahun, dan fakta menarik/konteks kenapa film ini penting/kontroversial.
+            4. Jika ini Software/Game: Jelaskan fungsinya.
+            5. Gaya Bahasa: Semi-formal, informatif, seperti ensiklopedia atau database intelijen.
+            6. Jangan mengulang menulis Nama File atau Ukuran File di dalam deskripsi, fokus ke KONTEN.
+            ";
+        
+        try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}", [
+                'contents' => [
+                    [
+                        'parts' => [
+                            ['text' => $prompt],
+                        ],
+                    ],
+                ],
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                // Mengambil teks dari response Gemini
+                $generatedText = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Gagal menghasilkan deskripsi.';
+
+                $cleanText = str_replace(['**', '##', '###'], '', $generatedText);
+                return response()->json(['description' => $cleanText]);
+            }
+
+            return response()->json(['message' => 'Gagal menghubungi AI'], 500);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 }

@@ -131,6 +131,10 @@ Route::middleware('auth')->group(function () {
     Route::get('favorites/archives', [ArchiveController::class, 'favorites'])->name('favorites.archives');
     Route::post('archives/{archive}/favorite', [ArchiveController::class, 'toggleFavorite'])->name('archives.favorite.toggle');
 
+    // Pastikan ini di dalam middleware auth agar tidak sembarang orang bisa pakai kuota AI kamu
+    Route::post('/archives/generate-ai-desc', [ArchiveController::class, 'generateAiDescription'])
+    ->name('archives.generate-ai-desc');
+
     Route::resource('archives', ArchiveController::class);
 
     Route::resource('credits', CreditController::class);
@@ -194,7 +198,7 @@ Route::get('/avatar-proxy/{name}', function (string $name) {
 })->name('avatar.proxy');
 
 Route::get('/cek-gemini', function () {
-    $apiKey = env('GEMINI_API_KEY');
+    $apiKey = env('GEMINI_API_KEY_BATTLE');
     // Request ke endpoint 'list models'
     $response = Http::withoutVerifying()
         ->get("https://generativelanguage.googleapis.com/v1beta/models?key={$apiKey}");

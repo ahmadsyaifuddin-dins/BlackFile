@@ -192,3 +192,12 @@ Route::get('/avatar-proxy/{name}', function (string $name) {
     // Kirimkan gambar dari data yang sudah di-cache
     return response($imageData['body'])->header('Content-Type', $imageData['content_type']);
 })->name('avatar.proxy');
+
+Route::get('/cek-gemini', function () {
+    $apiKey = env('GEMINI_API_KEY');
+    // Request ke endpoint 'list models'
+    $response = Http::withoutVerifying()
+        ->get("https://generativelanguage.googleapis.com/v1beta/models?key={$apiKey}");
+
+    return $response->json();
+});

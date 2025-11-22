@@ -110,18 +110,15 @@
                                     }
                                 @endphp
                                 @if ($thumbnail)
-                                    @php
-                                        $imagePath = Illuminate\Support\Str::startsWith($thumbnail->path, 'http')
-                                            ? $thumbnail->path
-                                            : asset('uploads/' . $thumbnail->path);
-                                    @endphp
                                     <div class="aspect-square">
-                                        <img src="{{ $imagePath }}" alt="{{ $entity->codename }}"
+                                        {{-- CUKUP PANGGIL ->url --}}
+                                        <img src="{{ $thumbnail->url }}" alt="{{ $entity->codename }}"
                                             :class="{ 'grayscale': !inView }"
                                             class="w-full h-full object-cover transition-all duration-500 ease-in-out"
                                             loading="lazy">
                                     </div>
                                 @else
+                                    {{-- Bagian Else tetap sama --}}
                                     <div
                                         class="w-full h-32 bg-base flex items-center justify-center border border-dashed border-border-color">
                                         <span class="text-secondary font-mono text-sm">[NO VISUALS]</span>

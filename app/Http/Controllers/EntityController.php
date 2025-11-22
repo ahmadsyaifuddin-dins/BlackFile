@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class EntityController extends Controller
@@ -93,7 +94,7 @@ class EntityController extends Controller
             'thumbnail_selection' => 'nullable|string',
         ]);
 
-        // 1. Buat entitas dulu (tanpa thumbnail_image_id)
+        // 1. Buat entitas
         $entityData = $request->except(['images', 'image_url', 'thumbnail_selection']);
         $entity = Entity::create($entityData);
 
@@ -106,22 +107,30 @@ class EntityController extends Controller
                 'path' => $request->input('image_url'),
                 'caption' => 'Linked Evidence',
             ]);
-            // Jika 'new_url' dipilih sebagai thumbnail
             if ($thumbnailSelection === 'new_url') {
                 $newThumbnailId = $image->id;
             }
         }
 
-        // 3. Proses upload file (jika ada)
+        // Proses upload file (Universal)
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $imageFile) {
-                $path = $imageFile->store('entity_images', 'public_uploads');
+
+                // Buat nama unik
+                $filename = uniqid().'.'.$imageFile->extension();
+
+                // Simpan Fisik menggunakan Disk 'main_uploads'
+                // Ini akan masuk ke folder 'uploads/entity_images' secara otomatis
+                $imageFile->storeAs('entity_images', $filename, 'main_uploads');
+
+                // Simpan Path Bersih ke Database (entity_images/foto.jpg)
+                $dbPath = 'entity_images/'.$filename;
+
                 $image = $entity->images()->create([
-                    'path' => $path,
+                    'path' => $dbPath,
                     'caption' => 'Uploaded Evidence',
                 ]);
 
-                // Jika 'new_index_X' dipilih sebagai thumbnail
                 if ($thumbnailSelection === 'new_index_'.$index) {
                     $newThumbnailId = $image->id;
                 }
@@ -135,35 +144,19 @@ class EntityController extends Controller
         }
 
         try {
-            // 1. Cek apakah fitur notifikasi diaktifkan via SystemSetting (Default: True/On)
             if (SystemSetting::check('entity_notify_enabled', true)) {
-
-                // 2. Ambil penerima spesifik:
-                //    - User yang sudah 'confirmed' (Active)
-                //    - BUKAN user yang sedang login (Auth::id())
-                //    - BUKAN role 'admin' (Director tidak perlu dikirim notif inputannya sendiri/sesama admin)
                 $recipients = User::where('confirmed', true)
                     ->where('id', '!=', Auth::id())
                     ->whereHas('role', function ($query) {
                         $query->where('name', '!=', 'admin');
-                    })
-                    ->get();
+                    })->get();
 
-                // 3. Kirim email hanya jika ada agent yang valid
                 if ($recipients->isNotEmpty()) {
-                    // Menggunakan Mailable yang sudah ada
                     Mail::to($recipients)->send(new \App\Mail\NewEntityAlert($entity));
                 }
             }
-            // Jika SystemSetting 'entity_notify_enabled' bernilai FALSE/OFF,
-            // blok ini dilewati dan tidak ada email yang terkirim.
-
         } catch (\Exception $e) {
-            // Kita log errornya, tapi jangan biarkan error email membatalkan penyimpanan data entitas
             Log::error('SMTP Notification Failed for entity '.$entity->codename.': '.$e->getMessage());
-
-            // Opsional: Beri flash message warning jika ingin memberi tahu admin bahwa email gagal
-            // return redirect()->route('entities.index')->with('warning', 'Entity saved, but email alert failed.');
         }
 
         return redirect()->route('entities.index')->with('success', 'Entity created successfully.');
@@ -215,9 +208,9 @@ class EntityController extends Controller
 
         $thumbnailSelection = $request->input('thumbnail_selection');
         $newThumbnailId = null;
-        $finalThumbnailId = $entity->thumbnail_image_id; // Mulai dengan ID yang ada
+        $finalThumbnailId = $entity->thumbnail_image_id;
 
-        // 1. HAPUS GAMBAR YANG DIPILIH
+        // 1. [MODIFIKASI] HAPUS GAMBAR YANG DIPILIH
         if ($request->has('images_to_delete')) {
             $deletedIds = $request->input('images_to_delete');
             $imagesToDelete = EntityImage::whereIn('id', $deletedIds)
@@ -226,12 +219,17 @@ class EntityController extends Controller
 
             foreach ($imagesToDelete as $image) {
                 if (! filter_var($image->path, FILTER_VALIDATE_URL)) {
-                    Storage::disk('public_uploads')->delete($image->path);
+                    // Bersihkan path dari 'uploads/' jika ada (Fix data lama hosting)
+                    $cleanPath = Str::replaceFirst('uploads/', '', $image->path);
+
+                    // Hapus file fisik via disk
+                    if (Storage::disk('main_uploads')->exists($cleanPath)) {
+                        Storage::disk('main_uploads')->delete($cleanPath);
+                    }
                 }
                 $image->delete();
             }
 
-            // [BARU] Jika thumbnail yang sekarang ikut terhapus, set jadi null
             if (in_array($finalThumbnailId, $deletedIds)) {
                 $finalThumbnailId = null;
             }
@@ -243,22 +241,26 @@ class EntityController extends Controller
                 'path' => $request->input('image_url'),
                 'caption' => 'Linked Evidence',
             ]);
-            // Jika 'new_url' dipilih, catat ID-nya
             if ($thumbnailSelection === 'new_url') {
                 $newThumbnailId = $image->id;
             }
         }
 
-        // 3. PROSES GAMBAR BARU (FILE UPLOAD)
+        // 3. PROSES UPLOAD FILE BARU (Universal)
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $imageFile) {
-                $path = $imageFile->store('entity_images', 'public_uploads');
+
+                $filename = uniqid().'.'.$imageFile->extension();
+
+                // Simpan ke Disk main_uploads
+                $imageFile->storeAs('entity_images', $filename, 'main_uploads');
+                $dbPath = 'entity_images/'.$filename;
+
                 $image = $entity->images()->create([
-                    'path' => $path,
+                    'path' => $dbPath,
                     'caption' => 'Uploaded Evidence',
                 ]);
 
-                // Jika 'new_index_X' dipilih, catat ID-nya
                 if ($thumbnailSelection === 'new_index_'.$index) {
                     $newThumbnailId = $image->id;
                 }
@@ -267,20 +269,15 @@ class EntityController extends Controller
 
         // 4. TENTUKAN THUMBNAIL_ID FINAL
         if ($newThumbnailId) {
-            // Prioritas 1: Gambar baru (upload/url)
             $finalThumbnailId = $newThumbnailId;
         } elseif (is_numeric($thumbnailSelection)) {
-            // Prioritas 2: Gambar lama yang ada
-            // Pastikan ID itu masih ada (tidak dihapus) dan milik entitas ini
             if ($entity->images()->where('id', $thumbnailSelection)->exists()) {
                 $finalThumbnailId = $thumbnailSelection;
             }
         }
-        // Jika tidak ada di atas, $finalThumbnailId akan tetap ID lama (atau null jika dihapus)
 
         // 5. UPDATE DATA UTAMA ENTITAS
         $entityData = $request->except(['images', 'images_to_delete', 'image_url', 'thumbnail_selection']);
-        // [BARU] Sertakan ID thumbnail final
         $entityData['thumbnail_image_id'] = $finalThumbnailId;
 
         $entity->update($entityData);
@@ -295,7 +292,11 @@ class EntityController extends Controller
     {
         foreach ($entity->images as $image) {
             if (! filter_var($image->path, FILTER_VALIDATE_URL)) {
-                Storage::disk('public_uploads')->delete($image->path);
+                $cleanPath = Str::replaceFirst('uploads/', '', $image->path);
+
+                if (Storage::disk('main_uploads')->exists($cleanPath)) {
+                    Storage::disk('main_uploads')->delete($cleanPath);
+                }
             }
         }
         $entity->delete();

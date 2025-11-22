@@ -52,10 +52,9 @@ return [
         'Lainnya',
     ],
 
-
     /*
     |--------------------------------------------------------------------------
-    | Entity Classifications (Refactored)
+    | Entity Classifications
     |--------------------------------------------------------------------------
     |
     | Defines the standardized lists for entity attributes. Grouped logically
@@ -81,7 +80,7 @@ return [
         'Angelic Hierarchy',
         'Demonic Hierarchy',
         'Metaphysical Concept', // Abstract, non-physical beings/ideas
-        
+
         // --- Faction & Project Specific ---
         '[B.F] Anomaly', // Anomalies specific to BlackFile's findings
         'SCP Anomaly',
@@ -122,8 +121,19 @@ return [
         'Archdevil',
         'Principalities',
         'Nine Lords (Demon)',
-        'Seraphim / Cherubim',
+        'Lowest Sphere Guardian',
+        'Cosmic Guardian',
+        'Seraphim Guard',
+        'Territorial Commander',
         'Archangel',
+        'Seventh Choir / Third Sphere',
+        'Sixth Choir / Second Sphere',
+        'Fifth Choir / Second Sphere ',
+        'Fourth Choir / Second Sphere',
+        'Third Choir / First Sphere',
+        'Second Choir / First Sphere',
+        'Highest Choir / First Sphere',
+        'Chancellor of Heaven',
 
         // --- Cthulhu Mythos Tiers (Ordered by cosmic scale) ---
         'Servitor Race',
@@ -131,7 +141,6 @@ return [
         'Great Old One',
         'Outer God',
     ],
-
 
     'entity_origins' => [
         // --- Terrestrial & General ---
@@ -141,6 +150,9 @@ return [
         'The Abyss (Oceanic)',
         'Subterranean',
         'Antarctica',
+        'Extraterrestrial',
+        'Cosmic',
+        'Heaven',
 
         // --- Faction & Agency Specific ---
         '[B.F] Laboratory Creation',
@@ -175,17 +187,17 @@ return [
     |
     */
     'entity_statuses' => [
-        'UNKNOWN'     => 'UNKNOWN',
-        'ACTIVE'      => 'ACTIVE',
-        'CONTAINED'   => 'CONTAINED', // Tertahan
-        'STANDBY'     => 'STANDBY',
+        'UNKNOWN' => 'UNKNOWN',
+        'ACTIVE' => 'ACTIVE',
+        'CONTAINED' => 'CONTAINED', // Tertahan
+        'STANDBY' => 'STANDBY',
         'UNCONTAINED' => 'UNCONTAINED', // Masih Buron / Aktif Secara Musiman
         'NEUTRALIZED' => 'NEUTRALIZED',
-        'MIA'         => 'MISSING IN ACTION',
-        'TERMINATED'  => 'TERMINATED',
-        'FAILING' 	  => 'FAILING', // Rantai Penahanan Sedang Putus
-        'SEALED'	  => 'SEALED', // (Akses dilarang keras / Disegel dengan beton)
-        'DORMANT'     => 'DORMANT', //'(Tertidur Abadi)'
+        'MIA' => 'MISSING IN ACTION',
+        'TERMINATED' => 'TERMINATED',
+        'FAILING' => 'FAILING', // Rantai Penahanan Sedang Putus
+        'SEALED' => 'SEALED', // (Akses dilarang keras / Disegel dengan beton)
+        'DORMANT' => 'DORMANT', // '(Tertidur Abadi)'
     ],
 
     /*
@@ -202,11 +214,16 @@ return [
         'Link Download Film',
         'Link Game',
         'Video Langka',
+        'Video Eksklusif',
+        'Video Rahasia',
+        'Dokumen Rahasia',
         'Gambar Rahasia',
+        'Top Secret',
+        'Super Secret',
         'Dokumen PDF',
         'Dokumen Excel',
         'Dokumen CSV',
         'Dokumen Word',
-        'Other', // Pilihan untuk kategori kustom
+        'Other',
     ],
 ];

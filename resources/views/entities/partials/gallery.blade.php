@@ -11,14 +11,11 @@
 
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
         @foreach ($galleryImages as $image)
-            @php
-                $imgPath = Illuminate\Support\Str::startsWith($image->path, 'http')
-                    ? $image->path
-                    : asset('uploads/' . $image->path);
-            @endphp
             <div class="group relative aspect-square bg-black border border-gray-800 overflow-hidden cursor-pointer">
-                <img src="{{ $imgPath }}"
+                {{-- CUKUP PANGGIL ->url --}}
+                <img src="{{ $image->url }}"
                     class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110">
+
                 @if ($image->caption)
                     <div
                         class="absolute bottom-0 inset-x-0 bg-black/80 text-[10px] text-gray-400 p-1 text-center translate-y-full group-hover:translate-y-0 transition-transform duration-300">

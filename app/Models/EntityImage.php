@@ -2,25 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class EntityImage extends Model
 {
-    use HasFactory;
+    protected $fillable = ['entity_id', 'path', 'caption'];
 
-    protected $fillable = [
-        'entity_id',
-        'path',
-        'caption',
-    ];
+    // Agar JSON otomatis ada field 'url'
+    protected $appends = ['url'];
 
-    /**
-     * Get the entity that owns the image.
-     */
-    public function entity(): BelongsTo
+    public function getUrlAttribute()
     {
-        return $this->belongsTo(Entity::class);
+        if (Str::startsWith($this->path, ['http://', 'https://'])) {
+            return $this->path;
+        }
+
+        $cleanPath = Str::replaceFirst('uploads/', '', $this->path);
+
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('main_uploads');
+
+        return $disk->url($cleanPath);
     }
 }

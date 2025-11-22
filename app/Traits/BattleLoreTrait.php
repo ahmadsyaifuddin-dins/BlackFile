@@ -15,23 +15,53 @@ trait BattleLoreTrait
         // Helper: Cek match bolak-balik
         $isMatch = fn ($n1, $n2) => ($nameA === $n1 && $nameB === $n2) || ($nameA === $n2 && $nameB === $n1);
 
-        // 1. MICHAEL VS LUCIFER
-        if (str_contains($nameA, 'michael') && str_contains($nameB, 'lucifer') || str_contains($nameB, 'michael') && str_contains($nameA, 'lucifer')) {
+        // 1. MICHAEL VS (SATAN / LUCIFER) - LORE: THE TRUE WAR VS THE MYTH
+        // Cek apakah Michael terlibat dengan salah satu dari mereka
+        $isMichael = str_contains($nameA, 'michael') || str_contains($nameB, 'michael');
+        $isSatan = str_contains($nameA, 'satan') || str_contains($nameB, 'satan');
+        $isLucifer = str_contains($nameA, 'lucifer') || str_contains($nameB, 'lucifer');
+
+        if ($isMichael && ($isSatan || $isLucifer)) {
+
             $winner = str_contains($nameA, 'michael') ? $entA : $entB;
+            $loser = str_contains($nameA, 'michael') ? $entB : $entA;
 
-            $logs[] = 'WARNING: HIGH-LEVEL ESCHATOLOGICAL EVENT DETECTED.';
-            $logs[] = 'Matching signatures: [ARCHANGEL_COMMANDER] vs [THE_FALLEN_ONE].';
-            $logs[] = "Script override: 'REVELATION_12:7' executed.";
-            $logs[] = 'Dimensional stability compromised. Reality trembling...';
-            $logs[] = 'Result: The Light prevails over Darkness.';
+            // --- SKENARIO A: MICHAEL VS SATAN (THE CANON EVENT) ---
+            if ($isSatan) {
+                $logs[] = 'WARNING: APOCALYPTIC EVENT TRIGGERED.';
+                $logs[] = 'Target Identifier: THE GREAT DRAGON (SATAN).';
+                $logs[] = 'Database Match: TRUE ENEMY found.';
 
-            return response()->json([
-                'winner_id' => $winner->id,
-                'winner_name' => $winner->name,
-                'win_probability' => 100,
-                'logs' => $logs,
-                'reason' => "Prophetic Outcome: 'And there was war in heaven: Michael and his angels fought against the dragon.'",
-            ]);
+                // Script Khusus yang kamu minta
+                $logs[] = "PROTOCOL: 'REVELATION_12:7' EXECUTED.";
+
+                return response()->json([
+                    'winner_id' => $winner->id,
+                    'winner_name' => $winner->name,
+                    'win_probability' => 100,
+                    'logs' => $logs,
+                    // Pesan untuk AI: Ini perang asli, harus epik dan sesuai kitab
+                    'reason' => "Script Override: 'REVELATION_12:7'. The True War in Heaven. Satan is cast out.",
+                ]);
+            }
+
+            // --- SKENARIO B: MICHAEL VS LUCIFER (THE HISTORICAL ERROR) ---
+            elseif ($isLucifer) {
+                $logs[] = 'ALERT: HISTORICAL DATA CORRUPTION DETECTED.';
+                $logs[] = 'Target Identifier: LUCIFER (Morning Star).';
+                $logs[] = 'SYSTEM NOTE: Target is DISTINCT from SATAN.';
+                $logs[] = "Simulation Mode: 'COMMON_MYTH_CORRECTION'.";
+
+                // Michael tetap menang, tapi sistem sadar ini salah target
+                return response()->json([
+                    'winner_id' => $winner->id,
+                    'winner_name' => $winner->name,
+                    'win_probability' => 100,
+                    'logs' => $logs,
+                    // Pesan untuk AI: Ceritakan bahwa ini adalah kesalahpahaman sejarah/mitos
+                    'reason' => 'Lore Correction: Michael defeats Lucifer, but the system notes that Lucifer is NOT Satan (Different Entity).',
+                ]);
+            }
         }
 
         // 2. SCP-682 VS SCP-999

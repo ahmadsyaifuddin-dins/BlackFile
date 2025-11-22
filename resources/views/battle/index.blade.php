@@ -78,7 +78,7 @@
 
                 {{-- TOMBOL RANDOMIZE --}}
                 <button @click="randomizeFighters()" type="button" :disabled="isSimulating"
-                    class="flex items-center gap-2 px-4 py-2 bg-gray-900 border border-gray-600 text-gray-400 hover:text-white hover:border-white transition-all duration-300 text-xs font-mono tracking-widest uppercase group">
+                    class="cursor-pointer flex items-center gap-2 px-4 py-2 bg-gray-900 border border-gray-600 text-gray-400 hover:text-white hover:border-white transition-all duration-300 text-xs font-mono tracking-widest uppercase group">
 
                     {{-- Ikon Dadu / Shuffle (SVG) --}}
                     <svg class="w-4 h-4 group-hover:animate-spin" fill="none" viewBox="0 0 24 24"
@@ -147,22 +147,35 @@
                     </div>
 
                     {{-- Dynamic Logs --}}
-                    <div class="space-y-1" id="terminal-content">
+                    <div class="space-y-1 font-mono" id="terminal-content" x-ref="terminalContainer">
+
+                        {{-- Loop Log --}}
                         <template x-for="(log, index) in displayedLogs" :key="index">
-                            <div class="flex gap-2">
+                            <div class="flex gap-2 log-entry" :style="`animation-delay: ${index * 50}ms`">
                                 <span class="text-gray-600 select-none shrink-0"
-                                    x-text="'[' + String(index).padStart(3, '0') + ']'"></span>
+                                    x-text="'[' + String(index + 1).padStart(3, '0') + ']'"></span>
+
+                                {{-- Pewarnaan Log --}}
                                 <span
                                     :class="{
-                                        'text-primary': log.includes('WINNER') || log.includes('successfully'),
-                                        'text-red-500': log.includes('CRITICAL') || log.includes('succumbs'),
-                                        'text-yellow-500': log.includes('WARNING'),
+                                        'text-primary font-bold': log.includes('WINNER') || log.includes(
+                                            'successfully'),
+                                        'text-red-500 font-bold': log.includes('CRITICAL') || log.includes(
+                                            'succumbs') || log.includes('mutlak'),
+                                        'text-yellow-500': log.includes('WARNING') || log.includes('taktis'),
+                                        'text-blue-400': log.includes('Inisiasi') || log.includes('Kalkulasi'),
                                         'text-gray-300': !log.includes('WINNER') && !log.includes('CRITICAL')
                                     }"
                                     x-text="log"></span>
                             </div>
                         </template>
-                        <div x-show="isSimulating" class="text-primary mt-2 terminal-cursor">PROCESSING</div>
+
+                        {{-- Loading State yang lebih Keren --}}
+                        <div x-show="isSimulating" class="text-primary mt-2 terminal-cursor flex flex-col gap-1">
+                            <span>> ESTABLISHING SECURE UPLINK...</span>
+                            <span class="text-xs text-gray-500 animate-pulse">Warning: Neural Network latency
+                                detected...</span>
+                        </div>
                     </div>
 
                 </div>

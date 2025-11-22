@@ -18,18 +18,15 @@ export default function battleSystem(entitiesData, routeUrl, csrfToken) {
         winnerIsAttacker: false,
         winProbability: 0,
         winReason: '',
-        isMuted: false, // State Mute
+        isMuted: false,
 
         entitiesData: entitiesData,
 
-        // Toggle Mute Button
-        toggleAudio() {
-            this.isMuted = sfx.toggleMute();
-        },
-
+        // --- BAGIAN CHART & AUDIO SAMA SEPERTI SEBELUMNYA (TIDAK DIUBAH) ---
+        toggleAudio() { this.isMuted = sfx.toggleMute(); },
+        
         updatePreview(side) {
-            sfx.play('hover'); // <--- EFEK SUARA BLIP SAAT PILIH HERO
-
+            sfx.play('hover');
             const id = side === 'attacker' ? this.attackerId : this.defenderId;
             const entity = this.entitiesData.find(e => e.id == id);
             const target = side === 'attacker' ? this.attacker : this.defender;
@@ -38,14 +35,14 @@ export default function battleSystem(entitiesData, routeUrl, csrfToken) {
                 target.name = entity.name;
                 target.tier = entity.power_tier;
                 target.type = entity.combat_type;
-                target.stats = entity.combat_stats || {strength:0, speed:0, durability:0, intelligence:0, energy:0, combat_skill:0};
+                target.stats = entity.combat_stats || { strength: 0, speed: 0, durability: 0, intelligence: 0, energy: 0, combat_skill: 0 };
 
+                // Ambil objek gambar (Thumbnail atau gambar pertama)
                 let imgObj = entity.thumbnail || (entity.images && entity.images.length > 0 ? entity.images[0] : null);
-                if (imgObj) {
-                    target.image = imgObj.path.startsWith('http') ? imgObj.path : '/uploads/' + imgObj.path;
-                } else {
-                    target.image = null;
-                }
+
+                // Langsung pakai .url (Magic dari Model Laravel)
+                target.image = imgObj ? imgObj.url : null;
+
                 this.renderChart(side, target.stats);
             } else {
                 target.name = ''; target.tier = ''; target.image = ''; target.type = ''; target.stats = null;
@@ -61,6 +58,7 @@ export default function battleSystem(entitiesData, routeUrl, csrfToken) {
         },
         
         renderChart(side, stats) {
+            // ... (KODE CHART SAMA SEPERTI ASLINYA, TIDAK PERLU DIUBAH) ...
              this.destroyChart(side);
              const ctx = document.getElementById(side === 'attacker' ? 'chartAlpha' : 'chartOmega');
              if(!ctx) return;
@@ -68,7 +66,7 @@ export default function battleSystem(entitiesData, routeUrl, csrfToken) {
              const config = {
                 type: 'radar',
                 data: {
-                    labels: ['Strength', 'Speed', 'Durability', 'Intelligence', 'Energy', 'Combat Skill'],
+                    labels: ['STR', 'SPD', 'DUR', 'INT', 'NRG', 'CBT'], // Disingkat biar rapi
                     datasets: [{
                         label: 'Stats',
                         data: [stats.strength, stats.speed, stats.durability, stats.intelligence, stats.energy, stats.combat_skill],
@@ -87,7 +85,7 @@ export default function battleSystem(entitiesData, routeUrl, csrfToken) {
                             angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
                             grid: { color: 'rgba(255, 255, 255, 0.1)' },
                             pointLabels: { color: '#9ca3af', font: { size: 10, family: 'monospace' } },
-                            ticks: { display: false },
+                            ticks: { display: false, backdropColor: 'transparent' }, // backdrop transparan
                             suggestedMin: 0, suggestedMax: 100
                         }
                     },
@@ -99,50 +97,40 @@ export default function battleSystem(entitiesData, routeUrl, csrfToken) {
         },
 
         randomizeFighters() {
-            // Cek jumlah data
-            if (this.entitiesData.length < 2) {
-                alert("INSUFFICIENT DATA FOR RANDOMIZATION PROTOCOL.");
-                return;
-            }
+            // ... (KODE RANDOMIZE SAMA SEPERTI ASLINYA) ...
+            if (this.entitiesData.length < 2) { alert("INSUFFICIENT DATA."); return; }
             
-            // Efek Suara (Opsional, pakai suara 'typing' atau 'hover' biar terasa techy)
-            // sfx.play('typing'); 
-
-            // 1. Pilih Index Acak untuk Attacker
             const randomIndexA = Math.floor(Math.random() * this.entitiesData.length);
             this.attackerId = this.entitiesData[randomIndexA].id;
-
-            // 2. Pilih Index Acak untuk Defender (Loop sampai beda dengan A)
             let randomIndexB;
-            do {
-                randomIndexB = Math.floor(Math.random() * this.entitiesData.length);
-            } while (randomIndexB === randomIndexA);
-
+            do { randomIndexB = Math.floor(Math.random() * this.entitiesData.length); } while (randomIndexB === randomIndexA);
             this.defenderId = this.entitiesData[randomIndexB].id;
-
-            // 3. Update Tampilan Kartu & Chart
             this.updatePreview('attacker');
             this.updatePreview('defender');
-            
-            // Reset status
-            this.winner = null;
-            this.displayedLogs = [];
         },
 
+        // --- BAGIAN UTAMA YANG DIMODIFIKASI ---
         async startSimulation() {
             if (this.attackerId === this.defenderId) { alert("CANNOT SIMULATE SELF-CONFLICT."); return; }
-            
+            if (!this.attackerId || !this.defenderId) return; // Safety check
+
             this.isSimulating = true;
             this.winner = null;
             this.displayedLogs = []; 
             
-            sfx.play('process'); // <--- SUARA START (Proses Hitung)
+            sfx.play('process'); 
+
+            // 1. LOADING EFFECT (Agar user tidak bengong nunggu Gemini)
+            this.displayedLogs.push(">> ESTABLISHING SECURE UPLINK...");
+            await new Promise(r => setTimeout(r, 300));
+            this.displayedLogs.push(">> HANDSHAKE WITH BLACKFILE CORE: [OK]");
+            this.scrollToBottom();
 
             try {
+                // 2. FETCH DATA (Backend + Gemini AI)
                 const response = await fetch(routeUrl, {
                     method: "POST",
                     headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": csrfToken },
-                    // Tambahkan arena ke body request
                     body: JSON.stringify({ 
                         attacker_id: this.attackerId, 
                         defender_id: this.defenderId,
@@ -151,28 +139,39 @@ export default function battleSystem(entitiesData, routeUrl, csrfToken) {
                 });
                 const result = await response.json();
                 
-                for (const logText of result.logs) {
-                    this.displayedLogs.push(logText);
-                    sfx.play('typing'); // <--- SUARA KETIK (Setiap baris log muncul)
-                    
-                    this.scrollToBottom();
-                    await new Promise(resolve => setTimeout(resolve, Math.random() * 300 + 100));
+                // Hapus log loading manual tadi agar bersih, atau biarkan saja (opsional)
+                // this.displayedLogs = []; 
+
+                // 3. TAMPILKAN LOG HASIL (Efek Ngetik Per Baris)
+                // Logika ini menampilkan baris per baris dengan delay agar user sempat membaca
+                if (result.logs && result.logs.length > 0) {
+                    for (const logText of result.logs) {
+                        this.displayedLogs.push(logText);
+                        sfx.play('typing'); 
+                        this.scrollToBottom();
+                        
+                        // Delay dinamis: Teks panjang delay lebih lama, teks pendek lebih cepat
+                        const delay = Math.max(300, Math.min(logText.length * 15, 800));
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
                 }
 
+                // 4. TAMPILKAN HASIL AKHIR
                 this.winner = { name: result.winner_name };
                 this.winnerIsAttacker = (result.winner_id == this.attackerId);
                 this.winProbability = result.win_probability;
                 this.winReason = result.reason;
                 
-                sfx.play('win'); // <--- SUARA FINISH (Dramatis)
+                sfx.play('win'); 
 
                 this.displayedLogs.push(">> SIMULATION COMPLETE.");
-                this.displayedLogs.push(">> WINNER: [" + result.winner_name + "]");
                 this.scrollToBottom();
 
             } catch (e) {
                 console.error(e); 
-                this.displayedLogs.push("CRITICAL ERROR: CONNECTION LOST.");
+                this.displayedLogs.push("CRITICAL ERROR: NEURAL NETWORK UNRESPONSIVE.");
+                this.displayedLogs.push(">> CHECK SERVER LOGS.");
+                this.scrollToBottom();
             } finally { 
                 this.isSimulating = false; 
             }
@@ -180,8 +179,11 @@ export default function battleSystem(entitiesData, routeUrl, csrfToken) {
 
         scrollToBottom() {
             this.$nextTick(() => {
-                const terminal = document.getElementById('terminal-content').parentElement;
-                terminal.scrollTop = terminal.scrollHeight;
+                // Pastikan ID elemen ini ada di Blade kamu
+                const terminalContent = document.getElementById('terminal-content');
+                if (terminalContent && terminalContent.parentElement) {
+                    terminalContent.parentElement.scrollTop = terminalContent.parentElement.scrollHeight;
+                }
             });
         }
     }

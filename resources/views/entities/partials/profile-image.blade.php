@@ -3,12 +3,8 @@
         VISUAL</div>
     <div class="aspect-[3/4] w-full overflow-hidden bg-gray-900 flex items-center justify-center">
         @if ($mainImage)
-            @php
-                $mainPath = Illuminate\Support\Str::startsWith($mainImage->path, 'http')
-                    ? $mainImage->path
-                    : asset('uploads/' . $mainImage->path);
-            @endphp
-            <img src="{{ $mainPath }}"
+            {{-- CUKUP PANGGIL ->url --}}
+            <img src="{{ $mainImage->url }}"
                 class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500">
         @else
             <div class="text-center opacity-30">

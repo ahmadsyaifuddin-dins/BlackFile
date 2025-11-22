@@ -14,6 +14,7 @@ class BattleHistory extends Model
 
     protected $casts = [
         'logs' => 'array', // Agar otomatis jadi array saat diambil
+        'created_at' => 'datetime',
     ];
 
     public function attacker(): BelongsTo

@@ -76,6 +76,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/simulation', [BattleController::class, 'index'])->name('battle.index');
     Route::post('/simulation/run', [BattleController::class, 'simulate'])->name('battle.run');
 
+    Route::get('/simulation/{id}', [BattleController::class, 'show'])->name('battle.show');
+
     Route::resource('prototypes', PrototypeController::class);
     Route::get('/codex', [CodexController::class, 'index'])->name('codex.index');
 
@@ -133,7 +135,7 @@ Route::middleware('auth')->group(function () {
 
     // Pastikan ini di dalam middleware auth agar tidak sembarang orang bisa pakai kuota AI kamu
     Route::post('/archives/generate-ai-desc', [ArchiveController::class, 'generateAiDescription'])
-    ->name('archives.generate-ai-desc');
+        ->name('archives.generate-ai-desc');
 
     Route::resource('archives', ArchiveController::class);
 

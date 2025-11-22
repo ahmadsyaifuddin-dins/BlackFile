@@ -29,6 +29,13 @@ class BattleController extends Controller
         return view('battle.index', compact('entities', 'history'));
     }
 
+    public function show($id)
+    {
+        $history = BattleHistory::with(['attacker', 'defender', 'winner'])->findOrFail($id);
+
+        return view('battle.show', compact('history'));
+    }
+
     public function simulate(Request $request)
     {
         $request->validate([

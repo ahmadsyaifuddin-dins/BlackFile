@@ -10,17 +10,17 @@
         </div>
 
         {{-- Notifikasi --}}
-        @if(session('success'))
-        <div class="px-4 py-3 border rounded-md bg-surface-light border-primary text-primary">
-            <span class="font-bold">> Status:</span> {{ session('success') }}
-        </div>
+        @if (session('success'))
+            <div class="px-4 py-3 border rounded-md bg-surface-light border-primary text-primary">
+                <span class="font-bold">> Status:</span> {{ session('success') }}
+            </div>
         @endif
-        @if(session('error'))
-        <div class="px-4 py-3 border rounded-md bg-surface-light border-red-500 text-red-500">
-            <span class="font-bold">> Status:</span> {{ session('error') }}
-        </div>
+        @if (session('error'))
+            <div class="px-4 py-3 border rounded-md bg-surface-light border-red-500 text-red-500">
+                <span class="font-bold">> Status:</span> {{ session('error') }}
+            </div>
         @endif
-        
+
         {{-- Panggil Komponen Filter --}}
         @include('archives.partials._filter-form', ['searchRoute' => route('archives.index')])
 
@@ -33,10 +33,10 @@
         <div class="md:hidden">
             @include('archives.partials._card-view', ['archives' => $archives])
         </div>
-        
+
         {{-- Paginasi --}}
         @if ($archives->hasPages())
-            <div class="p-4 bg-surface border-t border-border rounded-md">
+            <div class="p-4 bg-surface rounded-md">
                 {{ $archives->links() }}
             </div>
         @endif

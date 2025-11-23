@@ -1,0 +1,61 @@
+@layer utilities {
+    .text-glow {
+        color: rgba(128, 255, 128, 0.8);
+        text-shadow:
+            0 0 2px rgba(51, 255, 51, 0.6),
+            0 0 5px rgba(255, 255, 255, 0.4);
+    }
+    
+    .text-glow-green {
+      text-shadow: 0 0 5px theme('colors.green.500'), 0 0 10px theme('colors.green.700');
+    }
+    .text-glow-cyan {
+      text-shadow: 0 0 5px theme('colors.cyan.500'), 0 0 10px theme('colors.cyan.700');
+    }
+    .animate-shimmer {
+      background-image: linear-gradient(
+        90deg,
+        theme('colors.amber.400') 0%,
+        theme('colors.white') 50%,
+        theme('colors.amber.400') 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
+    }
+}
+
+/* Animasi Kustom (Global) */
+@keyframes scan {
+    0% { background-position: 0 -100vh; }
+    35%, 100% { background-position: 0 100vh; }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.theme-terminal .scan-overlay::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(0deg,
+        transparent 0%,
+        rgba(32, 128, 32, 0.2) 2%,
+        rgba(32, 128, 32, 0.8) 3%,
+        rgba(32, 128, 32, 0.2) 3%,
+        transparent 100%);
+    background-repeat: no-repeat;
+    animation: scan 7.5s linear 0s infinite;
+}
+
+.iframe-wrapper iframe {
+    filter: invert(1) grayscale(1) brightness(1.5);
+}

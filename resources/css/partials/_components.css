@@ -1,0 +1,137 @@
+@layer components {
+    .form-input-dark {
+        @apply w-full bg-gray-800 border border-gray-600 rounded-md text-gray-300 focus:ring-green-500 focus:border-green-500;
+    }
+
+    .highlighted {
+        min-zoomed-font-size: 12px;
+        font-weight: bold;
+        background-color: var(--color-primary);
+        border-color: #fff;
+        border-width: 2px;
+        z-index: 9999;
+    }
+
+    .faded {
+        opacity: 0.25;
+    }
+
+    /* Form Input & Select Styles */
+    .form-control {
+        @apply w-full bg-[var(--color-base)] border-2 border-[var(--color-border)] text-white px-3 py-2;
+        @apply font-mono transition-colors duration-200;
+        @apply placeholder-gray-600;
+        @apply focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)];
+    }
+
+    /* Style khusus untuk dropdown options */
+    .form-select-dropdown {
+        @apply absolute z-50 mt-1 w-full max-h-60 overflow-y-auto bg-black border border-[var(--border-color-primary)] shadow-lg shadow-[var(--color-primary)]/10;
+    }
+
+    .form-select-option {
+        @apply block px-4 py-2 text-sm cursor-pointer text-[var(--color-secondary)] transition-colors;
+    }
+
+    .form-select-option:hover, 
+    .form-select-option.active {
+        @apply bg-[var(--color-surface)] text-[var(--color-primary)];
+    }
+
+    /* Varian Danger untuk Form Control (Merah) */
+    .form-control.form-danger {
+        @apply bg-red-900/10 border-red-500/50 text-red-200 placeholder-red-400/50;
+        @apply focus:border-red-500 focus:ring-red-500 focus:ring-1;
+    }
+
+    /* Label khusus danger */
+    .label-danger {
+        @apply text-red-400;
+    }
+
+    /* Style Input Garis Bawah (Underline) */
+    .form-underline {
+        @apply w-full bg-transparent text-white px-1 py-2;
+        @apply font-mono rounded-none;
+        @apply placeholder-gray-600;
+        @apply border-b-2 border-[var(--color-border)];
+        @apply border-t-0 border-x-0; 
+        @apply focus:outline-none; 
+        @apply focus:ring-0;      
+        @apply focus:border-[var(--color-primary)]; 
+        @apply transition-colors duration-200;
+    }
+
+    /* Styling untuk Form Checkbox & Radio Bertema */
+    .form-checkbox-themed {
+        @apply appearance-none h-4 w-4 rounded-sm border-2 cursor-pointer align-middle;
+        @apply border-[var(--color-border)] bg-[var(--color-surface)];
+        @apply focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-base)] focus:outline-none;
+        @apply transition-all duration-150;
+
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+    .form-checkbox-themed:checked {
+        @apply bg-[var(--color-primary)] border-[var(--color-primary)];
+        background-image: var(--checkbox-icon);
+    }
+
+    .form-radio-themed {
+        @apply appearance-none h-4 w-4 rounded-full border-2 cursor-pointer align-middle;
+        @apply border-[var(--color-border)] bg-[var(--color-surface)];
+        @apply focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-base)] focus:outline-none;
+        @apply transition-all duration-150;
+
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+    .form-radio-themed:checked {
+        @apply bg-[var(--color-primary)] border-[var(--color-primary)];
+        background-image: var(--radio-icon);
+    }
+
+    /* Komponen Tombol Kustom */
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 font-bold tracking-widest transition-colors duration-150 cursor-pointer;
+        @apply text-xs sm:text-sm;
+        @apply whitespace-nowrap;
+        @apply focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-base)];
+    }
+
+    /* Varian Primary (Solid) */
+    .btn-primary {
+        @apply bg-[var(--color-primary)] border border-transparent;
+        color: var(--btn-primary-text);
+    }
+    .btn-primary:hover {
+        @apply bg-[var(--color-primary-hover)];
+        color: var(--btn-primary-text);
+    }
+
+    /* Varian Outline (Border) */
+    .btn-outline {
+        @apply bg-transparent border border-[var(--border-color-primary)];
+        color: var(--btn-outline-text);
+    }
+    .btn-outline:hover {
+        @apply bg-[var(--color-primary)] border border-[var(--border-color-primary)];
+        color: var(--btn-primary-text);
+    }
+
+    /* Varian Secondary (Subtle) */
+    .btn-secondary {
+        @apply bg-[var(--color-surface-light)] border border-[var(--color-border)];
+        color: var(--btn-secondary-text);
+    }
+
+    .btn-secondary:hover {
+        @apply bg-[var(--color-border)] text-white;
+    }
+
+    .btn-sm {
+        @apply px-3 py-1 text-xs;
+    }
+}

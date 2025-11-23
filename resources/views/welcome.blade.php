@@ -20,18 +20,15 @@
         body {
             font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
             background-color: #050505;
-            /* Mencegah scroll horizontal di mobile akibat elemen absolute */
             overflow-x: hidden;
         }
 
         .bg-grid {
             background-size: 30px 30px;
-            /* Ukuran grid lebih kecil untuk mobile */
             background-image: linear-gradient(to right, rgba(var(--primary-rgb, 34, 197, 94), 0.05) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(var(--primary-rgb, 34, 197, 94), 0.05) 1px, transparent 1px);
         }
 
-        /* Di layar besar, grid lebih lega */
         @media (min-width: 768px) {
             .bg-grid {
                 background-size: 50px 50px;
@@ -47,7 +44,6 @@
                     rgba(255, 255, 255, 0),
                     rgba(255, 255, 255, 0) 50%,
                     rgba(0, 0, 0, 0.15) 50%,
-                    /* Opacity dikurangi agar tidak ganggu baca di HP */
                     rgba(0, 0, 0, 0.15));
             background-size: 100% 3px;
             pointer-events: none;
@@ -55,7 +51,7 @@
     </style>
 </head>
 
-<body class="antialiased text-secondary selection:bg-primary selection:text-black">
+<body class="antialiased text-secondary selection:bg-[var(--color-primary)] selection:text-black">
 
     {{-- Background Layers --}}
     <div class="fixed inset-0 bg-grid z-0 pointer-events-none"></div>
@@ -65,7 +61,6 @@
     <div class="relative min-h-screen flex flex-col z-10">
 
         {{-- HEADER --}}
-        {{-- Padding dikurangi untuk mobile (p-4), di desktop p-6 --}}
         <header
             class="w-full px-4 py-4 md:p-6 border-b border-primary/10 bg-black/80 backdrop-blur-md fixed top-0 z-40 transition-all">
             <div class="container mx-auto flex justify-between items-center">
@@ -81,16 +76,17 @@
                 {{-- Auth Status --}}
                 <div class="flex items-center gap-4">
                     @auth
-                        {{-- Nama User hanya tampil di Tablet ke atas (sm:block) --}}
                         <div class="text-xs text-right hidden sm:block">
                             <div class="text-secondary opacity-60">ID</div>
                             <div class="text-primary font-bold">{{ Str::limit(Auth::user()->name, 10) }}</div>
                         </div>
+                        {{-- PERBAIKAN TOMBOL HEADER AUTH --}}
                         <a href="{{ route('dashboard') }}"
-                            class="relative px-3 py-1.5 md:px-5 md:py-2 border border-primary bg-primary/10 text-primary font-bold text-[10px] md:text-xs uppercase tracking-wider hover:bg-primary hover:text-black transition-all duration-300">
+                            class="relative px-3 py-1.5 md:px-5 md:py-2 border border-primary bg-[var(--color-primary)]/10 text-primary font-bold text-[10px] md:text-xs uppercase tracking-wider hover:bg-[var(--color-primary)] hover:text-black transition-all duration-300">
                             > DASHBOARD
                         </a>
                     @else
+                        {{-- PERBAIKAN TOMBOL HEADER GUEST --}}
                         <a href="{{ route('login') }}"
                             class="relative px-3 py-1.5 md:px-5 md:py-2 border border-secondary/50 text-secondary font-bold text-[10px] md:text-xs uppercase tracking-wider hover:border-primary hover:text-primary transition-colors duration-300">
                             LOGIN
@@ -104,7 +100,6 @@
         <main class="flex-grow flex flex-col pt-16 md:pt-20">
 
             {{-- HERO SECTION --}}
-            {{-- Menggunakan min-h-[dynamic] agar pas di layar HP --}}
             <section
                 class="flex flex-col items-center justify-center text-center px-4 py-12 md:py-20 min-h-[60vh] md:min-h-[70vh]">
 
@@ -118,7 +113,6 @@
                 </div>
 
                 {{-- Typing Effect Title --}}
-                {{-- min-h-[4rem] ditambahkan agar layout tidak loncat saat teks berganti --}}
                 <div x-data="{
                     text: '',
                     textArray: ['BLACKFILE_PROTOCOL', 'SECURE_ARCHIVE', 'EYES_ONLY'],
@@ -152,7 +146,6 @@
                 }" x-init="type()"
                     class="min-h-[3rem] md:min-h-[4rem] flex items-center justify-center max-w-full overflow-hidden">
 
-                    {{-- Font size responsif: text-2xl di HP, text-5xl di desktop. break-all mencegah overflow horizontal --}}
                     <h1
                         class="text-2xl sm:text-4xl md:text-6xl font-extrabold text-white tracking-tight break-words mx-2">
                         <span x-text="text"></span><span class="animate-pulse text-primary">_</span>
@@ -185,14 +178,10 @@
                         <div class="h-px bg-primary/30 w-8 md:w-16"></div>
                     </div>
 
-                    {{-- Grid 1 kolom di HP, 3 di Desktop. Gap diperkecil di HP --}}
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-
-                        {{-- Card Component --}}
                         @foreach ([['title' => 'AGENT ROSTER', 'desc' => 'Manage operative designations and clearance levels.'], ['title' => 'MISSION LOGS', 'desc' => 'Detailed operational history and deployment tracking.'], ['title' => 'INTEL NETWORK', 'desc' => 'Visualize connections between assets and targets.']] as $item)
                             <div
-                                class="group relative p-5 md:p-6 border border-primary/20 bg-black/40 hover:bg-primary/5 transition-all duration-300">
-                                {{-- Corner Accents (Hanya muncul 4 sudut) --}}
+                                class="group relative p-5 md:p-6 border border-primary/20 bg-black/40 hover:bg-[var(--color-primary)]/5 transition-all duration-300">
                                 <div
                                     class="absolute top-0 left-0 w-2 h-2 border-t border-l border-primary opacity-50 group-hover:opacity-100">
                                 </div>
@@ -216,7 +205,6 @@
                                 </p>
                             </div>
                         @endforeach
-
                     </div>
                 </div>
             </section>
@@ -230,11 +218,13 @@
                     </p>
 
                     @auth
+                        {{-- PERBAIKAN TOMBOL UTAMA CTA AUTH --}}
                         <a href="{{ route('dashboard') }}"
-                            class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 border border-primary bg-primary/10 text-primary font-bold text-sm md:text-lg tracking-[0.1em] md:tracking-[0.2em] hover:bg-primary hover:text-black hover:shadow-[0_0_20px_rgba(34,197,94,0.5)] transition-all duration-300">
+                            class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 border border-primary bg-[var(--color-primary)]/10 text-primary font-bold text-sm md:text-lg tracking-[0.1em] md:tracking-[0.2em] hover:bg-[var(--color-primary)] hover:text-black hover:shadow-[0_0_20px_rgba(34,197,94,0.5)] transition-all duration-300">
                             [ ENTER_VAULT ]
                         </a>
                     @else
+                        {{-- PERBAIKAN TOMBOL UTAMA CTA GUEST --}}
                         <a href="{{ route('login') }}"
                             class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 border border-white/20 bg-transparent text-white font-bold text-sm md:text-lg tracking-[0.1em] md:tracking-[0.2em] hover:border-primary hover:text-primary hover:bg-black hover:shadow-[0_0_20px_rgba(34,197,94,0.3)] transition-all duration-300">
                             [ ACCESS_TERMINAL ]

@@ -6,7 +6,7 @@
     <div class="max-w-5xl mx-auto space-y-6">
 
         {{-- Header Navigation --}}
-        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-primary/20 pb-4">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-green-500/20 pb-4">
             <div>
                 <h1 class="text-xl sm:text-2xl font-bold text-primary break-words tracking-tight font-mono">
                     <span class="text-primary/50 mr-2">FILE_ID:</span>{{ $archive->name }}
@@ -25,7 +25,7 @@
 
                 {{-- Image Preview --}}
                 @if ($archive->preview_image_url)
-                    <div class="w-full overflow-hidden rounded border border-primary/30 bg-black relative group">
+                    <div class="w-full overflow-hidden rounded border border-green-500/30 bg-black relative group">
                         <div
                             class="absolute top-0 left-0 bg-primary/80 text-black text-[10px] font-bold px-2 py-1 font-mono">
                             IMG_PREVIEW</div>
@@ -39,8 +39,8 @@
                 @endif
 
                 {{-- DESCRIPTION SECTION --}}
-                <div class="bg-surface/40 border border-primary/30 rounded overflow-hidden relative">
-                    <div class="bg-black/30 px-4 py-2 border-b border-primary/20 flex items-center justify-between">
+                <div class="bg-surface/40 border border-green-500/30 rounded overflow-hidden relative">
+                    <div class="bg-black/30 px-4 py-2 border-b border-green-500/20 flex items-center justify-between">
                         <h3 class="text-xs font-bold uppercase tracking-widest text-secondary font-mono">>
                             DESCRIPTION_DATA</h3>
                         <div class="flex gap-1">
@@ -65,12 +65,12 @@
 
                 {{-- Links Section (Only for URL type) --}}
                 @if ($archive->type === 'url' && count($archive->links) > 0)
-                    <div class="bg-surface/40 border border-primary/30 rounded p-4">
+                    <div class="bg-surface/40 border border-green-500/30 rounded p-4">
                         <h3 class="text-xs font-bold uppercase tracking-widest text-secondary font-mono mb-3">>
                             LINKED_RESOURCES</h3>
                         <ul class="space-y-2">
                             @foreach ($archive->links as $link)
-                                <li class="flex items-start gap-3 bg-black/20 p-2 rounded border border-primary/10"
+                                <li class="flex items-start gap-3 bg-black/20 p-2 rounded border border-green-500/10"
                                     x-data="{ tooltip: 'copy' }">
                                     <svg class="h-4 w-4 text-secondary mt-1 flex-shrink-0" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -112,9 +112,9 @@
 
             {{-- KOLOM KANAN: Metadata / Sidebar --}}
             <div class="space-y-6">
-                <div class="bg-surface border border-primary/30 rounded p-5 shadow-lg">
+                <div class="bg-surface border border-green-500/30 rounded p-5 shadow-lg">
                     <h3
-                        class="text-xs font-bold uppercase tracking-widest text-secondary font-mono mb-4 border-b border-primary/20 pb-2">
+                        class="text-xs font-bold uppercase tracking-widest text-secondary font-mono mb-4 border-b border-green-500/20 pb-2">
                         > METADATA_INFO
                     </h3>
 
@@ -155,7 +155,7 @@
 
                         {{-- File Specifics --}}
                         @if ($archive->type === 'file')
-                            <div class="bg-primary/5 p-2 rounded border border-primary/10">
+                            <div class="bg-primary/5 p-2 rounded border border-green-500/10">
                                 <div class="flex justify-between mb-1">
                                     <dt class="text-[10px] uppercase text-secondary font-mono">Size</dt>
                                     <dd class="text-xs font-mono text-primary">
@@ -208,7 +208,7 @@
                                     count = response.data.favorited_by_count;
                                 });
                         "
-                            class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-surface border border-border rounded hover:bg-surface-light transition-colors group">
+                            class="cursor-pointer w-full flex items-center justify-center gap-2 px-4 py-2 bg-surface border border-border rounded hover:bg-surface-light transition-colors group">
                             <svg class="h-5 w-5 transition-colors duration-200"
                                 :class="isFavorited ? 'text-red-500 fill-current' : 'text-secondary group-hover:text-red-400'"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">

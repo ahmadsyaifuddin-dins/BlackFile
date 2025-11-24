@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -32,7 +31,7 @@ class SettingController extends Controller
     }
 
     /**
-     * [BARU] Memperbarui pengaturan paginasi dan menyimpannya di session.
+     * Memperbarui pengaturan paginasi dan menyimpannya di session.
      */
     public function updatePagination(Request $request)
     {
@@ -46,7 +45,7 @@ class SettingController extends Controller
     }
 
     /**
-     * [BARU & DISATUKAN] Memperbarui semua pengaturan pengguna.
+     * Memperbarui semua pengaturan pengguna.
      */
     public function update(Request $request)
     {
@@ -54,10 +53,11 @@ class SettingController extends Controller
             'locale' => 'required|in:en,id',
             'per_page' => 'required|integer|in:6,9,12,15,18,27,54',
             'theme' => 'required|string|in:default,amber,arctic,red',
+            'alert_position' => 'nullable|string',
         ]);
 
         $user = Auth::user();
-        
+
         // Ambil pengaturan yang ada, atau buat array kosong jika belum ada
         $settings = $user->settings ?? [];
 
@@ -65,10 +65,10 @@ class SettingController extends Controller
         $settings['locale'] = $request->locale;
         $settings['per_page'] = $request->per_page;
         $settings['theme'] = $request->theme;
-        
+        $settings['alert_position'] = $request->alert_position;
         // Simpan kembali ke database
         $user->settings = $settings;
-                
+
         /** @var \App\Models\User $user */
         $user->save();
 

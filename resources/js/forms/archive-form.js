@@ -159,17 +159,17 @@ export default function archiveForm() {
                 // Show first validation error as alert for user feedback
                 const firstError = Object.values(this.errors)[0];
                 if (firstError && firstError.length > 0) {
-                    alert('Validation Error: ' + firstError[0]);
+                    window.agentAlert('warning', 'VALIDATION FAILED', firstError[0]);
                 }
             } else if (error.response && error.response.data?.message) {
                 // Server error with message
-                alert('Error: ' + error.response.data.message);
+                window.agentAlert('error', 'SYSTEM ERROR', error.response.data.message);
             } else if (error.message) {
                 // Network or other axios error
-                alert('Network Error: ' + error.message);
+                window.agentAlert('error', 'CONNECTION LOST', error.message);
             } else {
                 // Generic error
-                alert('An unexpected error occurred. Please try again.');
+                window.agentAlert('error', 'CRITICAL FAILURE', 'An unexpected error occurred. Operation aborted.');                
             }
         },
 

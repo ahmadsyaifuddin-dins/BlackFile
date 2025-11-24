@@ -232,10 +232,31 @@
     </nav>
 
     <div class="p-4 border-t border-border-color flex-shrink-0">
-        <form method="POST" action="{{ route('logout') }}">
+        <form method="POST" action="{{ route('logout') }}" x-data="{
+            async requestLogout() {
+                const confirmed = await window.agentConfirm(
+                    'TERMINATE SESSION?',
+                    'Confirm disconnection sequence. Secure channel will be closed and local cache cleared.',
+                    'DISCONNECT',
+                    'STAY CONNECTED'
+                );
+        
+                if (confirmed) {
+                    // Submit form secara manual jika dikonfirmasi
+                    this.$el.submit();
+                }
+            }
+        }" @submit.prevent="requestLogout">
+            {{-- Mencegah submit langsung --}}
+
             @csrf
+
             <button type="submit"
-                class="w-full text-left flex items-center space-x-3 px-3 py-2 rounded transition-colors hover:bg-red-900/50 hover:text-red-400 cursor-pointer">
+                class="w-full text-left flex items-center space-x-3 px-3 py-2 rounded transition-colors hover:bg-red-900/50 hover:text-red-400 cursor-pointer group">
+
+                {{-- Icon Power (Opsional, biar lebih keren) --}}
+                <i class="fa-solid fa-power-off text-red-500/50 group-hover:text-red-500 transition-colors"></i>
+
                 <span>> {{ __('Terminate Session') }}</span>
             </button>
         </form>

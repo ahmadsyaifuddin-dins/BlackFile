@@ -28,7 +28,11 @@
     <div class="relative z-10">
         {{ $slot }}
     </div>
+
     <x-modal.confirm />
+    <x-agent-confirm />
+
+    <x-agent-alert />
     @stack('scripts')
 </body>
 

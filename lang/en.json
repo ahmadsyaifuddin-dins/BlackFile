@@ -16,7 +16,11 @@
     "Codex": "Codex",
     "Settings": "Settings",
     "Activity Logs": "Activity Logs",
-    "Kontak Terenkripsi": "Encrypted Contacts",
+    "Encrypted Contacts": "Encrypted Contacts",
+    
+    "Archives": "Archives",
+    "All Files": "All Files",
+
     "Register Agent": "Register Agent",
     "Terminate Session": "Terminate Session",
     "General application configuration.": "General application configuration.",

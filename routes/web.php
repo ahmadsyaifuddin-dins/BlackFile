@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthManual\RegisterController;
 use App\Http\Controllers\BattleController;
 use App\Http\Controllers\CodexController;
 use App\Http\Controllers\CreditController;
+use App\Http\Controllers\DarkArchiveController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefaultMusicController;
 use App\Http\Controllers\EncryptedContactController;
@@ -41,6 +42,10 @@ Route::get('/', function () {
 // Using route-model binding on the 'slug' column of the User model
 Route::get('/public-credits/{user:slug}', [CreditController::class, 'publicShow'])->name('credits.public');
 
+Route::get('/dark-archives', [DarkArchiveController::class, 'index'])->name('dark-archives.index');
+Route::get('/dark-archives/case/{slug}', [DarkArchiveController::class, 'show'])->name('dark-archives.show');
+Route::post('/dark-archives/respect/{id}', [DarkArchiveController::class, 'payRespect'])->name('dark-archives.respect');
+
 // Grup rute yang HANYA bisa diakses oleh "tamu" (pengguna yang belum login)
 Route::middleware('guest')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -58,6 +63,11 @@ Route::get('/default-music-file/{path}', [DefaultMusicController::class, 'serveM
 Route::middleware('auth')->group(function () {
     // Rute dasar setelah login
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/dark-archives/create', [DarkArchiveController::class, 'create'])->name('dark-archives.create');
+    Route::post('/dark-archives', [DarkArchiveController::class, 'store'])->name('dark-archives.store');
+    Route::get('/dark-archives/{slug}/edit', [DarkArchiveController::class, 'edit'])->name('dark-archives.edit');
+    Route::put('/dark-archives/{id}', [DarkArchiveController::class, 'update'])->name('dark-archives.update');
 
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');

@@ -6,6 +6,7 @@
 
 @import '@fortawesome/fontawesome-free/css/all.css';
 @import 'tailwindcss';
+@plugin "@tailwindcss/typography";
 
 /* Import Custom CSS Modules */
 @import './partials/_base.css';

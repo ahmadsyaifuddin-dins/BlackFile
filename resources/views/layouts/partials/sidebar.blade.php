@@ -97,6 +97,12 @@
         <div class="my-4 border-t border-primary/10 mx-2"></div>
         <div class="px-4 text-xs text-primary/50 uppercase tracking-widest font-bold mb-2">Operations</div>
 
+        <a href="{{ route('dark-archives.index') }}"
+            class="{{ $baseLinkClass }} {{ request()->routeIs('dark-archives.*') ? $activeClass : $inactiveClass }}">
+            <span class="opacity-50 group-hover:text-primary transition-colors text-lg">></span>
+            <span>{{ __('Dark Archives') }}</span>
+        </a>
+
         <a href="{{ route('tools.index') }}"
             class="{{ $baseLinkClass }} {{ request()->routeIs('tools.*') ? $activeClass : $inactiveClass }}">
             <span class="opacity-50 group-hover:text-primary transition-colors text-lg">></span>
@@ -216,7 +222,7 @@
     </nav>
 
     {{-- FOOTER SECTION (LOGOUT) --}}
-    <div class="p-6 border-t border-primary/20 bg-black/80">
+    <div class="p-2 border-t border-primary/20 bg-black/80">
         <form method="POST" action="{{ route('logout') }}" x-data="{
             async requestLogout() {
                 const confirmed = await window.agentConfirm(
@@ -234,7 +240,7 @@
             @submit.prevent="requestLogout">
             @csrf
             <button type="submit"
-                class="cursor-pointer w-full group relative flex items-center justify-center space-x-3 px-6 py-4 rounded border-2 border-red-900/30 text-red-500/80 hover:text-black hover:bg-red-600 hover:border-red-600 hover:shadow-[0_0_20px_rgba(220,38,38,0.5)] transition-all duration-300 overflow-hidden font-bold tracking-[0.2em] text-sm uppercase">
+                class="cursor-pointer w-full group relative flex items-center justify-center space-x-3 px-6 py-2 rounded border-2 border-red-900/30 text-red-500/80 hover:text-black hover:bg-red-600 hover:border-red-600 hover:shadow-[0_0_20px_rgba(220,38,38,0.5)] transition-all duration-300 overflow-hidden font-bold tracking-[0.2em] text-sm uppercase">
                 <i class="fa-solid fa-power-off text-base"></i>
                 <span>TERMINATE</span>
             </button>

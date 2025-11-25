@@ -61,17 +61,29 @@
             {{ $archive ? 'Update Visual Evidence (Leave blank to keep current)' : 'Upload Visual Evidence (Thumbnail)' }}
         </label>
 
-        <!-- Preview Gambar Lama jika sedang Edit -->
+        <!-- 1. Preview Gambar Lama (Dari Database) -->
         @if ($archive && $archive->thumbnail)
-            <div class="mb-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <!-- Kita kasih ID agar bisa disembunyikan jika user upload gambar baru (opsional, tapi lebih rapi) -->
+            <div id="current-evidence" class="mb-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <img src="{{ asset($archive->thumbnail) }}" alt="Current Evidence"
                     class="h-20 w-auto border border-red-900 opacity-70 rounded shadow-lg shadow-red-900/20">
-                <span class="text-xs text-green-700 font-mono bg-green-900/10 px-2 py-1 rounded">[ CURRENT EVIDENCE ON
-                    FILE ]</span>
+                <span class="text-xs text-green-700 font-mono bg-green-900/10 px-2 py-1 rounded">
+                    [ CURRENT EVIDENCE ON FILE ]
+                </span>
             </div>
         @endif
 
-        <input type="file" name="thumbnail"
+        <!-- 2. Preview Gambar Baru (JavaScript Preview) -->
+        <div id="new-preview-container" class="hidden flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
+            <img id="new-preview-image" src="#" alt="New Evidence Preview"
+                class="h-24 w-auto border border-yellow-600 opacity-100 rounded shadow-lg shadow-yellow-900/20">
+            <span class="text-xs text-yellow-500 font-mono bg-yellow-900/10 px-2 py-1 rounded animate-pulse">
+                [ NEW EVIDENCE SELECTED_ ]
+            </span>
+        </div>
+
+        <!-- 3. Input File -->
+        <input type="file" name="thumbnail" id="thumbnail-input" onchange="previewImage(event)"
             class="block w-full text-sm text-gray-400
             file:mr-4 file:py-2 file:px-4
             file:rounded-full file:border-0
@@ -207,6 +219,39 @@
 
 <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 <script>
+    function previewImage(event) {
+        const input = event.target;
+        const previewContainer = document.getElementById('new-preview-container');
+        const previewImage = document.getElementById('new-preview-image');
+        const currentEvidence = document.getElementById('current-evidence');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                // Set src gambar ke hasil bacaan file
+                previewImage.src = e.target.result;
+
+                // Tampilkan container preview baru
+                previewContainer.classList.remove('hidden');
+
+                // (Opsional) Sembunyikan gambar lama agar tidak bingung ada 2 gambar
+                if (currentEvidence) {
+                    currentEvidence.classList.add('hidden');
+                }
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            // Jika user cancel upload (file kosong), sembunyikan preview
+            previewContainer.classList.add('hidden');
+
+            // Munculkan kembali gambar lama
+            if (currentEvidence) {
+                currentEvidence.classList.remove('hidden');
+            }
+        }
+    }
     // Cek apakah editor sudah ter-init sebelumnya untuk menghindari error duplikasi
     if (!window.darkEditorInitialized) {
         ClassicEditor

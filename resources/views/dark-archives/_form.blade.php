@@ -55,31 +55,34 @@
     </div>
 
     <!-- INPUT: Evidence Photo -->
-    <div class="border border-dashed border-gray-800 p-6 bg-gray-900/20 hover:bg-gray-900/40 transition-colors">
+    <div
+        class="border border-dashed border-gray-800 p-4 md:p-6 bg-gray-900/20 hover:bg-gray-900/40 transition-colors rounded-lg">
         <label class="block text-xs text-gray-500 uppercase mb-3 tracking-widest">
             {{ $archive ? 'Update Visual Evidence (Leave blank to keep current)' : 'Upload Visual Evidence (Thumbnail)' }}
         </label>
 
         <!-- Preview Gambar Lama jika sedang Edit -->
         @if ($archive && $archive->thumbnail)
-            <div class="mb-4 flex items-center gap-4">
+            <div class="mb-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <img src="{{ asset($archive->thumbnail) }}" alt="Current Evidence"
-                    class="h-20 w-auto border border-red-900 opacity-70">
-                <span class="text-xs text-green-700">[ CURRENT EVIDENCE ON FILE ]</span>
+                    class="h-20 w-auto border border-red-900 opacity-70 rounded shadow-lg shadow-red-900/20">
+                <span class="text-xs text-green-700 font-mono bg-green-900/10 px-2 py-1 rounded">[ CURRENT EVIDENCE ON
+                    FILE ]</span>
             </div>
         @endif
 
         <input type="file" name="thumbnail"
             class="block w-full text-sm text-gray-400
             file:mr-4 file:py-2 file:px-4
-            file:border-0
-            file:text-sm file:font-semibold
+            file:rounded-full file:border-0
+            file:text-xs md:file:text-sm file:font-semibold
             file:bg-red-900 file:text-white
             hover:file:bg-red-800
             cursor-pointer font-mono
+            focus:outline-none
         ">
         @error('thumbnail')
-            <span class="text-red-500 text-xs">{{ $message }}</span>
+            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
         @enderror
     </div>
 
@@ -118,7 +121,7 @@
                 [ ABORT ]
             </a>
             <button type="submit"
-                class="cursor-pointer group relative w-full md:w-auto bg-red-900/80 hover:bg-red-800 text-white font-bold py-3 px-8 tracking-[0.15em] uppercase text-sm transition-all duration-300 border border-red-800 hover:border-red-600 overflow-hidden">
+                class="cursor-pointer group relative w-full md:w-auto bg-red-900/80 hover:bg-red-800 text-white font-bold py-3 px-8 tracking-[0.15em] uppercase text-xs md:text-sm transition-all duration-300 border border-red-800 hover:border-red-600 overflow-hidden">
                 <span class="relative z-10 flex items-center justify-center gap-2">
                     {{ $archive ? 'REWRITE ARCHIVE' : 'ENCRYPT & SAVE' }}
                     <span class="text-red-400 group-hover:translate-x-1 transition-transform">>></span>

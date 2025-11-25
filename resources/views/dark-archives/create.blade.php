@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Dark Archives">
     <div class="min-h-screen bg-black text-gray-300 font-mono p-4 md:p-8">
         <div class="max-w-6xl mx-auto border-l-4 border-green-900 pl-4 md:pl-8 py-4">
 

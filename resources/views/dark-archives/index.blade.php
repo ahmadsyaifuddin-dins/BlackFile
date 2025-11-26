@@ -102,28 +102,30 @@
 
                             <!-- Action Footer (Tombol Edit Disini) -->
                             <div
-                                class="px-5 py-3 border-t border-gray-900 bg-gray-900/30 flex justify-between items-center">
+                                class="px-5 py-3 border-t border-gray-900 bg-gray-900/30 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
                                 <a href="{{ route('dark-archives.show', $archive->slug) }}"
                                     class="text-[10px] text-gray-500 hover:text-white transition">
                                     [ PREVIEW ]
                                 </a>
 
-                                <!-- Pastikan route 'dark-archives.edit' sudah ada di web.php -->
-                                <a href="{{ route('dark-archives.edit', $archive->slug) }}"
-                                    class="text-[10px] bg-gray-800 hover:bg-blue-900 text-blue-400 hover:text-white px-3 py-1 border border-gray-700 hover:border-blue-500 transition">
-                                    // EDIT FILE
-                                </a>
+                                <div class="flex items-center gap-2 w-full sm:w-auto justify-center">
+                                    <!-- Pastikan route 'dark-archives.edit' sudah ada di web.php -->
+                                    <a href="{{ route('dark-archives.edit', $archive->slug) }}"
+                                        class="text-[10px] bg-gray-800 hover:bg-blue-900 text-blue-400 hover:text-white px-3 py-1 border border-gray-700 hover:border-blue-500 transition whitespace-nowrap">
+                                        // EDIT FILE
+                                    </a>
 
-                                <button x-data
-                                    @click="$dispatch('open-delete-modal', { 
-                                    url: '{{ route('dark-archives.destroy', $archive->id) }}',
-                                    title: 'PURGE ARCHIVE',
-                                    message: 'Are you sure you want to permanently delete case file {{ $archive->case_code }}? This action will wipe all evidence data and cannot be undone.',
-                                    target: '{{ Str::limit($archive->title, 30) }}'
-                                })"
-                                    class="text-[10px] cursor-pointer bg-red-900/20 hover:bg-red-900 text-red-500 hover:text-white px-3 py-1 border border-red-900/50 hover:border-red-500 transition">
-                                    [ DELETE ]
-                                </button>
+                                    <button x-data
+                                        @click="$dispatch('open-delete-modal', { 
+                                        url: '{{ route('dark-archives.destroy', $archive->id) }}',
+                                        title: 'PURGE ARCHIVE',
+                                        message: 'Are you sure you want to permanently delete case file {{ $archive->case_code }}? This action will wipe all evidence data and cannot be undone.',
+                                        target: '{{ Str::limit($archive->title, 30) }}'
+                                    })"
+                                        class="text-[10px] cursor-pointer bg-red-900/20 hover:bg-red-900 text-red-500 hover:text-white px-3 py-1 border border-red-900/50 hover:border-red-500 transition whitespace-nowrap">
+                                        [ DELETE ]
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     @endforeach

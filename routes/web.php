@@ -64,10 +64,12 @@ Route::middleware('auth')->group(function () {
     // Rute dasar setelah login
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Rute Dark Archives
     Route::get('/dark-archives/create', [DarkArchiveController::class, 'create'])->name('dark-archives.create');
     Route::post('/dark-archives', [DarkArchiveController::class, 'store'])->name('dark-archives.store');
     Route::get('/dark-archives/{slug}/edit', [DarkArchiveController::class, 'edit'])->name('dark-archives.edit');
     Route::put('/dark-archives/{id}', [DarkArchiveController::class, 'update'])->name('dark-archives.update');
+    Route::delete('/dark-archives/{id}', [DarkArchiveController::class, 'destroy'])->name('dark-archives.destroy');
 
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');

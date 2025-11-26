@@ -181,4 +181,27 @@ class DarkArchiveController extends Controller
 
         return redirect()->route('dark-archives.index')->with('success', 'Arsip berhasil diperbarui.');
     }
+
+    public function destroy($id)
+    {
+        $archive = DarkArchive::findOrFail($id);
+
+        // 1. Hapus File Gambar (Jika ada)
+        if ($archive->thumbnail) {
+            // Path di DB: uploads/evidence_files/nama.jpg
+            // Root Disk 'main_uploads': public/uploads/
+            // Maka kita perlu menghapus prefix 'uploads/' agar path sesuai relatif terhadap disk
+            $path = str_replace('uploads/', '', $archive->thumbnail);
+
+            if (Storage::disk('main_uploads')->exists($path)) {
+                Storage::disk('main_uploads')->delete($path);
+            }
+        }
+
+        // 2. Hapus Data di Database
+        $archive->delete();
+
+        return redirect()->route('dark-archives.index')
+            ->with('success', 'Archive successfully purged from database.');
+    }
 }

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('status', ['draft', 'declassified'])->default('draft');
 
             // Metadata
-            $table->timestamp('incident_date')->nullable();
+            $table->dateTime('incident_date')->nullable();
             $table->string('location')->nullable(); // Banjarmasin, Kalimantan Selatan
 
             // Engagement

@@ -46,11 +46,14 @@ Route::get('/dark-archives', [DarkArchiveController::class, 'index'])->name('dar
 Route::get('/dark-archives/case/{slug}', [DarkArchiveController::class, 'show'])->name('dark-archives.show');
 Route::post('/dark-archives/respect/{id}', [DarkArchiveController::class, 'payRespect'])->name('dark-archives.respect');
 
-// Grup rute yang HANYA bisa diakses oleh "tamu" (pengguna yang belum login)
+// 2. Grup Guest TERPROTEKSI (Diblokir saat Maintenance)
 Route::middleware('guest')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [LoginController::class, 'login']);
+});
 
+// Calon agent tidak boleh daftar saat lockdown.
+Route::middleware(['guest', 'maintenance'])->group(function () {
     Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [RegisterController::class, 'register'])->name('register');
 });
@@ -60,8 +63,8 @@ Route::get('/default-music-file/{path}', [DefaultMusicController::class, 'serveM
     ->name('default-music.serve');
 
 // Grup rute yang HANYA bisa diakses oleh pengguna yang SUDAH LOGIN
-Route::middleware('auth')->group(function () {
-    // Rute dasar setelah login
+// Rute dasar setelah login
+Route::middleware(['auth', 'maintenance'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Rute Dark Archives
@@ -155,6 +158,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('archives', ArchiveController::class);
 
     Route::resource('credits', CreditController::class);
+
+    Route::middleware('role:Director')->group(function () {
+        Route::post('/admin/setting/maintenance', [AdminController::class, 'toggleMaintenance'])
+            ->name('admin.setting.maintenance');
+    });
 
     // Grup rute yang dilindungi oleh role tertentu (Director atau Technician)
     // Menggunakan 'role' middleware kustom Anda

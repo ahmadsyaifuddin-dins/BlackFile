@@ -15,5 +15,10 @@
             url="{{ route('admin.setting.toggle') }}"
         /> 
         --}}
+
+        {{-- 2. MAINTENANCE MODE (BARU) --}}
+        {{-- Mengarah ke route khusus admin.setting.maintenance --}}
+        <x-terminal-toggle label="MAINTENANCE LOCKDOWN" key="maintenance_mode" :checked="$maintenanceMode"
+            url="{{ route('admin.setting.maintenance') }}" />
     </div>
 </div>

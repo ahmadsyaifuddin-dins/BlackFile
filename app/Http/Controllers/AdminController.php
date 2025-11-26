@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\AgentNotification;
+use App\Mail\MaintenanceAlert;
 use App\Models\Invite;
 use App\Models\Role;
 use App\Models\SystemSetting;
@@ -41,8 +42,10 @@ class AdminController extends Controller
 
         $entityNotifyEnabled = SystemSetting::check('entity_notify_enabled', true);
 
+        $maintenanceMode = SystemSetting::check('maintenance_mode', false);
+
         // Tambahkan 'agents' ke view
-        return view('admin.dashboard', compact('pendingApplicants', 'invites', 'agents', 'entityNotifyEnabled'));
+        return view('admin.dashboard', compact('pendingApplicants', 'invites', 'agents', 'entityNotifyEnabled', 'maintenanceMode'));
     }
 
     // Method AJAX untuk toggle
@@ -109,6 +112,48 @@ class AdminController extends Controller
         }
 
         return back()->with('success', 'Notification broadcast has been sent to '.$targetAgents->count().' agents.');
+    }
+
+    public function toggleMaintenance(Request $request)
+    {
+        $request->validate([
+            'value' => 'required|boolean', // true = mau maintenance, false = mau online
+        ]);
+
+        // 1. Simpan ke Database
+        // Kita simpan sebagai '1' atau '0' sesuai struktur SystemSetting Anda
+        $isMaintenance = $request->value;
+
+        SystemSetting::updateOrCreate(
+            ['key' => 'maintenance_mode'],
+            ['value' => $isMaintenance ? '1' : '0']
+        );
+
+        // 2. Ambil list Agent untuk dinotifikasi
+        // Menggunakan logic query yg sama dengan dashboard agar konsisten
+        // Kecuali Admin/Director yg sedang login mungkin tidak perlu dikirim email, tapi dikirim semua juga tidak masalah.
+        $agents = User::where('confirmed', true)
+            ->whereHas('role', function ($query) {
+                $query->where('name', '!=', 'admin');
+            })->get();
+
+        // 3. Kirim Email (Looping)
+        // Note: Untuk production dgn user ribuan, ini sebaiknya pakai Queue (Job).
+        // Tapi untuk tahap ini synchronous masih oke.
+        foreach ($agents as $agent) {
+            try {
+                Mail::to($agent->email)->send(new MaintenanceAlert($isMaintenance));
+            } catch (\Exception $e) {
+                Log::error("Gagal kirim alert maintenance ke {$agent->email}: ".$e->getMessage());
+            }
+        }
+
+        $statusText = $isMaintenance ? 'ACTIVATED (System Down)' : 'DEACTIVATED (System Online)';
+
+        return response()->json([
+            'status' => 'success',
+            'message' => "Maintenance Protocol {$statusText}. Alerts sent.",
+        ]);
     }
 
     public function approveUser(User $user)

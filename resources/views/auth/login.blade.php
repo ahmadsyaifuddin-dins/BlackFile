@@ -1,26 +1,32 @@
+@php
+    // Cek status maintenance langsung di View (Metode cepat & praktis)
+    $isMaintenance = \App\Models\SystemSetting::check('maintenance_mode', false);
+@endphp
 <x-guest-layout>
-    <div 
-        x-data="{ 
-            status: 'idle', // 'idle', 'loading', 'granted', 'denied'
-            errorMessage: ''
-        }"
-        x-init="$watch('status', value => {
-            if (value === 'granted' || value === 'denied') {
-                setTimeout(() => { status = 'idle' }, 3000)
-            }
-        })"
-        {{-- Jadikan container ini 'relative' untuk menjadi jangkar bagi animasi --}}
-        class="relative min-h-[250px]"
-    >
+    <div x-data="{
+        status: 'idle', // 'idle', 'loading', 'granted', 'denied'
+        errorMessage: ''
+    }" x-init="$watch('status', value => {
+        if (value === 'granted' || value === 'denied') {
+            setTimeout(() => { status = 'idle' }, 3000)
+        }
+    })" {{-- Jadikan container ini 'relative' untuk menjadi jangkar bagi animasi --}} class="relative min-h-[250px]">
         <!-- Form Login -->
         {{-- Form sekarang menjadi transparan saat status berubah, bukan menghilang --}}
-        <div 
-            :class="{ 'opacity-0 invisible': status !== 'idle' }"
-            class="transition-opacity duration-300"
-            x-cloak
-        >
+        <div :class="{ 'opacity-0 invisible': status !== 'idle' }" class="transition-opacity duration-300" x-cloak>
+            @if ($isMaintenance)
+                <div class="mb-6 p-3 bg-red-900/30 border border-red-600 rounded text-center">
+                    <h3 class="text-red-500 font-bold text-sm tracking-widest animate-pulse">
+                        SYSTEM MAINTENANCE ACTIVE
+                    </h3>
+                    <p class="text-xs text-red-400 mt-1">
+                        Restricted Access. Authorization Level 9 (Director) Required.
+                    </p>
+                </div>
+            @endif
             <h2 class="text-2xl text-primary font-bold mb-6 text-center">[ AGENT LOGIN ]</h2>
-            <form @submit.prevent="
+            <form
+                @submit.prevent="
                 status = 'loading';
                 fetch('{{ route('login') }}', {
                     method: 'POST',
@@ -59,7 +65,7 @@
                         </x-slot:icon>
                     </x-forms.input>
                 </div>
-                
+
                 <div class="mt-4">
                     <label for="password" class="block text-primary text-sm mb-1">PASSCODE</label>
                     <x-forms.input id="password" type="password" name="password" required>
@@ -68,36 +74,36 @@
                         </x-slot:icon>
                     </x-forms.input>
                 </div>
-                
+
                 <div class="block mt-4">
                     <x-forms.checkbox id="remember_me" name="remember">
                         Remember me
                     </x-forms.checkbox>
                 </div>
-                
+
                 <div class="flex items-center justify-end mt-6">
                     <x-button type="submit" class="w-full justify-center">
                         > INITIATE CONNECTION
                     </x-button>
                 </div>
             </form>
-            <p class="text-xs text-secondary mt-2">Don't have an account? <a href="{{ route('register') }}" class="text-primary hover:underline">Register</a></p>
+            <p class="text-xs text-secondary mt-2">Don't have an account? <a href="{{ route('register') }}"
+                    class="text-primary hover:underline">Register</a></p>
         </div>
 
         <!-- Container untuk semua animasi, diposisikan absolut di tengah -->
-        <div x-show="status !== 'idle'" x-transition x-cloak 
-             class="absolute inset-0 flex items-center justify-center">
-            
+        <div x-show="status !== 'idle'" x-transition x-cloak class="absolute inset-0 flex items-center justify-center">
+
             <!-- Animasi Loading -->
             <div x-show="status === 'loading'" class="text-center text-primary">
                 <p class="text-2xl animate-pulse">ESTABLISHING SECURE LINK...</p>
             </div>
-    
+
             <!-- Animasi Granted -->
             <div x-show="status === 'granted'" class="text-center text-green-600">
                 <p class="text-2xl sm:text-4xl font-bold">[ ACCESS GRANTED ]</p>
             </div>
-    
+
             <!-- Animasi Denied -->
             <div x-show="status === 'denied'" class="text-center text-red-500">
                 <p class="text-2xl sm:text-4xl font-bold">[ ACCESS DENIED ]</p>

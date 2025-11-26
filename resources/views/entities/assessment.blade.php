@@ -12,7 +12,6 @@
         </div>
 
         {{-- Form Area --}}
-        {{-- PENTING: Gunakan single quote untuk x-data agar JSON object aman --}}
         <div x-data='assessmentForm(@json($entity))'
             class="bg-black border border-gray-800 p-6 rounded-lg shadow-2xl relative overflow-hidden">
 
@@ -74,7 +73,6 @@
                 <hr class="border-gray-800">
 
                 {{-- SECTION 2: QUICK PRESETS & AI BUTTON --}}
-                {{-- Kita gunakan Flexbox dengan 'items-end' agar tombol AI sejajar dengan tombol preset di desktop --}}
                 <div
                     class="flex flex-col md:flex-row justify-between items-end gap-6 mb-8 border-b border-gray-800 pb-6">
 
@@ -109,22 +107,14 @@
 
                     {{-- AI GENERATE BUTTON (Kanan) --}}
                     <div class="w-full md:w-auto flex flex-col items-end">
-                        <button type="button" @click="generateAiStats()" :disabled="isLoading" {{-- Styling Badass dimulai disini --}}
+                        <button type="button" @click="generateAiStats()" :disabled="isLoading"
                             class="relative group overflow-hidden flex items-center gap-3 px-6 py-3 rounded-md font-bold text-sm tracking-wider shadow-lg transition-all duration-300
-            
-            {{-- Warna Default: Gradient Indigo Gelap ke Ungu (Kesan AI/Magic Tech) --}}
-            bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-900 border border-indigo-500/50 text-indigo-100
-            
-            {{-- Hover State: Glow Effect & Border Terang --}}
-            hover:shadow-[0_0_20px_rgba(99,102,241,0.6)] hover:border-indigo-300 hover:text-white hover:scale-[1.02]
-            
-            {{-- Active/Click State: Tekan sedikit ke dalam --}}
-            active:scale-95
-            
-            {{-- Cursor Logic --}}
-            cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:shadow-none disabled:grayscale">
+                            bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-900 border border-indigo-500/50 text-indigo-100
+                            hover:shadow-[0_0_20px_rgba(99,102,241,0.6)] hover:border-indigo-300 hover:text-white hover:scale-[1.02]
+                            active:scale-95
+                            cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:shadow-none disabled:grayscale">
 
-                            {{-- Background Animation (Optional: Kilauan berjalan) --}}
+                            {{-- Background Shine Effect --}}
                             <div
                                 class="absolute inset-0 bg-white/5 skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out">
                             </div>
@@ -139,7 +129,7 @@
                                 </path>
                             </svg>
 
-                            {{-- Icon Petir Statis (Hanya muncul jika TIDAK loading) --}}
+                            {{-- Static Icon --}}
                             <svg x-show="!isLoading" xmlns="http://www.w3.org/2000/svg"
                                 class="h-5 w-5 text-indigo-400 group-hover:text-yellow-300 transition-colors"
                                 viewBox="0 0 20 20" fill="currentColor">
@@ -153,7 +143,6 @@
                                 x-text="isLoading ? 'ESTABLISHING LINK...' : 'INITIATE AI ANALYSIS'"></span>
                         </button>
 
-                        {{-- Reasoning Display (Style Terminal) --}}
                         <div x-show="aiReason" x-transition.opacity
                             class="mt-3 text-[10px] font-mono text-indigo-300 text-right bg-indigo-900/30 px-2 py-1 border-l-2 border-indigo-500">
                             <span class="font-bold text-indigo-400">>> SYSTEM LOG:</span> <span
@@ -162,34 +151,28 @@
                     </div>
                 </div>
 
-                {{-- SECTION 3: STAT SLIDERS (Refactored to Alpine Loop) --}}
+                {{-- SECTION 3: STAT SLIDERS --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-
-                    {{-- Gunakan Alpine x-for untuk merender slider agar tidak ada konflik sintaks PHP/JS --}}
                     <template x-for="statKey in statKeys" :key="statKey">
                         <div>
                             <div class="flex justify-between mb-1">
-                                {{-- Label Stat --}}
                                 <label class="text-xs uppercase text-gray-400 tracking-wider"
                                     x-text="statKey.replace('_', ' ')"></label>
-                                {{-- Angka Stat --}}
                                 <span class="text-xs font-bold text-primary" x-text="stats[statKey]"></span>
                             </div>
 
-                            {{-- Slider Input --}}
-                            {{-- Name attribute using template literal for form submission --}}
+                            {{-- Slider --}}
                             <input type="range" :name="'stats[' + statKey + ']'" x-model="stats[statKey]"
                                 min="0" max="100"
                                 class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-primary hover:accent-green-400">
 
-                            {{-- Bar Visual --}}
+                            {{-- Visual Bar --}}
                             <div class="w-full h-1 bg-gray-900 mt-1 rounded overflow-hidden">
                                 <div class="h-full bg-primary transition-all duration-300"
                                     :style="'width: ' + stats[statKey] + '%'"></div>
                             </div>
                         </div>
                     </template>
-
                 </div>
 
                 {{-- Submit Button --}}
@@ -204,131 +187,174 @@
         </div>
     </div>
 
-    {{-- Alpine Logic --}}
-    <script>
-        function assessmentForm(entity) {
-            return {
-                // Data Awal
-                tier: entity.power_tier || 10,
-                type: entity.combat_type || 'AGGRESSOR',
-                isLoading: false, // State untuk loading
-                aiReason: null, // Menampung alasan dari AI
+    {{-- SCRIPT DILETAKKAN DISINI SECARA INLINE UNTUK MENGHINDARI ERROR LINKING --}}
+    @push('scripts')
+        <script>
+            // Menggunakan function biasa (bukan Alpine.data) agar sesuai dengan struktur x-data="assessmentForm(...)"
+            function assessmentForm(entity) {
+                return {
+                    // Data Awal
+                    tier: entity.power_tier || 10,
+                    type: entity.combat_type || 'AGGRESSOR',
+                    isLoading: false,
+                    aiReason: null,
 
-                generateUrl: "{{ route('entities.generate_ai', ':id') }}".replace(':id', entity.id),
-                csrfToken: "{{ csrf_token() }}",
+                    // Setup URL & Token
+                    generateUrl: "{{ route('entities.generate_ai', ':id') }}".replace(':id', entity.id),
+                    csrfToken: "{{ csrf_token() }}",
 
-                // Daftar Key Stats untuk Loop x-for
-                statKeys: ['strength', 'speed', 'durability', 'intelligence', 'energy', 'combat_skill'],
+                    // Stat Configuration
+                    statKeys: ['strength', 'speed', 'durability', 'intelligence', 'energy', 'combat_skill'],
 
-                // Objek Stats
-                stats: {
-                    strength: entity.combat_stats?.strength || 0,
-                    speed: entity.combat_stats?.speed || 0,
-                    durability: entity.combat_stats?.durability || 0,
-                    intelligence: entity.combat_stats?.intelligence || 0,
-                    energy: entity.combat_stats?.energy || 0,
-                    combat_skill: entity.combat_stats?.combat_skill || 0,
-                },
+                    // Pastikan object stats aman dari null value
+                    stats: {
+                        strength: (entity.combat_stats && entity.combat_stats.strength) || 0,
+                        speed: (entity.combat_stats && entity.combat_stats.speed) || 0,
+                        durability: (entity.combat_stats && entity.combat_stats.durability) || 0,
+                        intelligence: (entity.combat_stats && entity.combat_stats.intelligence) || 0,
+                        energy: (entity.combat_stats && entity.combat_stats.energy) || 0,
+                        combat_skill: (entity.combat_stats && entity.combat_stats.combat_skill) || 0,
+                    },
 
-                // [BARU] Fungsi AJAX ke Controller
-                async generateAiStats() {
-                    this.isLoading = true;
-                    this.aiReason = null;
+                    /**
+                     * GENERATE AI STATS
+                     */
+                    async generateAiStats() {
+                        // Cek apakah window.agentConfirm tersedia, jika tidak pakai confirm biasa
+                        const confirmFunc = window.agentConfirm || confirm;
 
-                    try {
-                        const response = await fetch(this.generateUrl, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': this.csrfToken
-                            },
-                            body: JSON
-                                .stringify({}) // Body kosong tidak masalah, karena data diambil dari DB backend berdasarkan ID
-                        });
+                        const confirmed = await confirmFunc(
+                            'INITIATE AI ANALYSIS?',
+                            'This action will overwrite current manual statistics with AI-predicted data. Proceed?',
+                            'OVERWRITE & ANALYZE',
+                            'CANCEL'
+                        );
 
-                        if (!response.ok) throw new Error('Network response was not ok');
+                        if (!confirmed) return;
 
-                        const data = await response.json();
+                        this.isLoading = true;
+                        this.aiReason = null;
 
-                        // Update UI dengan Data AI
-                        this.tier = data.power_tier;
-                        this.type = data.combat_type;
-                        this.stats = data.combat_stats;
-                        this.aiReason = "AI Analysis: " + data.reasoning;
+                        try {
+                            const response = await fetch(this.generateUrl, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': this.csrfToken
+                                },
+                                body: JSON.stringify({})
+                            });
 
-                    } catch (error) {
-                        console.error('Error:', error);
-                        alert('Gagal menghubungi Tactical AI HQ. Cek console.');
-                    } finally {
-                        this.isLoading = false;
-                    }
-                },
+                            if (!response.ok) throw new Error('Network response was not ok');
 
-                applyPreset(presetName) {
-                    switch (presetName) {
-                        case 'human':
-                            this.tier = 10;
-                            this.type = 'AGGRESSOR';
-                            this.stats = {
-                                strength: 15,
-                                speed: 15,
-                                durability: 15,
-                                intelligence: 60,
-                                energy: 0,
-                                combat_skill: 10
-                            };
-                            break;
-                        case 'soldier':
-                            this.tier = 8;
-                            this.type = 'AGGRESSOR';
-                            this.stats = {
-                                strength: 40,
-                                speed: 40,
-                                durability: 40,
-                                intelligence: 70,
-                                energy: 0,
-                                combat_skill: 80
-                            };
-                            break;
-                        case 'monster':
-                            this.tier = 4;
-                            this.type = 'AGGRESSOR';
-                            this.stats = {
-                                strength: 90,
-                                speed: 70,
-                                durability: 90,
-                                intelligence: 50,
-                                energy: 20,
-                                combat_skill: 60
-                            };
-                            break;
-                        case 'god':
-                            this.tier = 2;
-                            this.type = 'AGGRESSOR';
-                            this.stats = {
-                                strength: 100,
-                                speed: 100,
-                                durability: 100,
-                                intelligence: 100,
-                                energy: 100,
-                                combat_skill: 100
-                            };
-                            break;
-                        case 'object':
-                            this.tier = 5;
-                            this.type = 'HAZARD';
-                            this.stats = {
-                                strength: 80,
-                                speed: 0,
-                                durability: 50,
-                                intelligence: 0,
-                                energy: 80,
-                                combat_skill: 0
-                            };
-                            break;
+                            const data = await response.json();
+
+                            // Update UI
+                            this.tier = data.power_tier;
+                            this.type = data.combat_type;
+                            this.stats = data.combat_stats;
+                            this.aiReason = "AI Analysis: " + data.reasoning;
+
+                            if (window.agentAlert) {
+                                window.agentAlert('success', 'ANALYSIS COMPLETE',
+                                    'Entity tactical profile has been updated.');
+                            }
+
+                        } catch (error) {
+                            console.error('Error:', error);
+                            if (window.agentAlert) {
+                                window.agentAlert('error', 'CONNECTION LOST', 'Failed to reach AI Server.');
+                            } else {
+                                alert('Connection Failed');
+                            }
+                        } finally {
+                            this.isLoading = false;
+                        }
+                    },
+
+                    /**
+                     * APPLY PRESET
+                     */
+                    applyPreset(presetName) {
+                        if (window.agentAlert) {
+                            window.agentAlert('info', 'PRESET APPLIED', `Loading preset: ${presetName.toUpperCase()}`);
+                        }
+
+                        switch (presetName) {
+                            case 'human':
+                                this.tier = 10;
+                                this.type = 'AGGRESSOR';
+                                this.stats = {
+                                    strength: 15,
+                                    speed: 15,
+                                    durability: 15,
+                                    intelligence: 60,
+                                    energy: 0,
+                                    combat_skill: 10
+                                };
+                                break;
+                            case 'soldier':
+                                this.tier = 8;
+                                this.type = 'AGGRESSOR';
+                                this.stats = {
+                                    strength: 40,
+                                    speed: 40,
+                                    durability: 40,
+                                    intelligence: 70,
+                                    energy: 0,
+                                    combat_skill: 80
+                                };
+                                break;
+                            case 'monster':
+                                this.tier = 4;
+                                this.type = 'AGGRESSOR';
+                                this.stats = {
+                                    strength: 90,
+                                    speed: 70,
+                                    durability: 90,
+                                    intelligence: 50,
+                                    energy: 20,
+                                    combat_skill: 60
+                                };
+                                break;
+                            case 'god':
+                                this.tier = 2;
+                                this.type = 'AGGRESSOR';
+                                this.stats = {
+                                    strength: 100,
+                                    speed: 100,
+                                    durability: 100,
+                                    intelligence: 100,
+                                    energy: 100,
+                                    combat_skill: 100
+                                };
+                                break;
+                            case 'object':
+                                this.tier = 5;
+                                this.type = 'HAZARD';
+                                this.stats = {
+                                    strength: 80,
+                                    speed: 0,
+                                    durability: 50,
+                                    intelligence: 0,
+                                    energy: 80,
+                                    combat_skill: 0
+                                };
+                                break;
+                        }
                     }
                 }
             }
-        }
-    </script>
+
+            // Handle Session Messages
+            document.addEventListener('DOMContentLoaded', () => {
+                @if (session('success'))
+                    if (window.agentAlert) window.agentAlert('success', 'DATABASE UPDATED', "{{ session('success') }}");
+                @endif
+                @if ($errors->any())
+                    if (window.agentAlert) window.agentAlert('warning', 'DATA CORRUPTION', "{{ $errors->first() }}");
+                @endif
+            });
+        </script>
+    @endpush
 </x-app-layout>

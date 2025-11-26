@@ -3,11 +3,12 @@
 <div x-data="{
     on: {{ $checked ? 'true' : 'false' }},
     loading: false,
-    async toggle() {
-        this.loading = true;
-        // Simulasi delay network (opsional)
-        // await new Promise(r => setTimeout(r, 300));
 
+    async toggle() {
+        // Mencegah spam klik saat sedang loading
+        if (this.loading) return;
+
+        this.loading = true;
         const newState = !this.on;
 
         try {
@@ -24,12 +25,35 @@
             });
 
             if (response.ok) {
+                // 1. Update State Lokal
                 this.on = newState;
+
+                // 2. Tampilkan Alert SUKSES (Keren)
+                window.agentAlert(
+                    'success',
+                    'PROTOCOL UPDATED',
+                    'System configuration has been successfully modified.'
+                );
             } else {
-                alert('ACCESS DENIED: Failed to update protocol.');
+                // 3. Tampilkan Alert ERROR (Jika server menolak)
+                window.agentAlert(
+                    'error',
+                    'ACCESS DENIED',
+                    'Server rejected the protocol update request.'
+                );
+
+                // Opsional: Kembalikan toggle ke posisi semula jika gagal
+                // this.on = !newState; 
             }
         } catch (error) {
             console.error('Transmission Error:', error);
+
+            // 4. Tampilkan Alert NETWORK ERROR (Jika internet mati/server down)
+            window.agentAlert(
+                'error',
+                'TRANSMISSION FAILURE',
+                'Unable to establish link with the mainframe.'
+            );
         } finally {
             this.loading = false;
         }

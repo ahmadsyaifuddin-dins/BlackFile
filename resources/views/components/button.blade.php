@@ -26,7 +26,11 @@
 @endphp
 
 @if ($href)
-    <a href="{{ $href }}" {{ $attributes->merge(['class' => $classes, 'type' => $defaultType]) }}>
+    {{-- html_entity_decode dulu: Blade sudah meng-escape nilai yang dikirim
+         lewat `{{ }}` di dalam tag <x-button>. Tanpa decode di sini, karakter
+         `&` jadi `&amp;amp;` di HTML dan browser mengirim param seperti
+         `amp;page=2` ke server (butuh 2x decode). --}}
+    <a href="{{ html_entity_decode($href) }}" {{ $attributes->merge(['class' => $classes, 'type' => $defaultType]) }}>
         {{ $slot }}
     </a>
 @else

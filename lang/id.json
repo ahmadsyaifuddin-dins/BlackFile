@@ -88,6 +88,13 @@
     "27 Entries": "27 Data",
     "54 Entries": "54 Data",
     "SAVE ALL CHANGES": "SIMPAN SEMUA PERUBAHAN",
+    "HUD Layout": "Tata Letak HUD",
+    "Alert Position:": "Posisi Alert:",
+    "Post-Edit Behavior": "Perilaku Setelah Edit",
+    "After Saving an Archive:": "Setelah Simpan Arsip:",
+    "Kembali ke Posisi Index (dengan filter)": "Kembali ke Posisi Index (dengan filter)",
+    "Masuk ke Detail Arsip": "Masuk ke Detail Arsip",
+    "// \"Posisi Index\" preserves your active filter and highlights the edited row.": "// \"Posisi Index\" mempertahankan filter aktif dan menyorot baris yang diedit.",
 
     "My Network": "Jaringan Saya",
     "Network Analysis": "Analisis Jaringan",

@@ -1,6 +1,10 @@
 @php
-    // Logika 'Back' yang pintar untuk kembali ke halaman detail atau index
-    $backUrl = request('return_url') ?? route('archives.show', $archive);
+    // Tombol Back mengikuti tujuan yang sama dengan submit (setting "setelah edit"),
+    // dengan fallback ke return_url bila tersedia. URL dibangun ulang lewat
+    // ArchiveReturnUrl supaya karakter '&' tidak rusak jadi '&amp;'.
+    $backUrl = $targetUrl
+        ?? \App\Support\ArchiveReturnUrl::forController($returnUrl ?? null)
+        ?? route('archives.show', $archive);
 @endphp
 
 <x-app-layout title="Edit Archive: {{ $archive->name }}">
@@ -13,6 +17,11 @@
         </div>
 
         {{-- Panggil Partial Form --}}
-        @include('archives._form', ['archive' => $archive, 'categories' => $categories])
+        @include('archives._form', [
+            'archive' => $archive,
+            'categories' => $categories,
+            'targetUrl' => $targetUrl ?? null,
+            'returnUrl' => $returnUrl ?? null,
+        ])
     </div>
 </x-app-layout>

@@ -1,5 +1,5 @@
-{{-- DESKTOP VIEW (TABLE) --}}
-<div class="hidden md:block">
+﻿{{-- DESKTOP VIEW (TABLE) --}}
+<div class="hidden md:block" id="archive-table-view">
     {{-- Wrapper dengan border tipis dan shadow --}}
     <div class="bg-surface/50 border border-green-500/30 rounded-sm overflow-hidden shadow-lg backdrop-blur-sm">
         <div class="overflow-x-auto">
@@ -7,6 +7,10 @@
                 {{-- Header dengan gaya Terminal --}}
                 <thead class="bg-black/40 text-primary">
                     <tr class="font-mono text-xs tracking-widest">
+                        <th scope="col"
+                            class="w-10 px-3 py-4 text-left font-bold uppercase border-b border-green-500/30">
+                            <span class="sr-only">Preview</span>
+                        </th>
                         <th scope="col" class="px-6 py-4 text-left font-bold uppercase border-b border-green-500/30">
                             > FILE_NAME & TAGS
                         </th>
@@ -30,8 +34,49 @@
 
                 <tbody class="divide-y divide-green-500/10 bg-transparent">
                     @forelse ($archives as $archive)
+                        @php $isFocus = ($focusId ?? null) === $archive->id; @endphp
                         {{-- Efek Hover pada baris --}}
-                        <tr class="group hover:bg-green-500/5 transition-colors duration-200">
+                        <tr id="archive-row-{{ $archive->id }}"
+                            @if ($isFocus) data-focus-row @endif
+                            @class([
+                                'group transition-colors duration-200',
+                                'hover:bg-green-500/5' => ! $isFocus,
+                                'archive-focus-row' => $isFocus,
+                            ])>
+
+                            {{-- Kolom Preview: gambar jika ada, ikon default jika tidak --}}
+                            <td class="px-3 py-4 align-top">
+                                <div class="relative w-11 h-11 shrink-0"
+                                    x-data="archiveThumb({
+                                        src: @js($archive->preview_image_url),
+                                        type: @js($archive->type),
+                                        name: @js($archive->name),
+                                    })">
+                                    {{-- Fallback icon (selalu di DOM, disembunyikan via opacity) --}}
+                                    <div x-show="showFallback" x-cloak
+                                        class="absolute inset-0 flex items-center justify-center rounded border border-green-500/25 bg-black/40 text-primary/40 group-hover:text-primary/70 transition-colors">
+                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                            aria-hidden="true">
+                                            <path x-bind:d="fallbackIcon" />
+                                        </svg>
+                                    </div>
+
+                                    {{-- Skeleton shimmer selagi gambar dimuat --}}
+                                    <div x-show="loading && !failed" x-cloak
+                                        class="absolute inset-0 rounded border border-green-500/25 bg-black/40 overflow-hidden">
+                                        <div
+                                            class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-[shimmer_1.4s_infinite]">
+                                        </div>
+                                    </div>
+
+                                    {{-- Gambar asli --}}
+                                    <img x-show="showImage" x-cloak :src="src" :alt="name"
+                                        loading="lazy" decoding="async"
+                                        class="w-full h-full object-cover rounded border border-green-500/25 bg-black/40 group-hover:border-primary/50 transition-colors"
+                                        onerror="this.style.display='none'" />
+                                </div>
+                            </td>
 
                             {{-- Kolom Nama --}}
                             <td class="px-6 py-4 align-top">
@@ -118,7 +163,7 @@
                                     </div>
 
                                     {{-- Details --}}
-                                    <a href="{{ route('archives.show', $archive) }}?return_url={{ urlencode(request()->fullUrl()) }}"
+                                    <a href="{{ route('archives.show', $archive) }}?return_url={{ urlencode(\App\Support\ArchiveReturnUrl::index()) }}"
                                         class="text-blue-400 hover:text-blue-300 transform hover:scale-110 transition-transform"
                                         title="View Details">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
@@ -131,7 +176,7 @@
                                     </a>
 
                                     {{-- Edit --}}
-                                    <a href="{{ route('archives.edit', $archive) }}"
+                                    <a href="{{ route('archives.edit', $archive) }}?return_url={{ urlencode(\App\Support\ArchiveReturnUrl::index()) }}"
                                         class="text-yellow-500 hover:text-yellow-400 transform hover:scale-110 transition-transform"
                                         title="Edit Entry">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"

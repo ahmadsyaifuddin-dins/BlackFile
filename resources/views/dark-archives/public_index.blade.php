@@ -138,6 +138,15 @@
                                     {{ $archive->title }}
                                 </h3>
 
+                                <div class="flex items-center text-[10px] text-gray-600 font-mono mb-4">
+                                    <svg class="w-3 h-3 mr-1 shrink-0" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    FILED AT: {{ $archive->formatted_added_at }}
+                                </div>
+
                                 <div class="pt-4 border-t border-gray-900 flex justify-between items-center">
                                     <span
                                         class="text-[10px] text-gray-600 group-hover:text-gray-400 transition font-mono">

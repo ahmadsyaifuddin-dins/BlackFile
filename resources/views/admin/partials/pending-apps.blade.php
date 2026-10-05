@@ -25,7 +25,19 @@
                     </form>
 
                     <form action="{{ route('admin.users.reject', $applicant) }}" method="POST"
-                        onsubmit="return confirm('Confirm rejection?')" class="flex-1">
+                        x-data="{
+                                async reject(e) {
+                                    const confirmed = await window.agentConfirm?.(
+                                        'CONFIRM REJECTION?',
+                                        'Application dari {{ $applicant->codename }} akan ditolak permanen.',
+                                        'REJECT',
+                                        'CANCEL'
+                                    );
+                                    if (!confirmed) return;
+                                    e.target.submit();
+                                }
+                            }"
+                        @submit.prevent="reject($event)" class="flex-1">
                         @csrf @method('DELETE')
                         <button type="submit"
                             class="cursor-pointer w-full text-center px-3 py-1 bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white font-bold text-xs rounded transition-colors">[

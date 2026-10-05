@@ -220,10 +220,7 @@
                      * GENERATE AI STATS
                      */
                     async generateAiStats() {
-                        // Cek apakah window.agentConfirm tersedia, jika tidak pakai confirm biasa
-                        const confirmFunc = window.agentConfirm || confirm;
-
-                        const confirmed = await confirmFunc(
+                        const confirmed = await window.agentConfirm?.(
                             'INITIATE AI ANALYSIS?',
                             'This action will overwrite current manual statistics with AI-predicted data. Proceed?',
                             'OVERWRITE & ANALYZE',
@@ -255,18 +252,13 @@
                             this.stats = data.combat_stats;
                             this.aiReason = "AI Analysis: " + data.reasoning;
 
-                            if (window.agentAlert) {
-                                window.agentAlert('success', 'ANALYSIS COMPLETE',
-                                    'Entity tactical profile has been updated.');
-                            }
+                            window.agentAlert?.('success', 'ANALYSIS COMPLETE',
+                                'Entity tactical profile has been updated.');
 
                         } catch (error) {
                             console.error('Error:', error);
-                            if (window.agentAlert) {
-                                window.agentAlert('error', 'CONNECTION LOST', 'Failed to reach AI Server.');
-                            } else {
-                                alert('Connection Failed');
-                            }
+                            window.agentAlert?.('error', 'CONNECTION LOST',
+                                error.message || 'Failed to reach AI Server.');
                         } finally {
                             this.isLoading = false;
                         }
@@ -276,9 +268,7 @@
                      * APPLY PRESET
                      */
                     applyPreset(presetName) {
-                        if (window.agentAlert) {
-                            window.agentAlert('info', 'PRESET APPLIED', `Loading preset: ${presetName.toUpperCase()}`);
-                        }
+                        window.agentAlert?.('info', 'PRESET APPLIED', `Loading preset: ${presetName.toUpperCase()}`);
 
                         switch (presetName) {
                             case 'human':

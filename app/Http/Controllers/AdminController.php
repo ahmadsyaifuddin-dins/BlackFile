@@ -44,8 +44,11 @@ class AdminController extends Controller
 
         $maintenanceMode = SystemSetting::check('maintenance_mode', false);
 
+        // Kunci global: paksa semua user kembali ke posisi index setelah edit arsip
+        $archiveEditRedirectLocked = SystemSetting::check('archive_edit_redirect_locked', false);
+
         // Tambahkan 'agents' ke view
-        return view('admin.dashboard', compact('pendingApplicants', 'invites', 'agents', 'entityNotifyEnabled', 'maintenanceMode'));
+        return view('admin.dashboard', compact('pendingApplicants', 'invites', 'agents', 'entityNotifyEnabled', 'maintenanceMode', 'archiveEditRedirectLocked'));
     }
 
     // Method AJAX untuk toggle

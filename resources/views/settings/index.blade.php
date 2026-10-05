@@ -32,13 +32,19 @@
          'red' => 'Code Red',
      ];
 
-     $alertPositionOptions = [
-         'bottom-right' => __('Standard (Bottom Right)'),
-         'top-right' => __('Tactical (Top Right)'),
-         'top-left' => __('Stream (Top Left)'),
-         'center' => __('System Override (Center)'),
-     ];
- @endphp
+$alertPositionOptions = [
+          'bottom-right' => __('Standard (Bottom Right)'),
+          'top-right' => __('Tactical (Top Right)'),
+          'top-left' => __('Stream (Top Left)'),
+          'center' => __('System Override (Center)'),
+      ];
+
+      // 5. Opsi tujuan halaman setelah edit arsip
+      $archiveEditRedirectOptions = [
+          'index_position' => __('Kembali ke Posisi Index (dengan filter)'),
+          'show' => __('Masuk ke Detail Arsip'),
+      ];
+  @endphp
  <x-app-layout title="{{ __('System Settings') }}">
      {{-- Header Halaman --}}
      <div class="border-y-2 border-dashed border-primary/50 py-4 mb-8">
@@ -110,12 +116,26 @@
                  <x-forms.select label="{{ __('Alert Position:') }}" name="alert_position" :options="$alertPositionOptions"
                      :selected="Auth::user()->settings['alert_position'] ?? 'bottom-right'" />
 
-                 <p class="text-xs text-secondary mt-2">
-                     {{ __('// Controls where system alerts appear on screen.') }}
-                 </p>
-             </div>
+<p class="text-xs text-secondary mt-2">
+                      {{ __('// Controls where system alerts appear on screen.') }}
+                  </p>
+              </div>
 
-         </div>
+              {{-- Panel 5: Perilaku Setelah Edit Arsip --}}
+              <div class="bg-surface border border-border-color p-6 font-mono h-full">
+                  <h2 class="text-lg font-bold text-primary border-b border-border-color pb-2 mb-4">
+                      {{ __('Post-Edit Behavior') }}</h2>
+
+                  <x-forms.select label="{{ __('After Saving an Archive:') }}" name="archive_edit_redirect"
+                      :options="$archiveEditRedirectOptions"
+                      :selected="Auth::user()->settings['archive_edit_redirect'] ?? 'index_position'" />
+
+                  <p class="text-xs text-secondary mt-2">
+                      {{ __('// "Posisi Index" preserves your active filter and highlights the edited row.') }}
+                  </p>
+              </div>
+
+          </div>
 
          {{-- Tombol Simpan --}}
          <div class="mt-6 flex justify-end pt-4 border-t border-border-color">

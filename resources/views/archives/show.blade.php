@@ -1,6 +1,14 @@
 @php
-    // fallback ke index
-    $backUrl = request('return_url') ?? route('archives.index');
+    // Terima return_url berantai: kalau show dibuka dari index berfilter,
+    // teruskan posisi index itu (bukan URL show) supaya tombol EDIT & BACK
+    // tetap membawa filter + halaman paginasi yang sama.
+    //
+    // PENTING: bangun ulang lewat ArchiveReturnUrl::back() (route()) jangan
+    // pakai request('return_url') mentah. String mentah berisi '&' yang
+    // jadi '&amp;' di href, lalu ter-urlencode lagi di hop berikutnya
+    // sampai param `page` rusak dan user selalu mendarat di halaman 1.
+    $backUrl = \App\Support\ArchiveReturnUrl::back();
+    $editReturnUrl = $backUrl;
 @endphp
 <x-app-layout title="Detail Arsip: {{ $archive->name }}">
     <div class="max-w-5xl mx-auto space-y-6">
@@ -234,7 +242,8 @@
                     @endif
 
                     <div class="grid grid-cols-2 gap-3">
-                        <x-button variant="outline" href="{{ route('archives.edit', $archive) }}"
+                        <x-button variant="outline"
+                            href="{{ route('archives.edit', $archive) }}?return_url={{ urlencode($editReturnUrl) }}"
                             class="justify-center border-yellow-500/50 text-yellow-500 hover:bg-yellow-900/20">
                             <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

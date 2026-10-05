@@ -166,14 +166,14 @@
 
                     // Validate Type
                     if (!['image/jpeg', 'image/jpg', 'image/tiff'].includes(file.type)) {
-                        alert('INVALID FORMAT. Only JPG/TIFF allowed for EXIF extraction.');
+                        window.agentAlert?.('warning', 'INVALID FORMAT', 'Hanya format JPG/TIFF yang diizinkan untuk ekstraksi EXIF.');
                         resetUpload();
                         return;
                     }
 
                     // Validate Size (10MB)
                     if (file.size > 10485760) {
-                        alert('FILE TOO LARGE. Maximum 10MB.');
+                        window.agentAlert?.('warning', 'FILE TOO LARGE', 'Ukuran maksimum file adalah 10MB.');
                         resetUpload();
                         return;
                     }
@@ -274,7 +274,7 @@
                     document.getElementById('statusIndicator').textContent = 'ERROR';
                     document.getElementById('statusIndicator').className = 'text-red-500';
 
-                    alert('SYSTEM ERROR: ' + error.message);
+                    window.agentAlert?.('error', 'SYSTEM ERROR', error.message);
                 } finally {
                     btnAnalyze.disabled = false;
                 }

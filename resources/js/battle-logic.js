@@ -98,7 +98,7 @@ export default function battleSystem(entitiesData, routeUrl, csrfToken) {
 
         randomizeFighters() {
             // ... (KODE RANDOMIZE SAMA SEPERTI ASLINYA) ...
-            if (this.entitiesData.length < 2) { alert("INSUFFICIENT DATA."); return; }
+            if (this.entitiesData.length < 2) { window.agentAlert?.('warning', 'INSUFFICIENT DATA', 'Minimal 2 entri diperlukan untuk acak pertarungan.'); return; }
             
             const randomIndexA = Math.floor(Math.random() * this.entitiesData.length);
             this.attackerId = this.entitiesData[randomIndexA].id;
@@ -111,7 +111,7 @@ export default function battleSystem(entitiesData, routeUrl, csrfToken) {
 
         // --- BAGIAN UTAMA YANG DIMODIFIKASI ---
         async startSimulation() {
-            if (this.attackerId === this.defenderId) { alert("CANNOT SIMULATE SELF-CONFLICT."); return; }
+            if (this.attackerId === this.defenderId) { window.agentAlert?.('warning', 'SELF-CONFLICT', 'Tidak bisa simulasikan pertarungan melawan dirinya sendiri.'); return; }
             if (!this.attackerId || !this.defenderId) return; // Safety check
 
             this.isSimulating = true;

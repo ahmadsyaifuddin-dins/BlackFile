@@ -9,6 +9,7 @@ import cytoscape from 'cytoscape';
 import prototypesCRUD from './prototypes-crud';
 import archiveForm from './forms/archive-form.js';
 import battleSystem from './battle-logic.js';
+import archiveThumb from './archive-thumb.js';
 
 // 2. Buat library bisa diakses secara global (di window object)
 //    PENTING: Lakukan ini SEBELUM mendaftarkan plugin atau data
@@ -23,5 +24,6 @@ Alpine.plugin(intersect);
 Alpine.data('prototypesCRUD', prototypesCRUD);
 Alpine.data('archiveForm', archiveForm);
 Alpine.data('battleSystem', battleSystem);
+Alpine.data('archiveThumb', archiveThumb);
 // 5. Jalankan Alpine. Ini HARUS menjadi baris terakhir.
 Alpine.start();

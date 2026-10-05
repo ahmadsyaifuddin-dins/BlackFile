@@ -83,6 +83,14 @@
                                 <div class="text-[10px] text-gray-600 space-y-1 font-mono">
                                     <p>DATE: {{ $archive->formatted_date }}</p>
                                     <p>AUTHOR: {{ $archive->agent->name ?? 'Unknown' }}</p>
+                                    <p class="flex items-center text-gray-500">
+                                        <svg class="w-3 h-3 mr-1 shrink-0" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        ADDED: {{ $archive->formatted_added_at }}
+                                    </p>
                                     <div class="flex gap-3 mt-2 text-gray-500">
                                         <span class="flex items-center"><svg class="w-3 h-3 mr-1" fill="none"
                                                 stroke="currentColor" viewBox="0 0 24 24">

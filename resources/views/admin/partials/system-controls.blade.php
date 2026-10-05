@@ -20,5 +20,11 @@
         {{-- Mengarah ke route khusus admin.setting.maintenance --}}
         <x-terminal-toggle label="MAINTENANCE LOCKDOWN" key="maintenance_mode" :checked="$maintenanceMode"
             url="{{ route('admin.setting.maintenance') }}" />
+
+        {{-- 3. KUNCI PERILAKU SETELAH EDIT ARSIP --}}
+        {{-- Mengoverride preferensi per-user: semua user dipaksa balik ke posisi index. --}}
+        <x-terminal-toggle label="LOCK EDIT RETURN TO INDEX POSITION" key="archive_edit_redirect_locked"
+            :checked="$archiveEditRedirectLocked ?? false"
+            url="{{ route('admin.setting.toggle') }}" />
     </div>
 </div>

@@ -54,6 +54,7 @@ class SettingController extends Controller
             'per_page' => 'required|integer|in:6,9,12,15,18,27,54',
             'theme' => 'required|string|in:default,amber,arctic,red',
             'alert_position' => 'nullable|string',
+            'archive_edit_redirect' => 'nullable|string|in:index_position,show',
         ]);
 
         $user = Auth::user();
@@ -66,6 +67,7 @@ class SettingController extends Controller
         $settings['per_page'] = $request->per_page;
         $settings['theme'] = $request->theme;
         $settings['alert_position'] = $request->alert_position;
+        $settings['archive_edit_redirect'] = $request->input('archive_edit_redirect', 'index_position');
         // Simpan kembali ke database
         $user->settings = $settings;
 

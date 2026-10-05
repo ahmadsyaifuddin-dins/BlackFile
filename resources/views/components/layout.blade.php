@@ -13,6 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @vite('resources/js/pages/friends-index.js')
+    @stack('styles')
 
 </head>
 @props(['title', 'theme' => 'default']) {{-- Menerima prop 'theme' dengan nilai default --}}

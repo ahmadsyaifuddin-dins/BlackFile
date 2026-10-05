@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Archive;
+use App\Models\SystemSetting;
 use App\Models\Tag;
 use App\Models\User;
+use App\Support\ArchiveReturnUrl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -35,17 +37,44 @@ class ArchiveController extends Controller
         // Ambil hanya user yang memiliki arsip, urutkan berdasarkan nama
         $owners = User::whereHas('archives')->orderBy('name')->get();
 
-        // 2. MEMBANGUN QUERY DASAR BERDASARKAN ROLE
-        $query = Archive::query();
+        // 2. MEMBANGUN QUERY DASAR + FILTER
+        $query = $this->applyFilters(Archive::query(), $request);
 
+        $perPage = Auth::user()->settings['per_page'] ?? 15;
+
+        // 3. FINALISASI QUERY DAN KIRIM DATA KE VIEW
+        $archives = $query->with(['user', 'tags'])
+            // [UBAH] Tambahkan withCount dan withExists untuk status favorit
+            ->withCount('favoritedBy')
+            ->withExists(['favoritedBy as is_favorited' => function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            }])
+            ->latest()
+            ->paginate($perPage)
+            ->appends($request->query()); // <-- SANGAT PENTING untuk paginasi
+
+        // [BARU] Fokus baris tertentu setelah edit (highlight + auto-scroll)
+        $focusId = $request->integer('focus') ?: null;
+
+        return view('archives.index', compact('archives', 'categories', 'owners', 'focusId'));
+    }
+
+    /**
+     * Terapkan filter index (scope role + search/category/type/owner).
+     * Dipakai bersama oleh index() dan pengecekan "arsip masih cocok filter?".
+     */
+    private function applyFilters($query, Request $request)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Scope berdasarkan role
         if (strtolower($user->role->name) !== 'director') {
             $query->where(function ($q) use ($user) {
                 $q->where('is_public', true)
                     ->orWhere('user_id', $user->id);
             });
         }
-
-        // 3. MENERAPKAN FILTER SECARA DINAMIS
 
         // Filter Pencarian Umum (Nama, Deskripsi, atau Tag)
         $query->when($request->filled('search'), function ($q) use ($request) {
@@ -74,20 +103,7 @@ class ArchiveController extends Controller
             $q->where('user_id', $request->owner);
         });
 
-        $perPage = Auth::user()->settings['per_page'] ?? 15;
-
-        // 4. FINALISASI QUERY DAN KIRIM DATA KE VIEW
-        $archives = $query->with(['user', 'tags'])
-            // [UBAH] Tambahkan withCount dan withExists untuk status favorit
-            ->withCount('favoritedBy')
-            ->withExists(['favoritedBy as is_favorited' => function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            }])
-            ->latest()
-            ->paginate($perPage)
-            ->appends($request->query()); // <-- SANGAT PENTING untuk paginasi
-
-        return view('archives.index', compact('archives', 'categories', 'owners'));
+        return $query;
     }
 
     /**
@@ -254,7 +270,15 @@ class ArchiveController extends Controller
         // Kirim juga data kategori ke view edit
         $categories = Config::get('blackfile.archive_categories', []);
 
-        return view('archives.edit', compact('archive', 'categories'));
+        // [BARU] Tentukan halaman tujuan setelah simpan, sesuai preferensi user.
+        $returnUrl = $this->resolveReturnUrl(request('return_url'));
+
+        return view('archives.edit', [
+            'archive' => $archive,
+            'categories' => $categories,
+            'targetUrl' => $this->redirectTarget($archive, $returnUrl),
+            'returnUrl' => $returnUrl,
+        ]);
     }
 
     /**
@@ -302,22 +326,151 @@ class ArchiveController extends Controller
         // [LOGIKA UNTUK TAGS]
         $this->syncTags($validated['tags'] ?? null, $archive);
 
-        // Redirect handling (honor return_url jika disediakan)
-        $return = $request->input('return_url');
+        // [BARU] Redirect mengikuti preferensi "setelah edit" milik user.
+        $target = $this->redirectTarget($archive, $this->resolveReturnUrl($request->input('return_url')));
 
-        if ($return) {
-            // Terima: (a) path relatif yang diawali '/', atau (b) absolute URL yang mulai dengan APP_URL
-            $appUrl = rtrim(config('app.url'), '/');
-
-            if (! Str::startsWith($return, '/') && ! Str::startsWith($return, $appUrl)) {
-                // bukan path relatif dan bukan domain kita -> tolak (hindari open-redirect)
-                $return = null;
-            }
+        // Permintaan dari form (axios)_expect JSON supaya frontend tahu URL
+        // tujuan final, termasuk penanda `focus_miss` bila filter tak lagi cocok.
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Arsip berhasil diperbarui.',
+                'redirect_url' => $target,
+            ]);
         }
 
-        $return = $return ?? route('archives.index');
+        return redirect()->to($target)->with('success', 'Arsip berhasil diperbarui.');
+    }
 
-        return redirect()->to($return)->with('success', 'Arsip berhasil diperbarui.');
+    /**
+     * Susun halaman tujuan setelah edit disimpan.
+     *
+     * - Preferensi "show"  -> langsung ke halaman detail arsip.
+     * - Preferensi "index_position" -> kembali ke URL index tadi (filter ikut
+     *   dipertahankan) + parameter `focus` agar baris yang diedit tersorot.
+     * - `focus_miss` hanya ditambahkan kalau arsipnya memang tidak lagi
+     *   cocok dengan filter, dan dipakai sebagai penanda di query string
+     *   (bukan session flash, supaya tidak bocor ke request berikutnya).
+     */
+    private function redirectTarget(Archive $archive, ?string $returnUrl): string
+    {
+        $params = ['focus' => $archive->id];
+
+        if ($returnUrl && ! $this->archiveMatchesFilters($archive, $returnUrl)) {
+            $params['focus_miss'] = 1;
+        }
+
+        if ($this->editRedirectPreference() === 'show') {
+            // Tetap bawa posisi index (filter + halaman + penanda focus) sebagai
+            // return_url, supaya tombol BACK di halaman detail mendarat di filter
+            // yang sama dengan baris yang baru saja diedit ikut tersorot.
+            return route('archives.show', [
+                'archive' => $archive,
+                'return_url' => ArchiveReturnUrl::forController($returnUrl, $params),
+            ]);
+        }
+
+        // Selalu bangun ulang lewat route() dari parameter yang sudah dibersihkan,
+        // bukan menyalin string return_url apa adanya. Ini yang mencegah
+        // "&amp;"/rfc3986 berantai dan merusak param `page`.
+        return ArchiveReturnUrl::forController($returnUrl, $params);
+    }
+
+    /**
+     * Apakah arsip ini masih cocok dengan filter yang tersimpan di URL return?
+     */
+    private function archiveMatchesFilters(Archive $archive, string $returnUrl): bool
+    {
+        $query = ArchiveReturnUrl::params($returnUrl);
+
+        // Tanpa filter sama sekali = selalu cocok.
+        if ($query === []) {
+            return true;
+        }
+
+        $request = Request::create('/', 'GET', $query);
+
+        return $this->applyFilters(Archive::query(), $request)
+            ->whereKey($archive->getKey())
+            ->exists();
+    }
+
+    /**
+     * Preferensi tujuan halaman setelah edit selesai.
+     * Global (admin/system override) menang atas preferensi per-user.
+     */
+    private function editRedirectPreference(): string
+    {
+        // Global override: kalau di-lock admin, semua user dipaksa balik ke posisi index.
+        if (SystemSetting::check('archive_edit_redirect_locked', false)) {
+            return 'index_position';
+        }
+
+        $mode = Auth::user()->settings['archive_edit_redirect'] ?? 'index_position';
+
+        return in_array($mode, ['index_position', 'show'], true) ? $mode : 'index_position';
+    }
+
+    /**
+ * Sanitasi return_url sekaligus menormalkannya jadi path relatif.
+     *
+     * Hanya izinkan:
+     * - path relatif ('/archives?...'), tapi bukan protocol-relative ('//host')
+     * - absolute URL dengan host yang sama dengan request saat ini ATAU APP_URL
+     *
+     * Hasilnya dikembalikan sebagai path relatif supaya bebas dari perbedaan
+     * host (localhost vs 127.0.0.1 vs domain produksi).
+     */
+    private function resolveReturnUrl(?string $return): ?string
+    {
+        if (! $return) {
+            return null;
+        }
+
+        // Path relatif: harus diawali '/' tapi BUKAN protocol-relative ('//host')
+        if (Str::startsWith($return, '/')) {
+            return Str::startsWith($return, '//') ? null : $return;
+        }
+
+        $parts = parse_url($return);
+
+        //.Bukan URL yang valid / tanpa host -> tolak
+        if (($parts['scheme'] ?? null) !== 'http' && ($parts['scheme'] ?? null) !== 'https') {
+            return null;
+        }
+
+        $host = strtolower($parts['host'] ?? '');
+
+        if ($host === '') {
+            return null;
+        }
+
+        $port = isset($parts['port']) ? ':'.$parts['port'] : '';
+
+        $allowedHosts = array_filter([
+            // Host yang sedang dipakai user sekarang (menangani localhost vs 127.0.0.1)
+            request()->getHost().$port,
+            request()->getHost(),
+            // Host produksi dari APP_URL
+            (function () {
+                $app = parse_url((string) config('app.url'));
+
+                return isset($app['host'])
+                    ? $app['host'].(isset($app['port']) ? ':'.$app['port'] : '')
+                    : null;
+            })(),
+            (function () {
+                $app = parse_url((string) config('app.url'));
+
+                return $app['host'] ?? null;
+            })(),
+        ]);
+
+        if (! in_array($host.$port, $allowedHosts, true) && ! in_array($host, $allowedHosts, true)) {
+            return null;
+        }
+
+        // Ubah jadi path relatif supaya tidak terikat host
+        return ($parts['path'] ?? '/').(isset($parts['query']) ? '?'.$parts['query'] : '');
     }
 
     private function syncTags(?string $tagsString, Archive $archive): void

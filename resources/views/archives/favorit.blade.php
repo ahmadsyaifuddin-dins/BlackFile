@@ -1,4 +1,4 @@
-<x-app-layout title="Favorite Archives">
+﻿<x-app-layout title="Favorite Archives">
     <div class="space-y-6">
 
         {{-- Header Halaman --}}
@@ -92,26 +92,38 @@
                                 <td class="px-6 py-4 align-top whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex items-center justify-end space-x-4">
                                         {{-- Logic Unfavorite dengan AlpineJS --}}
-                                        <div x-data="{ isFavorited: true }" class="inline-flex items-center gap-1">
-                                            <button class="cursor-pointer focus:outline-none" 
-                                                title="Unfavorite"
-                                                @click="
-                                                    if(!confirm('Remove from favorites?')) return;
+                                        <div x-data="{
+                                                isFavorited: true,
+                                                async unfavorite() {
+                                                    const confirmed = await window.agentConfirm?.(
+                                                        'REMOVE FROM FAVORITES?',
+                                                        'Archive ini akan dihapus dari daftar favorites Anda.',
+                                                        'REMOVE',
+                                                        'CANCEL'
+                                                    );
+                                                    if (!confirmed) return;
                                                     axios.post('{{ route('archives.favorite.toggle', $archive) }}')
                                                         .then(response => {
                                                             if (!response.data.is_favorited) {
-                                                                $el.closest('tr').remove();
-                                                                // Optional: Reload page if list empty logic needed
+                                                                this.$root.closest('tr').remove();
+                                                                window.agentAlert?.('success', 'FAVORITE REMOVED', 'Archive dihapus dari daftar favorites.');
                                                             }
+                                                        })
+                                                        .catch(() => {
+                                                            window.agentAlert?.('error', 'TRANSMISSION FAILED', 'Gagal menghapus archive dari favorites.');
                                                         });
-                                                ">
+                                                }
+                                            }" class="inline-flex items-center gap-1">
+                                            <button class="cursor-pointer focus:outline-none" 
+                                                title="Unfavorite"
+                                                @click="unfavorite()">
                                                 <svg class="h-5 w-5 text-red-500 fill-current hover:text-red-400 transition-colors" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.672l1.318-1.354a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z" />
                                                 </svg>
                                             </button>
                                         </div>
                                         
-                                        <a href="{{ route('archives.show', $archive) }}" class="text-secondary hover:text-primary font-mono">VIEW</a>
+                                        <a href="{{ route('archives.show', $archive) }}?return_url={{ urlencode(\App\Support\ArchiveReturnUrl::index()) }}" class="text-secondary hover:text-primary font-mono">VIEW</a>
                                     </div>
                                 </td>
                             </tr>
@@ -157,16 +169,34 @@
 
                 <div class="mt-4 pt-3 border-t border-border-color flex items-center justify-between">
                      {{-- Unfavorite Button Mobile --}}
-                     <button class="text-red-500 hover:text-red-400 flex items-center gap-1 text-xs font-bold cursor-pointer"
-                        onclick="if(confirm('Remove from favorites?')) { 
-                            axios.post('{{ route('archives.favorite.toggle', $archive) }}').then(() => this.closest('.bg-surface').remove()) 
+                     <div x-data="{
+                            async unfavorite() {
+                                const confirmed = await window.agentConfirm?.(
+                                    'REMOVE FROM FAVORITES?',
+                                    'Archive ini akan dihapus dari daftar favorites Anda.',
+                                    'REMOVE',
+                                    'CANCEL'
+                                );
+                                if (!confirmed) return;
+                                axios.post('{{ route('archives.favorite.toggle', $archive) }}')
+                                    .then(() => {
+                                        this.$root.closest('.bg-surface').remove();
+                                        window.agentAlert?.('success', 'FAVORITE REMOVED', 'Archive dihapus dari daftar favorites.');
+                                    })
+                                    .catch(() => {
+                                        window.agentAlert?.('error', 'TRANSMISSION FAILED', 'Gagal menghapus archive dari favorites.');
+                                    });
+                            }
                         }">
+                        <button class="text-red-500 hover:text-red-400 flex items-center gap-1 text-xs font-bold cursor-pointer"
+                            @click="unfavorite()">
                         <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.672l1.318-1.354a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z" /></svg>
                         UNFAV
-                    </button>
+                        </button>
+                    </div>
 
                     <div class="flex gap-3">
-                        <a href="{{ route('archives.show', $archive) }}" class="text-primary hover:text-white text-sm font-bold">[ OPEN ]</a>
+                        <a href="{{ route('archives.show', $archive) }}?return_url={{ urlencode(\App\Support\ArchiveReturnUrl::index()) }}" class="text-primary hover:text-white text-sm font-bold">[ OPEN ]</a>
                     </div>
                 </div>
             </div>

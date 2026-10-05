@@ -38,6 +38,8 @@
         method: '{{ $method }}',
         csrf: '{{ csrf_token() }}',
         availableCategories: @js($categories),
+        targetUrl: @js($targetUrl ?? route('archives.index')),
+        returnUrl: @js($returnUrl ?? ''),
 
         init() {
             if (this.form.category && 
@@ -60,7 +62,7 @@
         // FITUR BARU: Generate AI Description
         generateAiDescription() {
             if (!this.form.name) {
-                alert('Mohon isi nama entri terlebih dahulu!');
+                window.agentAlert?.('warning', 'MISSING INPUT', 'Mohon isi nama entri terlebih dahulu!');
                 return;
             }
 
@@ -75,7 +77,7 @@
             })
             .catch(err => {
                 console.error(err);
-                alert('Gagal generate deskripsi AI. Cek console.');
+                window.agentAlert?.('error', 'AI GENERATION FAILED', 'Gagal generate deskripsi AI. Cek console.');
             })
             .finally(() => {
                 this.isGeneratingAi = false;
@@ -108,6 +110,12 @@
                 fd.append('archive_file', this.file);
             }
 
+            // Kembalikan filter + halaman paginasi aktif ke server.
+            // Tanpa ini, URL balik polos (?focus=xx) dan filter ikut hilang.
+            if (this.returnUrl) {
+                fd.append('return_url', this.returnUrl);
+            }
+
             axios.post(this.endpoint, fd, {
                 headers: {
                     'X-CSRF-TOKEN': this.csrf,
@@ -119,8 +127,10 @@
                     }
                 }
             })
-            .then(() => {
-                window.location.href = '{{ route('archives.index') }}';
+            .then(res => {
+                window.agentAlert?.('success', 'ARCHIVE UPDATED', 'Perubahan berhasil disimpan.');
+                // Prioritaskan URL yang dihitung server (ikut tahu filter masih cocok atau tidak)
+                window.location.href = res.data?.redirect_url || this.targetUrl;
             })
             .catch(err => {
                 this.isUploading = false;

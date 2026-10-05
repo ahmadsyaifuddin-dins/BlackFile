@@ -397,7 +397,7 @@
             <!-- Metadata Grid -->
             <!-- Font lebih kecil di mobile (text-[10px]) agar muat 2 kolom -->
             <div
-                class="grid grid-cols-2 md:grid-cols-4 gap-4 text-[10px] sm:text-xs font-mono text-gray-500 border-b border-gray-900 pb-8">
+                class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 text-[10px] sm:text-xs font-mono text-gray-500 border-b border-gray-900 pb-8">
                 <div>
                     <span class="block text-gray-700 uppercase">Incident Date</span>
                     <span class="text-gray-300">{{ $archive->formatted_date }}</span>
@@ -414,6 +414,12 @@
                 <div>
                     <span class="block text-gray-700 uppercase">Impact</span>
                     <span class="text-red-900 font-bold">CRITICAL</span>
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <span class="block text-gray-700 uppercase">Added To Database</span>
+                    <span class="text-gray-300">{{ $archive->formatted_added_at }}</span>
+                    <span class="block text-gray-700 uppercase mt-1">Last Updated</span>
+                    <span class="text-gray-500">{{ $archive->formatted_updated_at }}</span>
                 </div>
             </div>
         </header>

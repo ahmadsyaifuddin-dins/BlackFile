@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
                 'specialization' => 'System Architecture & Counter-Intelligence',
                 'quotes' => 'The future is not set in stone, it is shaped by our actions.',
                 'avatar' => '/avatars/el_absolute_1755504759.jpg',
+                'confirmed' => 1,
                 'role_id' => 1, // Director
             ]
         );

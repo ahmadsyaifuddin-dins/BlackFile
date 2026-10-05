@@ -3,17 +3,36 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+// Endpoint untuk pengecekan lisensi "Dead Hand"
+Route::get('/verify-license', function (Request $request) {
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    // 1. Tangkap Data dari Klien
+    $clientKey = $request->query('key'); // License Key
+    $clientApp = $request->query('app_name'); // Nama Project
+
+    // 2. DATABASE LISENSI SEDERHANA (Hardcode dulu biar cepat)
+    // Format: 'LICENSE-KEY' => ['status' => 'active/blocked', 'message' => 'Pesan untuk klien']
+    $licenses = [
+        'JOKI-PROJECT-SMAN3-2026' => [
+            'status' => 'active',
+            'message' => 'Lisensi Valid.',
+        ],
+        'JOKI-PROJECT-LIZA-PKL' => [
+            'status' => 'blocked',
+            'message' => 'Masa percobaan aplikasi telah habis. Silakan hubungi developer untuk perpanjangan.',
+        ],
+        // Tambahkan user lain di sini nanti
+    ];
+
+    // 3. Logika Pengecekan
+    if (array_key_exists($clientKey, $licenses)) {
+        // Jika Key Ditemukan, kembalikan status sesuai database
+        return response()->json($licenses[$clientKey]);
+    }
+
+    // 4. Jika Key Tidak Dikenal (Maling/Bajakan)
+    return response()->json([
+        'status' => 'blocked',
+        'message' => 'Lisensi Tidak Terdaftar! Akses Ditolak.',
+    ], 403);
 });

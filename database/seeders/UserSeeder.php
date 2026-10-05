@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
                 'name' => 'Ahmad Syaifuddin',
                 'codename' => 'El Absolute',
                 'email' => 'ahmadsyai598@gmail.com', // opsional
-                'password' => Hash::make('ahmads1230906'),
+                'password' => Hash::make('password'),
                 'specialization' => 'System Architecture & Counter-Intelligence',
                 'quotes' => 'The future is not set in stone, it is shaped by our actions.',
                 'avatar' => '/avatars/el_absolute_1755504759.jpg',

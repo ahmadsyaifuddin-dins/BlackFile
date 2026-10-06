@@ -23,6 +23,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Tools\ExifIntelController;
 use App\Http\Controllers\Tools\UsernameTrackerController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,11 @@ use Illuminate\Support\Str;
 | Web Routes
 |--------------------------------------------------------------------------
 */
+
+Route::get('/clear-cache', function() {
+    Artisan::call('optimize:clear');
+    return 'Cache berhasil dibersihkan';
+});
 
 // Rute ini tetap bisa diakses oleh semua orang, baik tamu maupun yang sudah login.
 Route::get('/', function () {

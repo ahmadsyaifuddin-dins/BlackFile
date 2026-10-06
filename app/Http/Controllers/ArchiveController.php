@@ -207,7 +207,14 @@ class ArchiveController extends Controller
         // Ambil kategori dari file config dan kirim ke view
         $categories = Config::get('blackfile.archive_categories', []);
 
-        return view('archives.create', compact('categories'));
+        // [BARU] Simpan posisi user (filter + halaman + urutan) supaya form
+        // "tambah" punya tujuan balik yang sama dengan form "edit".
+        $returnUrl = $this->resolveReturnUrl(request('return_url'));
+
+        return view('archives.create', [
+            'categories' => $categories,
+            'returnUrl' => $returnUrl,
+        ]);
     }
 
     public function store(Request $request)
@@ -265,16 +272,24 @@ class ArchiveController extends Controller
             $this->syncTags($validated['tags'], $archive);
         }
 
+        // [BARU] Redirect setelah simpan mengikuti preferensi "setelah tambah",
+        // sama persis dengan alur edit (filter + halaman ikut terjaga).
+        $target = $this->redirectTarget(
+            $archive,
+            $this->resolveReturnUrl($request->input('return_url')),
+            'create'
+        );
+
         // Jika request datang dari AJAX (JavaScript), kirim respons JSON
         if ($request->wantsJson()) {
             return response()->json([
                 'message' => 'Arsip berhasil ditambahkan.',
-                'redirect_url' => route('archives.index'),
+                'redirect_url' => $target,
             ], 201); // 201 Created
         }
 
         // Jika request biasa (tanpa JavaScript), lakukan redirect seperti biasa
-        return redirect()->route('archives.index')->with('success', 'Arsip berhasil ditambahkan.');
+        return redirect()->to($target)->with('success', 'Arsip berhasil ditambahkan.');
     }
 
     /**
@@ -359,16 +374,22 @@ class ArchiveController extends Controller
     }
 
     /**
-     * Susun halaman tujuan setelah edit disimpan.
+     * Susun halaman tujuan setelah arsip disimpan.
+     *
+     * Berlaku untuk dua alur: `update` (edit) dan `store` (tambah). Keduanya
+     * mengikuti aturan yang sama supaya perilaku konsisten.
      *
      * - Preferensi "show"  -> langsung ke halaman detail arsip.
      * - Preferensi "index_position" -> kembali ke URL index tadi (filter ikut
-     *   dipertahankan) + parameter `focus` agar baris yang diedit tersorot.
+     *   dipertahankan) + parameter `focus` agar baris yang baru disimpan
+     *   tersorot.
      * - `focus_miss` hanya ditambahkan kalau arsipnya memang tidak lagi
      *   cocok dengan filter, dan dipakai sebagai penanda di query string
      *   (bukan session flash, supaya tidak bocor ke request berikutnya).
+     *
+     * @param  string  $action  'update' atau 'create' (untuk memilih setelan)
      */
-    private function redirectTarget(Archive $archive, ?string $returnUrl): string
+    private function redirectTarget(Archive $archive, ?string $returnUrl, string $action = 'update'): string
     {
         $params = ['focus' => $archive->id];
 
@@ -376,10 +397,10 @@ class ArchiveController extends Controller
             $params['focus_miss'] = 1;
         }
 
-        if ($this->editRedirectPreference() === 'show') {
+        if ($this->redirectPreference($action) === 'show') {
             // Tetap bawa posisi index (filter + halaman + penanda focus) sebagai
             // return_url, supaya tombol BACK di halaman detail mendarat di filter
-            // yang sama dengan baris yang baru saja diedit ikut tersorot.
+            // yang sama dengan baris yang baru saja disimpan ikut tersorot.
             return route('archives.show', [
                 'archive' => $archive,
                 'return_url' => ArchiveReturnUrl::forController($returnUrl, $params),
@@ -412,17 +433,21 @@ class ArchiveController extends Controller
     }
 
     /**
-     * Preferensi tujuan halaman setelah edit selesai.
+     * Preferensi tujuan halaman setelah arsip disimpan.
      * Global (admin/system override) menang atas preferensi per-user.
+     *
+     * @param  string  $action  'update' atau 'create'
      */
-    private function editRedirectPreference(): string
+    private function redirectPreference(string $action = 'update'): string
     {
+        $settingKey = $action === 'create' ? 'archive_create_redirect' : 'archive_edit_redirect';
+
         // Global override: kalau di-lock admin, semua user dipaksa balik ke posisi index.
         if (SystemSetting::check('archive_edit_redirect_locked', false)) {
             return 'index_position';
         }
 
-        $mode = Auth::user()->settings['archive_edit_redirect'] ?? 'index_position';
+        $mode = Auth::user()->settings[$settingKey] ?? 'index_position';
 
         return in_array($mode, ['index_position', 'show'], true) ? $mode : 'index_position';
     }

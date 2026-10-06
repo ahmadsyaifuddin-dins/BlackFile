@@ -56,6 +56,11 @@ class ArchiveSortTest extends TestCase
         $this->makeArchive('ZZSORT Unity', '2024-01-07 10:00:00', ['AC', 'ABAD KE 19']);
         $this->makeArchive('ZZSORT Tanpa Angka', '2024-01-08 10:00:00', ['AC']);
         $this->makeArchive('ZZSORT Omega', '2024-01-09 10:00:00', ['AC', 'ABAD KE 18']);
+
+        // Kasus nyata dari data game yang ada.
+        $this->makeArchive('ZZSORT Wingsman', '2024-01-10 10:00:00', ['432 AC']);
+        $this->makeArchive('ZZSORT Stray', '2024-01-11 10:00:00', ['MASA DEPAN']);
+        $this->makeArchive('ZZSORT BlackMesa', '2024-01-12 10:00:00', ['AKHIR ABAD KE 20', '199X']);
     }
 
     protected function tearDown(): void
@@ -128,7 +133,7 @@ class ArchiveSortTest extends TestCase
     public function test_newest_puts_most_recent_first()
     {
         $this->assertSame(
-            ['Omega', 'Tanpa', 'Unity', 'Origins', 'Syndicate', 'Brotherhood'],
+            ['BlackMesa', 'Stray', 'Wingsman', 'Omega', 'Tanpa', 'Unity', 'Origins', 'Syndicate', 'Brotherhood'],
             $this->names('newest')
         );
     }
@@ -136,7 +141,7 @@ class ArchiveSortTest extends TestCase
     public function test_oldest_puts_least_recent_first()
     {
         $this->assertSame(
-            ['Brotherhood', 'Syndicate', 'Origins', 'Unity', 'Tanpa', 'Omega'],
+            ['Brotherhood', 'Syndicate', 'Origins', 'Unity', 'Tanpa', 'Omega', 'Wingsman', 'Stray', 'BlackMesa'],
             $this->names('oldest')
         );
     }
@@ -144,7 +149,7 @@ class ArchiveSortTest extends TestCase
     public function test_name_ascending_is_alphabetical_and_case_insensitive()
     {
         $this->assertSame(
-            ['Brotherhood', 'Omega', 'Origins', 'Syndicate', 'Tanpa', 'Unity'],
+            ['BlackMesa', 'Brotherhood', 'Omega', 'Origins', 'Stray', 'Syndicate', 'Tanpa', 'Unity', 'Wingsman'],
             $this->names('name_asc')
         );
     }
@@ -152,32 +157,35 @@ class ArchiveSortTest extends TestCase
     public function test_name_descending_is_reversed_alphabetical()
     {
         $this->assertSame(
-            ['Unity', 'Tanpa', 'Syndicate', 'Origins', 'Omega', 'Brotherhood'],
+            ['Wingsman', 'Unity', 'Tanpa', 'Syndicate', 'Stray', 'Origins', 'Omega', 'Brotherhood', 'BlackMesa'],
             $this->names('name_desc')
         );
     }
 
-    public function test_tag_ascending_sorts_by_smallest_numeric_tag()
+    public function test_tag_ascending_walks_from_oldest_era_to_newest()
     {
-        // ASC: century-only (18, 19) lebih kecil dari tahun (1400, 1500, 1868)
+        // 432 AC -> 432, "ABAD KE 15" -> 1450, "1500" -> 1500,
+        // "ABAD KE 18" -> 1750, "ABAD KE 19" -> 1850, "199X" -> 1995,
+        // "MASA DEPAN" -> era paling akhir, tanpa tag era -> paling bawah.
         $this->assertSame(
-            ['Omega', 'Unity', 'Origins', 'Brotherhood', 'Syndicate', 'Tanpa'],
+            ['Wingsman', 'Origins', 'Brotherhood', 'Omega', 'Syndicate', 'Unity', 'BlackMesa', 'Stray', 'Tanpa'],
             $this->names('tag_asc')
         );
     }
 
-    public function test_tag_descending_sorts_by_largest_numeric_tag()
+    public function test_tag_descending_walks_from_newest_era_to_oldest()
     {
         $this->assertSame(
-            ['Syndicate', 'Brotherhood', 'Origins', 'Unity', 'Omega', 'Tanpa'],
+            ['Stray', 'BlackMesa', 'Syndicate', 'Unity', 'Omega', 'Brotherhood', 'Origins', 'Wingsman', 'Tanpa'],
             $this->names('tag_desc')
         );
     }
 
     public function test_year_tag_takes_priority_over_century_tag()
     {
-        // "ABAD KE 19" bernilai 19, "1868" bernilai 1868. Kalau century ikut
-        // dihitung sebagai angka biasa, 19 akan selalu kalah dan urutannya salah.
+        // "ABAD KE 19" -> 1850, "1868" -> 1868. Untuk DESC yang dipakai tahun
+        // TERAKHIR (1868), untuk ASC tahun TERAWAL (1850). Kalau abad ikut
+        // dihitung sebagai angka mentah (19), urutannya akan salah.
         $withBoth = Archive::where('category', self::CATEGORY)
             ->where('name', 'ZZSORT Syndicate')
             ->firstOrFail();
@@ -188,9 +196,8 @@ class ArchiveSortTest extends TestCase
         $this->assertSame(1, $years);
         $this->assertSame(1, $centuries);
 
-        // Urutannya harus berdasarkan 1868, bukan 19.
         $this->assertSame(
-            ['Syndicate', 'Brotherhood', 'Origins', 'Unity', 'Omega', 'Tanpa'],
+            ['Stray', 'BlackMesa', 'Syndicate', 'Unity', 'Omega', 'Brotherhood', 'Origins', 'Wingsman', 'Tanpa'],
             $this->names('tag_desc')
         );
     }
@@ -198,7 +205,7 @@ class ArchiveSortTest extends TestCase
     public function test_unknown_sort_value_falls_back_to_newest()
     {
         $this->assertSame(
-            ['Omega', 'Tanpa', 'Unity', 'Origins', 'Syndicate', 'Brotherhood'],
+            ['BlackMesa', 'Stray', 'Wingsman', 'Omega', 'Tanpa', 'Unity', 'Origins', 'Syndicate', 'Brotherhood'],
             $this->names('drop table')
         );
 

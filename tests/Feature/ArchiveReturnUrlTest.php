@@ -232,7 +232,7 @@ class ArchiveReturnUrlTest extends TestCase
         // `page` ikut jadi `amp;page` sehingga user mendarat di halaman 1.
         //
         // `search=ZZRET` dipakai supaya hanya arsip test ikut terhitung, tidak
-        // Depends on data real => posisinya tidak bergeser.
+        // terpengaruh data real => posisinya tidak bergeser.
         $broken = '/archives?category=Link%20Game&search=ZZRET&amp;page=2';
 
         $idx = $this->actingAs($this->user)->get($broken, $this->host());
@@ -292,7 +292,9 @@ class ArchiveReturnUrlTest extends TestCase
 
         $target = $this->made[8]; // ada di halaman 2
 
-        $indexUrl = 'http://127.0.0.1:8000/archives?category=Link%20Game&page=2';
+        // `search=ZZRET` mengisolasi arsip test dari data real di kategori ini,
+        // supaya posisi halaman 2 tidak bergeser.
+        $indexUrl = 'http://127.0.0.1:8000/archives?category=Link%20Game&search=ZZRET&page=2';
 
         $ajax = $this->actingAs($this->user)->put('/archives/'.$target->id, [
             'name' => 'ZZRET 8 diedit',

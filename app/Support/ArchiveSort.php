@@ -12,27 +12,22 @@ use Illuminate\Support\Facades\DB;
  * Tiga kelompok urutan:
  * 1. Tanggal  -> terbaru / terlama (created_at)
  * 2. Abjad    -> A-Z / Z-A (name)
- * 3. Tag      -> berdasarkan angka pada tag (mis. "ABAD KE 19" atau "1868")
+ * 3. Tag      -> berdasarkan era cerita pada tag
  *
- * Untuk urutan tag, angka diambil dari tag dengan prioritas:
- *   1. Tag TAHUN  (4 digit, mis. "1868")  -> dipakai
- *   2. Tag ABAD   (mis. "ABAD KE 19")     -> dipakai kalau tidak ada tag tahun
- *   3. Tag lain   ("Game", "AC")          -> NULL, diabaikan
+ * Untuk urutan tag, setiap tag dinormalkan lebih dulu oleh TagEra menjadi satu
+ * angka tahun: "1868" -> 1868, "ABAD KE 19" -> 1850, "49 SM" -> -49,
+ * "199X" -> 1995, "MASA DEPAN" -> era paling akhir. Lihat TagEra.
  *
- * Prioritas ini penting: kalau langsung ambil MIN/MAX dari semua angka, maka
- * "ABAD KE 19" (nilai 19) akan tercampur dengan "1868" (nilai 1868) dan
- * hampir selalu kalah, padahal yang jelas lebih spesifik adalah tahun.
+ * Kalau satu arsip punya beberapa tag era, urutannya memakai rentang yang
+ * paling logis per arah: ASC memakai tahun TERAWAL (MIN), DESC memakai tahun
+ * TERAKHIR (MAX). Jadi arsip Black Mesa (tag "199X" + "AKHIR ABAD KE 20")
+ * akan muncul sebagai 1995 saat naik dan 2000 saat turun.
  *
- * Arsip tanpa tag bernumber dianggap paling "lama" untuk ASC dan paling
- * "baru"/terakhir untuk DESC, jadi tetap tampil tapi tidak mengacaukan urutan.
+ * Arsip tanpa tag era selalu ditaruh paling akhir di kedua arah, supaya tidak
+ * dianggap "tahun 0" dan tidak mengacaukan urutan.
  */
 class ArchiveSort
 {
-    /** Nilai tag yang dianggap "tidak ada angka" (diabaikan). */
-    private const NULL_RANK_ASC = 1;
-
-    private const NULL_RANK_DESC = 0;
-
     /** Semua pilihan urutan yang valid: value => label. */
     public const OPTIONS = [
         'newest' => 'Newest First',
@@ -87,51 +82,33 @@ class ArchiveSort
     }
 
     /**
-     * Regex tag tahun: 4 digit mulai 1xxx/2xxx, mis. "1868", "1500".
-     * Angka harus berdiri sendiri agar "ABAD KE 19" tidak ikut.
-     */
-    private const YEAR_PATTERN = '(^|[^0-9])[12][0-9]{3}([^0-9]|$)';
-
-    /**
-     * Urutkan berdasarkan angka pada tag (tahun, atau abad sebagai cadangan).
+     * Urutkan berdasarkan era pada tag.
+     *
+     * Nilai era tiap tag sudah dihitung di PHP oleh TagEra, lalu disuntikkan
+     * ke SQL sebagai CASE tag_id => nilai. Dengan begitu query tidak perlu
+     * regex SQL yang rumit, tapi agregasi MIN/MAX tetap jalan di database.
      */
     private static function applyTagSort(Builder $query, string $direction): Builder
     {
-        $aggregate = $direction === 'asc' ? 'MIN' : 'MAX';
-        $nullRank = $direction === 'asc' ? self::NULL_RANK_ASC : self::NULL_RANK_DESC;
+        $ascending = strtoupper($direction) === 'ASC';
 
-        // Subquery 1: angka TAHUN milik arsip ini (paling spesifik, prioritas)
-        $yearTag = static::numericTagSubQuery($query, self::YEAR_PATTERN, $aggregate);
+        // ASC -> tahun paling awal, DESC -> tahun paling akhir.
+        $aggregate = $ascending ? 'MIN' : 'MAX';
 
-        // Subquery 2: angka dari tag ABAD / token bernomor lain (cadangan)
-        $fallbackTag = static::numericTagSubQuery($query, '[0-9]', $aggregate);
+        $case = TagEra::caseExpression(TagEra::map());
 
-        $query->addSelect([
-            'sort_tag_year' => $yearTag,
-            'sort_tag_any' => $fallbackTag,
-        ]);
+        $eraValue = DB::table('archive_tag')
+            ->whereColumn('archive_tag.archive_id', 'archives.id')
+            ->selectRaw("{$aggregate}({$case})");
+
+        $query->addSelect(['sort_tag_era' => $eraValue]);
 
         return $query
-            // Arsip tanpa tag bern selalu ditaruh paling akhir, supaya tidak
-            // dianggap sebagai "tahun 0".
-            ->orderByRaw('CASE WHEN COALESCE(sort_tag_year, sort_tag_any) IS NULL THEN '.$nullRank.' ELSE 0 END ASC')
-            // Tahun menang kalau ada; kalau tidak, pakai angka tag lain.
-            ->orderByRaw('COALESCE(sort_tag_year, sort_tag_any) '.(strtoupper($direction) === 'ASC' ? 'ASC' : 'DESC'))
+            // Tanpa tag era -> selalu paling akhir, di kedua arah.
+            ->orderByRaw('CASE WHEN sort_tag_era IS NULL THEN 1 ELSE 0 END ASC')
+            ->orderByRaw('sort_tag_era '.($ascending ? 'ASC' : 'DESC'))
+            // Sama-sama satu era: urutkan huruf biar stabil.
             ->orderBy('archives.name');
-    }
-
-    /**
-     * Subquery: nilai numerik terbaik dari tag milik tiap arsip.
-     *
-     * @param  string  $condition  syarat WHERE tambahan untuk memilih tag
-     */
-    private static function numericTagSubQuery(Builder $query, string $condition, string $aggregate): \Illuminate\Database\Query\Builder
-    {
-        return DB::table('tags')
-            ->join('archive_tag', 'tags.id', '=', 'archive_tag.tag_id')
-            ->whereColumn('archive_tag.archive_id', 'archives.id')
-            ->whereRaw('tags.name REGEXP ?', [$condition])
-            ->selectRaw("{$aggregate}(CAST(SUBSTRING_INDEX(tags.name, ' ', -1) AS UNSIGNED))");
     }
 
     /**
@@ -143,12 +120,15 @@ class ArchiveSort
     }
 
     /**
-     * Semua nilai tag bern yang ada, untuk keperluan debug/diagnostics.
+     * Semua tag yang punya nilai era, untuk keperluan debug/diagnostics.
      *
      * @return \Illuminate\Support\Collection<int, string>
      */
     public static function numericTagNames()
     {
-        return Tag::whereRaw('name REGEXP ?', ['[0-9]'])->pluck('name');
+        return Tag::all()
+            ->filter(fn ($tag) => TagEra::value($tag->name) !== null)
+            ->pluck('name')
+            ->values();
     }
 }

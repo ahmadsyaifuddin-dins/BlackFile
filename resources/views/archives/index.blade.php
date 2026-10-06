@@ -41,7 +41,10 @@
         {{-- Header Halaman --}}
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
             <h1 class="text-xl sm:text-2xl text-glow font-bold text-primary">[ ARCHIVES_VAULT ]</h1>
-            <x-button variant="outline" href="{{ route('archives.create') }}">
+            {{-- Bawa posisi user (filter + halaman + urutan) ke form tambah, supaya
+                submit-nya bisa balik ke tempat yang sama --}}
+            <x-button variant="outline"
+                href="{{ route('archives.create') }}?return_url={{ urlencode(\App\Support\ArchiveReturnUrl::index()) }}">
                 + ADD_NEW_ENTRY
             </x-button>
         </div>

@@ -44,6 +44,12 @@ $alertPositionOptions = [
           'index_position' => __('Kembali ke Posisi Index (dengan filter)'),
           'show' => __('Masuk ke Detail Arsip'),
       ];
+
+      // 6. Opsi tujuan halaman setelah menambah arsip baru (terpisah dari edit)
+      $archiveCreateRedirectOptions = [
+          'index_position' => __('Kembali ke Posisi Index (dengan filter)'),
+          'show' => __('Masuk ke Detail Arsip'),
+      ];
   @endphp
  <x-app-layout title="{{ __('System Settings') }}">
      {{-- Header Halaman --}}
@@ -132,6 +138,20 @@ $alertPositionOptions = [
 
                   <p class="text-xs text-secondary mt-2">
                       {{ __('// "Posisi Index" preserves your active filter and highlights the edited row.') }}
+                  </p>
+              </div>
+
+              {{-- Panel 6: Perilaku Setelah Menambah Arsip Baru --}}
+              <div class="bg-surface border border-border-color p-6 font-mono h-full">
+                  <h2 class="text-lg font-bold text-primary border-b border-border-color pb-2 mb-4">
+                      {{ __('Post-Create Behavior') }}</h2>
+
+                  <x-forms.select label="{{ __('After Adding an Archive:') }}" name="archive_create_redirect"
+                      :options="$archiveCreateRedirectOptions"
+                      :selected="Auth::user()->settings['archive_create_redirect'] ?? 'index_position'" />
+
+                  <p class="text-xs text-secondary mt-2">
+                      {{ __('// Same rule as Post-Edit: "Posisi Index" keeps your active filter and highlights the new row.') }}
                   </p>
               </div>
 

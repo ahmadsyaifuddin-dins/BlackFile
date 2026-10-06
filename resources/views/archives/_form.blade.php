@@ -38,7 +38,12 @@
         method: '{{ $method }}',
         csrf: '{{ csrf_token() }}',
         availableCategories: @js($categories),
-        targetUrl: @js($targetUrl ?? route('archives.index')),
+        isEdit: {{ $isEdit ? 'true' : 'false' }},
+        successTitle: @js($isEdit ? 'ARCHIVE UPDATED' : 'ARCHIVE ADDED'),
+        successMessage: @js($isEdit
+            ? 'Perubahan berhasil disimpan.'
+            : 'Entri baru berhasil ditambahkan ke arsip.'),
+        targetUrl: @js($targetUrl ?? \App\Support\ArchiveReturnUrl::forController($returnUrl ?? null)),
         returnUrl: @js($returnUrl ?? ''),
 
         init() {
@@ -128,7 +133,8 @@
                 }
             })
             .then(res => {
-                window.agentAlert?.('success', 'ARCHIVE UPDATED', 'Perubahan berhasil disimpan.');
+                // Pesan & judul ditentukan server, menyesuaikan alur: tambah vs edit.
+                window.agentAlert?.('success', this.successTitle, this.successMessage);
                 // Prioritaskan URL yang dihitung server (ikut tahu filter masih cocok atau tidak)
                 window.location.href = res.data?.redirect_url || this.targetUrl;
             })

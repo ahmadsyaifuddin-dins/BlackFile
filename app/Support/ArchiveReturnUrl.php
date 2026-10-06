@@ -7,8 +7,8 @@ namespace App\Support;
  * berpindah halaman: index -> show -> edit -> simpan -> index.
  *
  * Masalah yang diselesaikan:
- * `return_url` Originally dibuat dari `request()->fullUrl()`, yaitu string URL
- * MENTAJA. Saat string itu ditulis ke `href` dengan `{{ }}`, Blade mengubah
+ * `return_url` awalnya dibuat dari `request()->fullUrl()`, yaitu string URL
+ * mentah. Saat string itu ditulis ke `href` dengan `{{ }}`, Blade mengubah
  * `&` menjadi `&amp;`. Kalau string itu lalu di-`urlencode()` lagi dan
  * diputar ke halaman berikutnya, karakternya berantai:
  *
@@ -28,6 +28,13 @@ class ArchiveReturnUrl
 {
     /** Parameter yang menandai posisi baris, bukan filter. */
     private const POINTER_KEYS = ['focus', 'focus_miss'];
+
+    /**
+     * Parameter yang bukan bagian dari "filter" tapi tetap perlu ikut dibawa,
+     * mis. pilihan urutan data. Tanpa ini, redirect setelah edit akan
+     * mengembalikan urutan ke default.
+     */
+    private const SORT_KEY = 'sort';
 
     /** Kunci yang hanya perlu dihapus dari URL. */
     private const DROP_KEYS = ['return_url'];
@@ -83,6 +90,18 @@ class ArchiveReturnUrl
 
             // 4. Buang nilai kosong supaya URL tetap rapi
             if ($value === '' || $value === null || $value === []) {
+                continue;
+            }
+
+            // 5. Validasi `sort` terhadap daftar pilihan yang sah, supaya nilai
+            //    ngawur dari URL tidak ikut terbawa dan membuat halaman error.
+            if ($key === static::SORT_KEY) {
+                if (! ArchiveSort::isValid(is_string($value) ? $value : null)) {
+                    continue;
+                }
+
+                $clean[$key] = $value;
+
                 continue;
             }
 

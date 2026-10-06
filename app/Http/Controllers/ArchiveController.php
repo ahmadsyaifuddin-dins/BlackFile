@@ -7,6 +7,7 @@ use App\Models\SystemSetting;
 use App\Models\Tag;
 use App\Models\User;
 use App\Support\ArchiveReturnUrl;
+use App\Support\ArchiveSort;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -49,14 +50,21 @@ class ArchiveController extends Controller
             ->withExists(['favoritedBy as is_favorited' => function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             }])
-            ->latest()
+            ->tap(fn ($q) => ArchiveSort::apply($q, $request->input('sort')))
             ->paginate($perPage)
             ->appends($request->query()); // <-- SANGAT PENTING untuk paginasi
 
         // [BARU] Fokus baris tertentu setelah edit (highlight + auto-scroll)
         $focusId = $request->integer('focus') ?: null;
 
-        return view('archives.index', compact('archives', 'categories', 'owners', 'focusId'));
+        return view('archives.index', [
+            'archives' => $archives,
+            'categories' => $categories,
+            'owners' => $owners,
+            'focusId' => $focusId,
+            'sortOptions' => ArchiveSort::OPTIONS,
+            'currentSort' => ArchiveSort::normalize($request->input('sort')),
+        ]);
     }
 
     /**
@@ -159,14 +167,23 @@ class ArchiveController extends Controller
 
         $favorites = $query->with(['user', 'tags'])
             ->withCount('favoritedBy')
-            // [PERBAIKAN PENTING] Cara yang benar untuk sorting berdasarkan pivot
-            ->orderBy('pivot_created_at', 'desc')
+            // Default favorit: urut dari yang paling baru difavoritkan (pivot), bukan
+            // dari tanggal arsip dibuat. Urutan lain (abjad / tag) pakai ArchiveSort.
+            ->when(
+                ! in_array($request->input('sort'), ['name_asc', 'name_desc', 'tag_asc', 'tag_desc'], true),
+                fn ($q) => $request->input('sort') === 'oldest'
+                    ? $q->orderBy('pivot_created_at')->orderBy('archives.id')
+                    : $q->orderByDesc('pivot_created_at')->orderByDesc('archives.id'),
+                fn ($q) => ArchiveSort::apply($q, $request->input('sort'))
+            )
             ->paginate(15)
             ->appends($request->query());
 
         return view('archives.favorit', [
             'favorites' => $favorites,
             'categories' => $categories,
+            'sortOptions' => ArchiveSort::OPTIONS,
+            'currentSort' => ArchiveSort::normalize($request->input('sort')),
         ]);
     }
 
@@ -499,9 +516,11 @@ class ArchiveController extends Controller
         $archive->tags()->sync($tagIds);
     }
 
-    public function destroy(Archive $archive)
+    public function destroy(Request $request, Archive $archive)
     {
         $this->authorize('delete', $archive);
+
+        $ownerName = $archive->user?->name ?? 'Agent tidak dikenal';
 
         if ($archive->type === 'file' && $archive->file_path) {
             // Hapus file dari disk 'public_uploads'
@@ -510,7 +529,18 @@ class ArchiveController extends Controller
 
         $archive->delete();
 
-        return redirect()->route('archives.index')->with('success', 'Arsip berhasil dihapus.');
+        // Kembalikan user ke posisi list semula (filter + halaman), bukan
+        // paksa ke halaman 1. Samakan dengan alur edit yang sudah pakai
+        // ArchiveReturnUrl.
+        $returnUrl = $this->resolveReturnUrl($request->input('return_url'));
+        $target = $returnUrl
+            ? ArchiveReturnUrl::forController($returnUrl)
+            : route('archives.index');
+
+        return redirect($target)->with(
+            'success',
+            "Arsip \"{$archive->name}\" milik {$ownerName} berhasil dihapus."
+        );
     }
 
     public function generateAiDescription(Request $request)

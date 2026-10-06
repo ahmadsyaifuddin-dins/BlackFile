@@ -22,7 +22,7 @@ class ArchivePolicy
     public function view(User $user, Archive $archive): bool
     {
         // Jika user adalah Director, selalu izinkan.
-        if (strtolower($user->role->name) === 'director') {
+        if ($this->isDirector($user)) {
             return true;
         }
 
@@ -49,10 +49,28 @@ class ArchivePolicy
 
     /**
      * Determine whether the user can delete the model.
+     *
+     * Director adalah otoritas tertinggi, jadi boleh menghapus arsip milik
+     * agent mana pun. Selain itu, pemilik arsipnya sendiri.
      */
     public function delete(User $user, Archive $archive): bool
     {
+        if ($this->isDirector($user)) {
+            return true;
+        }
+
         return $user->id === $archive->user_id;
+    }
+
+    /**
+     * Apakah user punya role Director (otoritas tertinggi).
+     *
+     * Dicek null-safe karena user tanpa role (mis. data belum lengkap)
+     * tidak boleh dianggap Director.
+     */
+    private function isDirector(User $user): bool
+    {
+        return strtolower((string) ($user->role->name ?? '')) === 'director';
     }
 
     /**

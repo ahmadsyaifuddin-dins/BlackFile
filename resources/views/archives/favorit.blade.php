@@ -74,7 +74,13 @@
                                     </div>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 align-top text-sm text-secondary whitespace-nowrap font-mono">{{ $archive->user->name }}</td>
+                                <td class="px-6 py-4 align-top text-sm whitespace-nowrap font-mono">
+                                    @if ($archive->user)
+                                        <span class="text-secondary">{{ $archive->user->name }}</span>
+                                    @else
+                                        <span class="text-red-400 text-xs">[DELETED USER]</span>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4 align-top text-sm font-mono">
                                     @if($archive->is_public)
                                     <span class="text-green-400">[PUBLIC]</span>
@@ -161,7 +167,13 @@
                 </div>
 
                 <div class="text-sm text-secondary space-y-1 flex-grow">
-                    <p>> Owner: {{ $archive->user->name }}</p>
+                    <p>> Owner:
+                                        @if ($archive->user)
+                                            {{ $archive->user->name }}
+                                        @else
+                                            <span class="text-red-400 text-xs">[DELETED USER]</span>
+                                        @endif
+                                    </p>
                     <p>> Type: {{ $archive->type }}</p>
                     <p>> Cat: {{ $archive->category === 'Other' ? $archive->category_other : $archive->category }}</p>
                     <p>> Added: {{ $archive->pivot->created_at->format('d M Y') }}</p>

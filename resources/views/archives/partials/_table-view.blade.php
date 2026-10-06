@@ -95,9 +95,17 @@
                                 @endif
                             </td>
 
-                            {{-- Kolom Owner --}}
-                            <td class="px-6 py-4 align-top text-sm text-secondary font-mono">
-                                {{ $archive->user->name }}
+                            {{-- Kolom Owner (null-safe: user bisa sudah dihapus) --}}
+                            <td class="px-6 py-4 align-top text-sm font-mono">
+                                @if ($archive->user)
+                                    <span class="text-secondary">{{ $archive->user->name }}</span>
+                                @else
+                                    <span
+                                        class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] uppercase bg-red-900/30 text-red-400 border border-red-500/30"
+                                        title="Pemilik arsip ini sudah tidak ada di sistem">
+                                        [DELETED USER]
+                                    </span>
+                                @endif
                             </td>
 
                             {{-- Kolom Status --}}
@@ -186,18 +194,24 @@
                                         </svg>
                                     </a>
 
-                                    {{-- Delete --}}
-                                    <x-button.delete :action="route('archives.destroy', $archive)" title="TERMINATE?" message="Confirm deletion?"
-                                        target="{{ $archive->name }}">
-                                        <div class="text-red-500 hover:text-red-400 cursor-pointer transform hover:scale-110 transition-transform"
-                                            title="Delete">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </div>
-                                    </x-button.delete>
+{{-- Delete: hanya tampil kalau policy mengizinkan --}}
+                                    @can('delete', $archive)
+                                        <x-button.delete
+                                            :action="route('archives.destroy', $archive).'?return_url='.urlencode(\App\Support\ArchiveReturnUrl::index())"
+                                            title="TERMINATE?"
+                                            message="{{ $archive->user_id === auth()->id() ? 'Confirm deletion?' : 'Hapus arsip milik Agent lain? Tindakan ini tercatat sebagai override Director.' }}"
+                                            target="{{ $archive->name }}">
+                                            <div
+                                                class="text-red-500 hover:text-red-400 cursor-pointer transform hover:scale-110 transition-transform"
+                                                title="Delete">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </div>
+                                        </x-button.delete>
+                                    @endcan
                                 </div>
                             </td>
                         </tr>

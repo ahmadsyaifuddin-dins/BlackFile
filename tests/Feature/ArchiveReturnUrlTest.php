@@ -112,8 +112,10 @@ class ArchiveReturnUrlTest extends TestCase
 
     public function test_index_page2_show_back_and_edit_chain_stays_clean()
     {
-        // Halaman 2 dengan filter category Link Game
-        $page2 = '/archives?category=Link%20Game&page=2';
+        // Halaman 2 dengan filter category Link Game.
+        // `search=ZZRET` mengisolasi arsip test supaya posisinya di pagination
+        // tidak bergeser karena ada data real di kategori yang sama.
+        $page2 = '/archives?category=Link%20Game&search=ZZRET&page=2';
         $target = $this->made[8]; // arsip yang benar-benar ada di halaman 2
 
         $idx = $this->actingAs($this->user)->get($page2, $this->host());
@@ -228,7 +230,10 @@ class ArchiveReturnUrlTest extends TestCase
 
         // URL rusak seperti yang pernah muncul di address bar:
         // `page` ikut jadi `amp;page` sehingga user mendarat di halaman 1.
-        $broken = '/archives?category=Link%20Game&amp;page=2';
+        //
+        // `search=ZZRET` dipakai supaya hanya arsip test ikut terhitung, tidak
+        // Depends on data real => posisinya tidak bergeser.
+        $broken = '/archives?category=Link%20Game&search=ZZRET&amp;page=2';
 
         $idx = $this->actingAs($this->user)->get($broken, $this->host());
         $idx->assertOk();
@@ -248,6 +253,7 @@ class ArchiveReturnUrlTest extends TestCase
 
         $this->assertSame('Link Game', $inner['category'] ?? null);
         $this->assertSame('2', (string) ($inner['page'] ?? null), 'page tidak dipulihkan');
+        $this->assertSame('ZZRET', $inner['search'] ?? null, 'penyaring tidak ikut dibawa');
     }
 
     public function test_deeply_corrupted_url_is_repaired()
@@ -255,7 +261,8 @@ class ArchiveReturnUrlTest extends TestCase
         $target = $this->made[5];
 
         // Stirisan bertingkat: amp%3Bamp%3Bpage, amp%3Bpage, amp%3Bfocus ...
-        $broken = '/archives?category=Link%20Game&amp%3Bamp%3Bpage=2&amp;page=2&amp;focus=60&amp;page=2&amp;focus='.$target->id;
+        // `search=ZZRET` mengisolasi arsip test dari data real.
+        $broken = '/archives?category=Link%20Game&search=ZZRET&amp%3Bamp%3Bpage=2&amp;page=2&amp;focus=60&amp;page=2&amp;focus='.$target->id;
 
         $idx = $this->actingAs($this->user)->get($broken, $this->host());
         $idx->assertOk();

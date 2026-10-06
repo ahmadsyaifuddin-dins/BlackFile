@@ -59,7 +59,14 @@
 
             {{-- flex-grow akan mendorong footer ke bawah --}}
             <div class="text-sm text-secondary space-y-1 mt-3 flex-grow">
-                <p><span class="font-semibold">Owner:</span> {{ $archive->user->name }}</p>
+                <p><span class="font-semibold">Owner:</span>
+                    @if ($archive->user)
+                        {{ $archive->user->name }}
+                    @else
+                        <span class="text-red-400 font-mono text-xs"
+                            title="Pemilik arsip ini sudah tidak ada di sistem">[DELETED USER]</span>
+                    @endif
+                </p>
                 <p><span class="font-semibold">Type:</span> {{ $archive->type }}</p>
                 <p><span class="font-semibold">Category:</span>
                     {{ $archive->category === 'Other' ? $archive->category_other : $archive->category }}
@@ -110,10 +117,15 @@
                             class="text-secondary text-primary-hover text-sm">Details</a>
                         <a href="{{ route('archives.edit', $archive) }}?return_url={{ urlencode(\App\Support\ArchiveReturnUrl::index()) }}"
                             class="text-yellow-500 hover:text-yellow-400 text-sm">Edit</a>
-                        <x-button.delete :action="route('archives.destroy', $archive)" title="TERMINATE ARCHIVE?"
-                            message="Confirm termination of this entry?" target="{{ $archive->name }}">
-                            Delete
-                        </x-button.delete>
+                        @can('delete', $archive)
+                            <x-button.delete
+                                :action="route('archives.destroy', $archive).'?return_url='.urlencode(\App\Support\ArchiveReturnUrl::index())"
+                                title="TERMINATE ARCHIVE?"
+                                message="{{ $archive->user_id === auth()->id() ? 'Confirm termination of this entry?' : 'Hapus arsip milik Agent lain? Tindakan ini tercatat sebagai override Director.' }}"
+                                target="{{ $archive->name }}">
+                                Delete
+                            </x-button.delete>
+                        @endcan
                     </div>
                 </div>
             </div>

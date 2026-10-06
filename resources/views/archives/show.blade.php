@@ -72,7 +72,7 @@
                 </div>
 
                 {{-- Links Section (Only for URL type) --}}
-                @if ($archive->type === 'url' && count($archive->links) > 0)
+                @if ($archive->type === 'url' && count($archive->links ?? []) > 0)
                     <div class="bg-surface/40 border border-green-500/30 rounded p-4">
                         <h3 class="text-xs font-bold uppercase tracking-widest text-secondary font-mono mb-3">>
                             LINKED_RESOURCES</h3>
@@ -130,7 +130,14 @@
                         {{-- Owner --}}
                         <div>
                             <dt class="text-[10px] uppercase text-secondary font-mono">Owner</dt>
-                            <dd class="text-sm font-bold text-primary">{{ $archive->user->name }}</dd>
+                            <dd class="text-sm font-bold text-primary">
+                                @if ($archive->user)
+                                    {{ $archive->user->name }}
+                                @else
+                                    <span class="text-red-400 font-mono text-xs"
+                                        title="Pemilik arsip ini sudah tidak ada di sistem">[DELETED USER]</span>
+                                @endif
+                            </dd>
                         </div>
 
                         {{-- Visibility --}}
@@ -252,11 +259,15 @@
                             EDIT
                         </x-button>
 
-                        <x-button.delete :action="route('archives.destroy', $archive)" variant="button" :icon="true" title="DELETE?"
-                            message="Action cannot be undone." target="{{ $archive->name }}"
-                            class="justify-center border-red-500/50 text-red-500 hover:bg-red-900/20">
-                            DELETE
-                        </x-button.delete>
+                        @can('delete', $archive)
+                            <x-button.delete
+                                :action="route('archives.destroy', $archive).'?return_url='.urlencode($backUrl)"
+                                variant="button" :icon="true" title="DELETE?"
+                                message="Action cannot be undone." target="{{ $archive->name }}"
+                                class="justify-center border-red-500/50 text-red-500 hover:bg-red-900/20">
+                                DELETE
+                            </x-button.delete>
+                        @endcan
                     </div>
                 </div>
             </div>

@@ -17,7 +17,7 @@
             }
         @endphp
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
 
             {{-- Search Input --}}
             <div class="sm:col-span-2 lg:col-span-2">
@@ -55,6 +55,12 @@
                         placeholder="All Owners" :searchable="true" />
                 </div>
             @endif
+
+            {{-- Filter Urutan Data (Sort) --}}
+            <div class="{{ isset($owners) ? '' : 'sm:col-span-2' }}">
+                <x-forms.select label="Sort By" name="sort" :options="$sortOptions ?? []"
+                    :selected="$currentSort ?? 'newest'" />
+            </div>
 
         </div>
 

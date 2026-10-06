@@ -87,6 +87,9 @@
             @endonce
         @endif
 
+        {{-- [BARU] Panel Statistik Vault (accordion, default tertutup) --}}
+        @include('archives.partials._vault-stats', ['vaultStats' => $vaultStats ?? null])
+
         {{-- Panggil Komponen Filter --}}
         @include('archives.partials._filter-form', ['searchRoute' => route('archives.index')])
 

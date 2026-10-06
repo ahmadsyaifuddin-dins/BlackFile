@@ -35,8 +35,7 @@
             --}}
             <div class="pb-6">
                 <h3 class="text-base text-primary font-bold mb-2">> [ {{ __('OPTION A: REGISTER NEW ASSET') }} ]</h3>
-                <p class="text-sm text-secondary mb-4 font-mono">// {{ __('Use this to add a new informant or asset that
-                    is not a system user.') }}</p>
+                <p class="text-sm text-secondary mb-4 font-mono">// {{ __('Use this to add a new informant or asset that is not a system user.') }}</p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {{-- Real Name --}}
@@ -74,8 +73,7 @@
             <div class="mt-6">
                 <h3 class="text-base text-primary font-bold mb-2">> [ {{ __('OPTION B: CONNECT TO EXISTING ENTITY') }} ]
                 </h3>
-                <p class="text-sm text-secondary mb-4 font-mono">// {{ __('Use this to link to another registered
-                    operative or an existing asset.') }}</p>
+                <p class="text-sm text-secondary mb-4 font-mono">// {{ __('Use this to link to another registered operative or an existing asset.') }}</p>
 
                 <div>
                     <label for="target_entity" class="block text-primary text-sm mb-1">> {{ __('SELECT TARGET')

@@ -8,6 +8,7 @@ use App\Models\Tag;
 use App\Models\User;
 use App\Support\ArchiveReturnUrl;
 use App\Support\ArchiveSort;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -57,6 +58,10 @@ class ArchiveController extends Controller
         // [BARU] Fokus baris tertentu setelah edit (highlight + auto-scroll)
         $focusId = $request->integer('focus') ?: null;
 
+        // [BARU] Statistik vault ikut filter aktif (search/category/type/owner),
+        // dihitung dari query DASAR yang sudah difilter (belum di-sort/paginasi).
+        $vaultStats = $this->vaultStats(Archive::query(), $request);
+
         return view('archives.index', [
             'archives' => $archives,
             'categories' => $categories,
@@ -64,7 +69,55 @@ class ArchiveController extends Controller
             'focusId' => $focusId,
             'sortOptions' => ArchiveSort::OPTIONS,
             'currentSort' => ArchiveSort::normalize($request->input('sort')),
+            'vaultStats' => $vaultStats,
         ]);
+    }
+
+    /**
+     * Hitung angka-angka ringkasan vault yang DIPERLUKAN untuk accordion data.
+     *
+     * Semua angka berasal dari query dasar yang sudah dikenai filter aktif,
+     * jadi kartu-kartunya ikut "menyusut/mengembang" sesuai penyaringan.
+     * Argumen $query hanya dipakai sebagai template; tiap klon berdiri sendiri
+     * supaya agregat yang satu tidak menimpa agregat lainnya.
+     */
+    private function vaultStats(Builder $query, Request $request): array
+    {
+        $filtered = $this->applyFilters($query, $request);
+
+        $typeSummary = (clone $filtered)->selectRaw('type, COUNT(*) as total')
+            ->groupBy('type')->pluck('total', 'type');
+
+        $visibilitySummary = (clone $filtered)->selectRaw('is_public, COUNT(*) as total')
+            ->groupBy('is_public')->pluck('total', 'is_public');
+
+        $categorySummary = (clone $filtered)->selectRaw('category, COUNT(*) as total')
+            ->whereNotNull('category')->where('category', '!=', '')
+            ->groupBy('category')->orderByDesc('total')->limit(4)
+            ->pluck('total', 'category');
+
+        $tagCount = (clone $filtered)->join('archive_tag', 'archives.id', '=', 'archive_tag.archive_id')
+            ->distinct()->count('archive_tag.tag_id');
+
+        $ownerCount = (clone $filtered)->distinct()->count('user_id');
+
+        $filesTotalSize = (clone $filtered)->where('type', 'file')->whereNotNull('size')->sum('size');
+
+        return [
+            'total' => (clone $filtered)->count(),
+            'type' => [
+                'file' => (int) ($typeSummary['file'] ?? 0),
+                'url' => (int) ($typeSummary['url'] ?? 0),
+            ],
+            'visibility' => [
+                'public' => (int) ($visibilitySummary[1] ?? 0),
+                'private' => (int) ($visibilitySummary[0] ?? 0),
+            ],
+            'categories' => $categorySummary->toArray(),
+            'tags' => (int) $tagCount,
+            'owners' => (int) $ownerCount,
+            'files_total_size' => (int) $filesTotalSize,
+        ];
     }
 
     /**

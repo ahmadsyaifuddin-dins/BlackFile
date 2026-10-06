@@ -77,6 +77,6 @@ class SettingController extends Controller
         /** @var \App\Models\User $user */
         $user->save();
 
-        return back()->with('success', 'Settings have been saved to your profile.');
+        return back()->with('success', __('Settings have been saved to your profile.'));
     }
 }

@@ -2,11 +2,11 @@
 
     <div x-data="prototypesCRUD" x-init="init()">
 
-        <x-slot:title>Prototypes Project</x-slot:title>
+        <x-slot:title>{{ __('Prototypes Projects') }}</x-slot:title>
 
         <x-slot name="header">
             <h2 class="font-semibold text-xl text-gray-200 leading-tight">
-                {{ __('Prototypes Project') }}
+                {{ __('Prototypes Projects') }}
             </h2>
         </x-slot>
 

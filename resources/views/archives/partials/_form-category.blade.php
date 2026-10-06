@@ -41,10 +41,10 @@
         <!-- DEBUG: Hapus setelah testing -->
         <p class="text-xs text-yellow-400 mt-1" x-text="'Current value: ' + form.is_public"></p>
     </div>
-    <label class="relative inline-flex items-center cursor-pointer">
-        <input type="checkbox" x-model="form.is_public" class="sr-only peer">
+    <label for="is_public" class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" x-model="form.is_public" id="is_public" class="sr-only peer">
         <div
-            class="w-11 h-6 bg-gray-800 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+            class="w-11 h-6 bg-gray-800 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-400 rounded-full transition-all duration-300 peer-checked:bg-green-400 peer-checked:shadow-[0_0_6px_rgba(74,222,128,0.9),0_0_16px_rgba(74,222,128,0.6)] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-checked:after:border-green-300 peer-checked:after:shadow-[0_0_8px_rgba(255,255,255,0.8)]">
         </div>
     </label>
 </div>

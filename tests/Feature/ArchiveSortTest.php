@@ -164,11 +164,12 @@ class ArchiveSortTest extends TestCase
 
     public function test_tag_ascending_walks_from_oldest_era_to_newest()
     {
-        // 432 AC -> 432, "ABAD KE 15" -> 1450, "1500" -> 1500,
+        // Urutan era: "49 SM"/"ABAD KE 15" -> 1400, "1500" -> 1500,
         // "ABAD KE 18" -> 1750, "ABAD KE 19" -> 1850, "199X" -> 1995,
-        // "MASA DEPAN" -> era paling akhir, tanpa tag era -> paling bawah.
+        // lalu era masa depan: "432 AC" (After Calamity) dan "MASA DEPAN".
+        // Tanpa tag era -> paling bawah.
         $this->assertSame(
-            ['Wingsman', 'Origins', 'Brotherhood', 'Omega', 'Syndicate', 'Unity', 'BlackMesa', 'Stray', 'Tanpa'],
+            ['Origins', 'Brotherhood', 'Omega', 'Syndicate', 'Unity', 'BlackMesa', 'Wingsman', 'Stray', 'Tanpa'],
             $this->names('tag_asc')
         );
     }
@@ -176,8 +177,29 @@ class ArchiveSortTest extends TestCase
     public function test_tag_descending_walks_from_newest_era_to_oldest()
     {
         $this->assertSame(
-            ['Stray', 'BlackMesa', 'Syndicate', 'Unity', 'Omega', 'Brotherhood', 'Origins', 'Wingsman', 'Tanpa'],
+            ['Stray', 'Wingsman', 'BlackMesa', 'Syndicate', 'Unity', 'Omega', 'Brotherhood', 'Origins', 'Tanpa'],
             $this->names('tag_desc')
+        );
+    }
+
+    public function test_after_calamity_era_is_not_treated_as_year_432()
+    {
+        // "432 AC" = After Calamity, bukan tahun 432 Masehi. Kalau salah
+        // dihitung sebagai 432, Wingsman akan muncul di posisi paling awal
+        // saat sorting naik, padahal secara cerita itu masa depan.
+        $this->assertSame(
+            ['Origins', 'Brotherhood', 'Omega', 'Syndicate', 'Unity', 'BlackMesa', 'Wingsman', 'Stray', 'Tanpa'],
+            $this->names('tag_asc')
+        );
+
+        $wingsman = Archive::where('category', self::CATEGORY)
+            ->where('name', 'ZZSORT Wingsman')
+            ->firstOrFail();
+
+        $this->assertSame(
+            1,
+            $wingsman->tags->filter(fn ($t) => $t->name === '432 AC')->count(),
+            'Wingsman harusnya punya tag 432 AC'
         );
     }
 
@@ -197,7 +219,7 @@ class ArchiveSortTest extends TestCase
         $this->assertSame(1, $centuries);
 
         $this->assertSame(
-            ['Stray', 'BlackMesa', 'Syndicate', 'Unity', 'Omega', 'Brotherhood', 'Origins', 'Wingsman', 'Tanpa'],
+            ['Stray', 'Wingsman', 'BlackMesa', 'Syndicate', 'Unity', 'Omega', 'Brotherhood', 'Origins', 'Tanpa'],
             $this->names('tag_desc')
         );
     }

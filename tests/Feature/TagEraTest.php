@@ -22,8 +22,13 @@ class TagEraTest extends TestCase
             'sebelum masehi BCE' => ['300 BCE', -300],
 
             // Setelah Masehi, mengikuti-meaning BC/AD.
-            'AC = After Christ' => ['432 AC', 432],
+            // Sufiks hanya menentukan arah hitungan, bukan arti kalendernya.
+            // "432 AC" di Project Wingman berarti After Calamity, bukan
+            // After Christ, tapi angkanya tetap 432.
+            // "AC" = After Calamity, jadi selalu di atas tahun Masehi mana pun.
+            'AC = After Calamity' => ['432 AC', TagEra::ERA_AC_BASE + 432],
             'AD' => ['432 AD', 432],
+            'CE' => ['432 CE', 432],
             'M = Masehi' => ['1900 M', 1900],
 
             // Abad, dengan penanda posisi.
@@ -36,6 +41,7 @@ class TagEraTest extends TestCase
             'pertengahan abad 21' => ['PERTENGAHAN ABAD KE 21', 2050],
             'abad sebelum masehi' => ['ABAD KE 5 SM', -450],
             'akhir abad 20' => ['AKHIR ABAD KE 20', 2000],
+            'abad after calamity' => ['ABAD KE 7 AC', TagEra::ERA_AC_BASE + 650],
 
             // Rentang decade: "199X" -> 1990-1999, dipakai tengahnya.
             'decade 199X' => ['199X', 1995],
@@ -101,6 +107,37 @@ class TagEraTest extends TestCase
     {
         $this->assertGreaterThan(TagEra::value('2999'), TagEra::value('MASA DEPAN'));
         $this->assertGreaterThan(TagEra::value('AKHIR ABAD KE 20'), TagEra::value('MASA DEPAN'));
+    }
+
+    public function test_after_calamity_is_above_every_ad_year()
+    {
+        // 432 AC = After Calamity, jadi TIDAK boleh dianggap tahun 432 Masehi.
+        // Harus berada di atas semua tahun Masehi, kalau tidak Project Wingman
+        // akan tersisip di antara arsip abad ke-15 dan ke-16.
+        $ac = TagEra::value('432 AC');
+
+        $this->assertGreaterThan(TagEra::value('2999'), $ac);
+        $this->assertGreaterThan(TagEra::value('2022'), $ac);
+        $this->assertGreaterThan(TagEra::value('AKHIR ABAD KE 20'), $ac);
+        $this->assertGreaterThan(TagEra::value('ABAD KE 19'), $ac);
+        $this->assertGreaterThan(TagEra::value('199X'), $ac);
+
+        // Tapi tetap di bawah "MASA DEPAN" yang belum ada tahun pastinya.
+        $this->assertLessThan(TagEra::value('MASA DEPAN'), $ac);
+    }
+
+    public function test_after_calamity_years_order_among_themselves()
+    {
+        // Angka di dalam era AC tetap berguna untuk membandingkan antar arsip AC.
+        $this->assertGreaterThan(TagEra::value('100 AC'), TagEra::value('432 AC'));
+    }
+
+    public function test_after_calamity_stays_out_of_the_ad_scale()
+    {
+        // "432 AC" tidak boleh jatuh di posisi year 432 yang bercampur dengan
+        // arsip ber-era Masehi.
+        $this->assertNotSame(432, TagEra::value('432 AC'));
+        $this->assertNotSame(-432, TagEra::value('432 AC'));
     }
 
     public function test_century_and_year_land_in_the_same_scale()

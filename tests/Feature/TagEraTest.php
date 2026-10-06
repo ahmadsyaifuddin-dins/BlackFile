@@ -147,6 +147,31 @@ class TagEraTest extends TestCase
         $this->assertLessThan(TagEra::value('2022'), TagEra::value('ABAD KE 19'));
     }
 
+    public function test_specificity_ranks_precision_for_multi_tag_archives()
+    {
+        // Tahun pasti lebih presisi dari decade, decade lebih presisi dari abad,
+        // dan "MASA DEPAN" (tanpa angka) paling tidak presisi. ArchiveSort
+        // memakai ini supaya tag tahun menang atas tag abad pada arsip yang
+        // punya keduanya (mis. "AWAL ABAD KE 21" + "2012").
+        $this->assertSame(TagEra::SPEC_YEAR, TagEra::specificity('2012'));
+        $this->assertSame(TagEra::SPEC_YEAR, TagEra::specificity('1868'));
+        $this->assertSame(TagEra::SPEC_YEAR, TagEra::specificity('432 AC'));
+        $this->assertSame(TagEra::SPEC_YEAR, TagEra::specificity('49 SM'));
+        $this->assertSame(TagEra::SPEC_DECADE, TagEra::specificity('199X'));
+        $this->assertSame(TagEra::SPEC_CENTURY, TagEra::specificity('ABAD KE 19'));
+        $this->assertSame(TagEra::SPEC_CENTURY, TagEra::specificity('AWAL ABAD KE 21'));
+        $this->assertSame(TagEra::SPEC_VAGUE, TagEra::specificity('MASA DEPAN'));
+        $this->assertNull(TagEra::specificity('BAJAK LAUT'));
+    }
+
+    public function test_specificity_years_outrank_century_tags()
+    {
+        $this->assertGreaterThan(
+            TagEra::specificity('AWAL ABAD KE 21'),
+            TagEra::specificity('2012')
+        );
+    }
+
     public function test_case_expression_maps_tag_ids_and_defaults_to_null()
     {
         $sql = TagEra::caseExpression([7 => 1850, 9 => -49], 'archive_tag.tag_id');

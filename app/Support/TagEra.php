@@ -57,6 +57,24 @@ class TagEra
      */
     public const ERA_AC_BASE = 100000;
 
+    /**
+     * Tingkat presisi sebuah tag era. Dipakai ArchiveSort supaya saat satu
+     * arsip punya BEBERAPA tag era, yang paling presisi yang menang:
+     *
+     * - SPEC_YEAR   : tahun pasti ("2012", "1868", "49 SM", "432 AC")
+     * - SPEC_DECADE : rentang satu dekade ("199X")
+     * - SPEC_CENTURY: rentang satu abad ("ABAD KE 19", "AWAL ABAD KE 21")
+     * - SPEC_VAGUE  : tanpa angka sama sekali ("MASA DEPAN")
+     *
+     * Tanpa ini, "AWAL ABAD KE 21" (=> 2001) akan menyeret "2012" ke 2001 dan
+     * membanjiri arsip-arsip yang punya tahun pasti (lihat archive yang punya
+     * tag abad + tahun sekaligus).
+     */
+    public const SPEC_YEAR = 3;
+    public const SPEC_DECADE = 2;
+    public const SPEC_CENTURY = 1;
+    public const SPEC_VAGUE = 0;
+
     /** Sufiks yang menandai tahun sebelum Masehi. */
     private const BC_SUFFIXES = ['SM', 'BC', 'BCE'];
 
@@ -64,6 +82,26 @@ class TagEra
      * Nilai era dari nama tag, atau null kalau tag itu bukan penanda waktu.
      */
     public static function value(?string $name): ?int
+    {
+        return self::resolve($name)['value'] ?? null;
+    }
+
+    /**
+     * Tingkat presisi tag era (lihat konstanta SPEC_*), atau null kalau tag
+     * itu bukan penanda waktu. Satu-satunya fungsi yang benar-benar memparsing
+     * nama tag; `value()` dan `specificity()` tinggal mengambil hasilnya.
+     */
+    public static function specificity(?string $name): ?int
+    {
+        return self::resolve($name)['specificity'] ?? null;
+    }
+
+    /**
+     * Parsing lengkap sebuah tag: nilai era + tingkat presisinya.
+     *
+     * @return array{value: int, specificity: int}|null
+     */
+    private static function resolve(?string $name): ?array
     {
         if ($name === null) {
             return null;
@@ -77,9 +115,10 @@ class TagEra
             return null;
         }
 
-        // 1. Masa depan: belum ada tahun, jadi selalu paling akhir.
+        // 1. Masa depan: belum ada tahun, selalu paling akhir. Presisinya
+        //    terendah ("SPEC_VAGUE") karena tidak ada angka sama sekali.
         if (preg_match('/MASA\s+DEPAN|\bFUTURE\b|\bDEPAN\b/', $n)) {
-            return self::ERA_FUTURE;
+            return ['value' => self::ERA_FUTURE, 'specificity' => self::SPEC_VAGUE];
         }
 
         // 2. Penanda abad. Dicek sebelum pola tahun biasa supaya "ABAD KE 5 SM"
@@ -104,33 +143,39 @@ class TagEra
 
             // "ABAD KE 7 AC" -> era After Calamity, bukan tahun Masehi.
             if ($suffix !== null && strtoupper($suffix) === 'AC') {
-                return self::ERA_AC_BASE + $value;
+                return ['value' => self::ERA_AC_BASE + $value, 'specificity' => self::SPEC_CENTURY];
             }
 
-            return self::isBeforeCommonEra($suffix) ? -$value : $value;
+            return [
+                'value' => self::isBeforeCommonEra($suffix) ? -$value : $value,
+                'specificity' => self::SPEC_CENTURY,
+            ];
         }
 
         // 3. Tahun berlabel era: "432 AC", "49 SM", "1200 M".
         //    "AC" ditangani terpisah karena maknanya bukan tahun Masehi.
         if (preg_match('/(\d{1,4})\s*AC\b/u', $n, $m)) {
-            return self::ERA_AC_BASE + (int) $m[1];
+            return ['value' => self::ERA_AC_BASE + (int) $m[1], 'specificity' => self::SPEC_YEAR];
         }
 
         if (preg_match('/(\d{1,4})\s*(SM|BCE|BC|MASEHI|AD|CE|M)\b/u', $n, $m)) {
             $year = (int) $m[1];
 
-            return self::isBeforeCommonEra($m[2]) ? -$year : $year;
+            return [
+                'value' => self::isBeforeCommonEra($m[2]) ? -$year : $year,
+                'specificity' => self::SPEC_YEAR,
+            ];
         }
 
         // 4. Rentang decade: "199X" berarti 1990-1999, dipakai angka tengahnya.
         if (preg_match('/(?<!\d)(\d{3})X(?!\d)/i', $n, $m)) {
-            return (int) $m[1] * 10 + 5;
+            return ['value' => (int) $m[1] * 10 + 5, 'specificity' => self::SPEC_DECADE];
         }
 
         // 5. Tahun polos 4 digit (1000-2999) yang berdiri sendiri, mis. "2022"
         //    atau "Jan 20 2021".
         if (preg_match('/(?<![\d.,])((?:1[0-9]|2[0-9])\d{2})(?![\d.,])/', $n, $m)) {
-            return (int) $m[1];
+            return ['value' => (int) $m[1], 'specificity' => self::SPEC_YEAR];
         }
 
         return null;
@@ -157,6 +202,33 @@ class TagEra
 
             if ($value !== null) {
                 $map[(int) $tag->id] = $value;
+            }
+        }
+
+        return $map;
+    }
+
+    /**
+     * Peta tag_id => tingkat presisi (SPEC_*), hanya untuk tag yang punya nilai.
+     *
+     * Dipakai bersamaan dengan `map()` oleh ArchiveSort: nilailah yang menentukan
+     * posisi, presisilah yang menentukan tag mana yang "menang" saat satu arsip
+     * punya beberapa tag era sekaligus.
+     *
+     * @param  iterable<int, \App\Models\Tag>|null  $tags
+     * @return array<int, int>
+     */
+    public static function specificityMap(?iterable $tags = null): array
+    {
+        $tags ??= \App\Models\Tag::all();
+
+        $map = [];
+
+        foreach ($tags as $tag) {
+            $specificity = self::specificity($tag->name);
+
+            if ($specificity !== null) {
+                $map[(int) $tag->id] = $specificity;
             }
         }
 

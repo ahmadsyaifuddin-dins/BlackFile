@@ -18,10 +18,14 @@ use Illuminate\Support\Facades\DB;
  * angka tahun: "1868" -> 1868, "ABAD KE 19" -> 1850, "49 SM" -> -49,
  * "199X" -> 1995, "MASA DEPAN" -> era paling akhir. Lihat TagEra.
  *
- * Kalau satu arsip punya beberapa tag era, urutannya memakai rentang yang
- * paling logis per arah: ASC memakai tahun TERAWAL (MIN), DESC memakai tahun
- * TERAKHIR (MAX). Jadi arsip Black Mesa (tag "199X" + "AKHIR ABAD KE 20")
- * akan muncul sebagai 1995 saat naik dan 2000 saat turun.
+ * Kalau satu arsip punya BEBERAPA tag era, yang dipakai adalah tag yang PALING
+ * PRESISI (dunia nyata: tahun pasti menang atas abad, abad menang atas "MASA
+ * DEPAN"). Contoh: Hitman ber-tag "AWAL ABAD KE 21" + "2012" -> diurutkan
+ * sebagai 2012, BUKAN 2001. London (tag "199X" + "AKHIR ABAD KE 20") -> 1995.
+ *
+ * Dulu memakai MIN/MAX atas SEMUA tag era, dan itu salah: "AWAL ABAD KE 21"
+ * (2001) menyeret "2012" turun ke 2001 sehingga arsip ber-tahun pasti jadi
+ * satu kelompok raksasa di 2001 dan akhirnya diurutkan alfabetis.
  *
  * Arsip tanpa tag era selalu ditaruh paling akhir di kedua arah, supaya tidak
  * dianggap "tahun 0" dan tidak mengacaukan urutan.
@@ -86,20 +90,29 @@ class ArchiveSort
      *
      * Nilai era tiap tag sudah dihitung di PHP oleh TagEra, lalu disuntikkan
      * ke SQL sebagai CASE tag_id => nilai. Dengan begitu query tidak perlu
-     * regex SQL yang rumit, tapi agregasi MIN/MAX tetap jalan di database.
+     * regex SQL yang rumit.
+     *
+     * Karena satu arsip bisa punya beberapa tag era, CASE juga dibuat untuk
+     * tingkat presisi (TagEra::specificityMap), lalu baris yang dipilih adalah
+     * yang presisinya PALING TINGGI; antar tag se-presisi, ikut arah urutan
+     * (ASC -> tahun terkecil, DESC -> tahun terbesar).
      */
     private static function applyTagSort(Builder $query, string $direction): Builder
     {
         $ascending = strtoupper($direction) === 'ASC';
 
-        // ASC -> tahun paling awal, DESC -> tahun paling akhir.
-        $aggregate = $ascending ? 'MIN' : 'MAX';
+        $valueCase = TagEra::caseExpression(TagEra::map());
+        $specCase = TagEra::caseExpression(TagEra::specificityMap());
 
-        $case = TagEra::caseExpression(TagEra::map());
-
+        // Untuk tiap arsip, ambil SATU tag pemenang: presisi tertinggi dulu,
+        // lalu (jika se-presisi) urutkan nilainya sesuai arah. Arsip tanpa tag
+        // era menghasilkan NULL -> selalu paling akhir.
         $eraValue = DB::table('archive_tag')
             ->whereColumn('archive_tag.archive_id', 'archives.id')
-            ->selectRaw("{$aggregate}({$case})");
+            ->orderByRaw("({$specCase}) DESC")
+            ->orderByRaw("({$valueCase}) ".($ascending ? 'ASC' : 'DESC'))
+            ->limit(1)
+            ->selectRaw("({$valueCase}) AS sort_tag_era");
 
         $query->addSelect(['sort_tag_era' => $eraValue]);
 

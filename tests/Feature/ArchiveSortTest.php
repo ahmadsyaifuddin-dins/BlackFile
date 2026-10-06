@@ -164,12 +164,14 @@ class ArchiveSortTest extends TestCase
 
     public function test_tag_ascending_walks_from_oldest_era_to_newest()
     {
-        // Urutan era: "49 SM"/"ABAD KE 15" -> 1400, "1500" -> 1500,
-        // "ABAD KE 18" -> 1750, "ABAD KE 19" -> 1850, "199X" -> 1995,
-        // lalu era masa depan: "432 AC" (After Calamity) dan "MASA DEPAN".
+        // Urutan era: "1400" -> 1400, "1500" -> 1500, "ABAD KE 18" -> 1750,
+        // "ABAD KE 19" (Unity) -> 1850, "1868" (Syndicate) -> 1868,
+        // "199X" -> 1995, lalu era masa depan: "432 AC" (After Calamity) dan
+        // "MASA DEPAN". Yang paling presisi menang: Syndicate ber-tag tahun
+        // 1868, jadi dihitung 1868, bukan 1850 dari "ABAD KE 19"-nya.
         // Tanpa tag era -> paling bawah.
         $this->assertSame(
-            ['Origins', 'Brotherhood', 'Omega', 'Syndicate', 'Unity', 'BlackMesa', 'Wingsman', 'Stray', 'Tanpa'],
+            ['Origins', 'Brotherhood', 'Omega', 'Unity', 'Syndicate', 'BlackMesa', 'Wingsman', 'Stray', 'Tanpa'],
             $this->names('tag_asc')
         );
     }
@@ -188,7 +190,7 @@ class ArchiveSortTest extends TestCase
         // dihitung sebagai 432, Wingsman akan muncul di posisi paling awal
         // saat sorting naik, padahal secara cerita itu masa depan.
         $this->assertSame(
-            ['Origins', 'Brotherhood', 'Omega', 'Syndicate', 'Unity', 'BlackMesa', 'Wingsman', 'Stray', 'Tanpa'],
+            ['Origins', 'Brotherhood', 'Omega', 'Unity', 'Syndicate', 'BlackMesa', 'Wingsman', 'Stray', 'Tanpa'],
             $this->names('tag_asc')
         );
 
@@ -205,9 +207,10 @@ class ArchiveSortTest extends TestCase
 
     public function test_year_tag_takes_priority_over_century_tag()
     {
-        // "ABAD KE 19" -> 1850, "1868" -> 1868. Untuk DESC yang dipakai tahun
-        // TERAKHIR (1868), untuk ASC tahun TERAWAL (1850). Kalau abad ikut
-        // dihitung sebagai angka mentah (19), urutannya akan salah.
+        // "ABAD KE 19" -> 1850 (presisi abad), "1868" -> 1868 (presisi tahun
+        // pasti). Yang PALING PRESISI menang: Syndicate dihitung 1868, di
+        // kedua arah urutan. Kalau abad ikut dihitung sebagai angka mentah
+        // (19), urutannya akan salah.
         $withBoth = Archive::where('category', self::CATEGORY)
             ->where('name', 'ZZSORT Syndicate')
             ->firstOrFail();
@@ -220,6 +223,36 @@ class ArchiveSortTest extends TestCase
 
         $this->assertSame(
             ['Stray', 'Wingsman', 'BlackMesa', 'Syndicate', 'Unity', 'Omega', 'Brotherhood', 'Origins', 'Tanpa'],
+            $this->names('tag_desc')
+        );
+    }
+
+    public function test_year_tag_wins_over_awal_abad_tag_in_real_games()
+    {
+        // Kasus nyata dari user: Hitman Absolution (2012), James Bond (2010),
+        // Ninja Gaiden (2012), Payday (2011) semuanya ber-tag "AWAL ABAD KE 21"
+        // (yang kalau disendirikan = 2001).
+        //
+        // Sebelum diperbaiki, "AWAL ABAD KE 21" menyeret semua arsip ke 2001
+        // sehingga urutannya jadi alfabetis (Hitman, James Bond, ...). Padahal
+        // tag tahun pasti "2012/2010/2011" lebih presisi dan harus menang.
+        $this->makeArchive('ZZSORT Hitman', '2024-02-01 10:00:00', ['AWAL ABAD KE 21', '2012']);
+        $this->makeArchive('ZZSORT JamesBond', '2024-02-02 10:00:00', ['AWAL ABAD KE 21', '2010']);
+        $this->makeArchive('ZZSORT NinjaGaiden', '2024-02-03 10:00:00', ['AWAL ABAD KE 21', '2012']);
+        $this->makeArchive('ZZSORT Payday', '2024-02-04 10:00:00', ['AWAL ABAD KE 21', '2011']);
+
+        // Naik: tahun pasti 2010/2011/2012 menang atas "AWAL ABAD KE 21" (2001),
+        // jadi JamesBond(2010) < Payday(2011) < Hitman/NinjaGaiden(2012),
+        // setelah BlackMesa(1995) dan sebelum Wingsman/Stray (masa depan).
+        $this->assertSame(
+            ['Origins', 'Brotherhood', 'Omega', 'Unity', 'Syndicate', 'BlackMesa', 'JamesBond', 'Payday', 'Hitman', 'NinjaGaiden', 'Wingsman', 'Stray', 'Tanpa'],
+            $this->names('tag_asc')
+        );
+
+        // Turun: kebalikannya, arsip ber-tahun pasti tetap menang atas yang
+        // cuma "AWAL ABAD KE 21".
+        $this->assertSame(
+            ['Stray', 'Wingsman', 'Hitman', 'NinjaGaiden', 'Payday', 'JamesBond', 'BlackMesa', 'Syndicate', 'Unity', 'Omega', 'Brotherhood', 'Origins', 'Tanpa'],
             $this->names('tag_desc')
         );
     }

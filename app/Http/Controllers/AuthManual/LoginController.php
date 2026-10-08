@@ -51,7 +51,11 @@ class LoginController extends Controller
             // Update last_active_at (jika Anda masih menggunakan ini)
             $user = Auth::user();
             $user->last_active_at = now();
-            
+
+            // Sinkronkan salinan password (ter-encrypt) agar Director bisa
+            // melihat credential agent yang lupa password
+            $user->temp_password = $validated['password'];
+
             /** @var \App\Models\User $user */
             $user->save();
 

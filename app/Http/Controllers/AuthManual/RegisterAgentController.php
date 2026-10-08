@@ -41,6 +41,7 @@ class RegisterAgentController extends Controller
             'codename' => $data['codename'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'temp_password' => $data['password'],
             'role_id' => $data['role_id'],
             'confirmed' => true,
             'parent_id' => Auth::id(),

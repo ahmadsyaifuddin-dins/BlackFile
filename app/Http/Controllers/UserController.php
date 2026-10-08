@@ -86,10 +86,29 @@ class UserController extends Controller
         // Hanya update password jika field-nya diisi
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
+            $user->temp_password = $request->password;
             $user->save();
         }
 
         return redirect()->route('agents.index')->with('success', "Agent {$user->codename}'s Agent has been updated.");
+    }
+
+    /**
+     * [DIRECTOR ONLY] Reset password agen sekali klik.
+     * Password baru = "password" + tanggal hari ini (format ddmmyyyy).
+     */
+    public function resetPassword(User $user)
+    {
+        $plainPassword = 'password' . now()->format('dmY');
+
+        // Cast model ('hashed' + 'encrypted') menangani enkripsi masing-masing
+        $user->password = $plainPassword;
+        $user->temp_password = $plainPassword;
+        $user->save();
+
+        return redirect()->route('agents.show', $user)
+            ->with('auto_reveal', true)
+            ->with('success', "CREDENTIAL OVERRIDE EXECUTED // {$user->codename}'s password is now: {$plainPassword}");
     }
 
     /**

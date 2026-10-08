@@ -33,6 +33,7 @@ class UserSeeder extends Seeder
                 'email' => 'haldi@gmail.com',
                 'password' => Hash::make('password'),
                 'specialization' => 'Open-Source Intelligence (OSINT) & Data Extraction',
+                'confirmed' => 1,
                 'role_id' => 2, // Agent
             ]
         );
@@ -45,6 +46,7 @@ class UserSeeder extends Seeder
                 'email' => 'elrio@gmail.com',
                 'password' => Hash::make('password'),
                 'specialization' => 'Digital Ghost & OS Manipulation',
+                'confirmed' => 1,
                 'role_id' => 4, // Analyst
             ]
         );
@@ -57,6 +59,7 @@ class UserSeeder extends Seeder
                 'email' => 'ryandyrhamadhany@gmail.com',
                 'password' => Hash::make('password'),
                 'specialization' => 'Solution Architect & System Auditing',
+                'confirmed' => 1,
                 'role_id' => 3, // Spesialis Teknis
             ]
         );
@@ -69,6 +72,7 @@ class UserSeeder extends Seeder
                 'email' => 'aldyr@gmail.com',
                 'password' => Hash::make('password'),
                 'specialization' => 'Psychological Operations (PSYOP) Specialist & Infiltration',
+                'confirmed' => 1,
                 'role_id' => 2, // Agent
             ]   
         );
@@ -81,6 +85,7 @@ class UserSeeder extends Seeder
                 'email' => 'mhmmdmaulidi21@gmail.com',
                 'password' => Hash::make('password'),
                 'specialization' => 'Field Operations & Execution',
+                'confirmed' => 1,
                 'role_id' => 2, // Agent
             ]
         );

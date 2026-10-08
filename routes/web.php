@@ -168,6 +168,10 @@ Route::middleware(['auth', 'maintenance'])->group(function () {
     Route::middleware('role:Director')->group(function () {
         Route::post('/admin/setting/maintenance', [AdminController::class, 'toggleMaintenance'])
             ->name('admin.setting.maintenance');
+
+        // Otoritas tertinggi: Director bisa melihat & mereset password agen
+        Route::post('/agents/{user}/reset-password', [UserController::class, 'resetPassword'])
+            ->name('agents.reset-password');
     });
 
     // Grup rute yang dilindungi oleh role tertentu (Director atau Technician)

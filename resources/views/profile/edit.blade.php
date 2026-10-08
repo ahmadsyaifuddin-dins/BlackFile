@@ -115,4 +115,15 @@
             </div>
         </form>
     </div>
+
+    @push('scripts')
+        <script>
+            // Toast saat data input ditolak validasi
+            document.addEventListener('DOMContentLoaded', () => {
+                @if ($errors->any())
+                    if (window.agentAlert) window.agentAlert('warning', @js(__('DATA INPUT ANOMALY')), @js($errors->first()));
+                @endif
+            });
+        </script>
+    @endpush
 </x-app-layout>

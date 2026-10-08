@@ -108,7 +108,10 @@ class UserController extends Controller
 
         return redirect()->route('agents.show', $user)
             ->with('auto_reveal', true)
-            ->with('success', "CREDENTIAL OVERRIDE EXECUTED // {$user->codename}'s password is now: {$plainPassword}");
+            ->with('success', __('CREDENTIAL OVERRIDE EXECUTED // :codename\'s password is now: :password', [
+                'codename' => $user->codename,
+                'password' => $plainPassword,
+            ]));
     }
 
     /**

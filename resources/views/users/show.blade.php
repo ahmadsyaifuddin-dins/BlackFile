@@ -90,16 +90,19 @@
                 }
 
                 this.copied = true;
-                if (window.agentAlert) window.agentAlert('success', 'CREDENTIAL COPIED', 'Password copied to clipboard.');
+                if (window.agentAlert) window.agentAlert('success', @js(__('CREDENTIAL COPIED')), @js(__('Password copied to clipboard.')));
                 setTimeout(() => { this.copied = false }, 2500);
             },
 
             async resetPassword() {
                 const proceed = await window.agentConfirm(
-                    @js('RESET AGENT PASSWORD'),
-                    @js('The current password of ' . $user->codename . ' will be overwritten with today\'s default pattern: ' . $resetPattern . '. The old password stops working immediately. Execute?'),
-                    @js('[ EXECUTE RESET ]'),
-                    @js('[ ABORT ]')
+                    @js(__('RESET AGENT PASSWORD')),
+                    @js(__('The current password of :codename will be overwritten with today\'s default pattern: :pattern. The old password stops working immediately. Execute?', [
+                        'codename' => $user->codename,
+                        'pattern' => $resetPattern,
+                    ])),
+                    @js(__('[ EXECUTE RESET ]')),
+                    @js(__('[ ABORT ]'))
                 );
 
                 if (proceed) this.$refs.resetForm.submit();
@@ -107,21 +110,21 @@
         }">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-            <h3 class="text-xl font-bold text-amber-500 text-glow">> [ CREDENTIAL OVERRIDE ]</h3>
+            <h3 class="text-xl font-bold text-amber-500 text-glow">> [ {{ __('CREDENTIAL OVERRIDE') }} ]</h3>
             <span
                 class="self-start sm:self-auto text-[10px] font-bold tracking-widest uppercase text-amber-500/80 border border-amber-500/40 bg-amber-500/10 px-2 py-1 rounded">
-                <i class="fa-solid fa-shield-halved mr-1"></i> CLEARANCE: DIRECTOR
+                <i class="fa-solid fa-shield-halved mr-1"></i> {{ __('CLEARANCE: DIRECTOR') }}
             </span>
         </div>
 
-        <p class="text-red-500/80 text-xs mb-4">// RESTRICTED // DIRECTOR AUTHORIZATION REQUIRED // HIGHEST AUTHORITY</p>
+        <p class="text-red-500/80 text-xs mb-4">{{ __('// RESTRICTED // DIRECTOR AUTHORIZATION REQUIRED // HIGHEST AUTHORITY') }}</p>
 
         <div class="space-y-3">
-            <p><span class="text-primary/25">> LOGIN USERNAME:</span> {{ $user->username }}</p>
+            <p><span class="text-primary/25">{{ __('> LOGIN USERNAME:') }}</span> {{ $user->username }}</p>
 
             @if ($hasCredential)
             <div>
-                <p><span class="text-primary/25">> RECORDED PASSWORD:</span></p>
+                <p><span class="text-primary/25">{{ __('> RECORDED PASSWORD:') }}</span></p>
 
                 <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
                     <code
@@ -130,32 +133,32 @@
 
                     <div class="flex items-center gap-2 sm:flex-shrink-0">
                         <button type="button" @click="revealed = !revealed"
-                            :title="revealed ? 'HIDE PASSWORD' : 'REVEAL PASSWORD'"
+                            :title="revealed ? @js(__('HIDE PASSWORD')) : @js(__('REVEAL PASSWORD'))"
                             class="cursor-pointer px-3 py-2 bg-amber-600/20 border border-amber-500/50 text-amber-500 hover:bg-amber-600 hover:text-white rounded transition-all duration-200">
                             <i class="fa-solid" :class="revealed ? 'fa-eye-slash' : 'fa-eye'"></i>
                         </button>
 
                         <button type="button" @click="copyPassword"
                             class="cursor-pointer px-3 py-2 bg-amber-600/20 border border-amber-500/50 text-amber-500 hover:bg-amber-600 hover:text-white rounded transition-all duration-200 font-mono text-xs font-bold whitespace-nowrap">
-                            <span x-show="!copied">[ COPY ]</span>
-                            <span x-show="copied" x-cloak>[ COPIED ]</span>
+                            <span x-show="!copied">{{ __('[ COPY ]') }}</span>
+                            <span x-show="copied" x-cloak>{{ __('[ COPIED ]') }}</span>
                         </button>
                     </div>
                 </div>
 
-                <p class="text-amber-500/50 text-xs mt-2">// REVEAL & COPY ARE DIRECTOR ONLY. RECORD FOLLOWS THE LATEST PASSWORD SET.</p>
+                <p class="text-amber-500/50 text-xs mt-2">{{ __('// REVEAL & COPY ARE DIRECTOR ONLY. RECORD FOLLOWS THE LATEST PASSWORD SET.') }}</p>
             </div>
             @else
-            <p class="text-red-500/80 text-xs">// NO CREDENTIAL RECORD ON FILE. EXECUTE RESET TO GENERATE ONE.</p>
+            <p class="text-red-500/80 text-xs">{{ __('// NO CREDENTIAL RECORD ON FILE. EXECUTE RESET TO GENERATE ONE.') }}</p>
             @endif
         </div>
 
         <div
             class="mt-6 border-t border-dashed border-amber-500/20 pt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <p class="text-sm text-amber-500 font-bold tracking-wider">> ONE-CLICK PASSWORD RESET</p>
+                <p class="text-sm text-amber-500 font-bold tracking-wider">> {{ __('ONE-CLICK PASSWORD RESET') }}</p>
                 <p class="text-xs text-secondary mt-1">
-                    Pattern: <span class="text-amber-400 font-bold">{{ $resetPattern }}</span>
+                    {{ __('Pattern:') }} <span class="text-amber-400 font-bold">{{ $resetPattern }}</span>
                     <span class="opacity-60">(password + DDMMYYYY)</span>
                 </p>
             </div>
@@ -163,7 +166,7 @@
             <button type="button" @click="resetPassword"
                 class="cursor-pointer inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 bg-amber-600/20 border border-amber-500 text-amber-500 hover:bg-amber-600 hover:text-white rounded transition-all duration-200 font-mono text-sm font-bold uppercase tracking-wider group">
                 <i class="fa-solid fa-rotate"></i>
-                <span class="group-hover:animate-pulse">[ RESET NOW ]</span>
+                <span class="group-hover:animate-pulse">{{ __('[ RESET NOW ]') }}</span>
             </button>
         </div>
 

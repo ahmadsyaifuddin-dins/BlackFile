@@ -37,4 +37,15 @@
             [ EDIT PROFILE ]
         </x-button>
     </div>
+
+    @push('scripts')
+        <script>
+            // Toast konfirmasi setelah update profile berhasil
+            document.addEventListener('DOMContentLoaded', () => {
+                @if (session('success'))
+                    if (window.agentAlert) window.agentAlert('success', @js(__('PROFILE UPDATED')), @js(session('success')));
+                @endif
+            });
+        </script>
+    @endpush
 </x-app-layout>

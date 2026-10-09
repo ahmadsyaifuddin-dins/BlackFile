@@ -48,6 +48,13 @@ Route::get('/', function () {
 // Using route-model binding on the 'slug' column of the User model
 Route::get('/public-credits/{user:slug}', [CreditController::class, 'publicShow'])->name('credits.public');
 
+// Public archive sharing: link publik yang bisa dibagikan ke teman/public.
+// Token acak (public_token) dipakai sebagai identifier sehingga link tidak
+// bisa ditebak. Kalau archive di-set "has_ad" (beriklan), pengunjung akan
+// melewati halaman gerbang (interstitial) sebelum data tujuan dibuka.
+Route::get('/s/{archive:public_token}', [ArchiveController::class, 'publicLanding'])->name('archives.public');
+Route::get('/s/{archive:public_token}/open', [ArchiveController::class, 'publicOpen'])->name('archives.public.open');
+
 Route::get('/dark-archives', [DarkArchiveController::class, 'index'])->name('dark-archives.index');
 Route::get('/dark-archives/case/{slug}', [DarkArchiveController::class, 'show'])->name('dark-archives.show');
 Route::post('/dark-archives/respect/{id}', [DarkArchiveController::class, 'payRespect'])->name('dark-archives.respect');
@@ -156,6 +163,10 @@ Route::middleware(['auth', 'maintenance'])->group(function () {
 
     Route::get('favorites/archives', [ArchiveController::class, 'favorites'])->name('favorites.archives');
     Route::post('archives/{archive}/favorite', [ArchiveController::class, 'toggleFavorite'])->name('archives.favorite.toggle');
+
+    // Toggle akses publik & mode iklan untuk sebuah archive
+    Route::post('archives/{archive}/toggle-share', [ArchiveController::class, 'toggleShare'])->name('archives.toggle_share');
+    Route::post('archives/{archive}/toggle-ad', [ArchiveController::class, 'toggleAd'])->name('archives.toggle_ad');
 
     // Pastikan ini di dalam middleware auth agar tidak sembarang orang bisa pakai kuota AI kamu
     Route::post('/archives/generate-ai-desc', [ArchiveController::class, 'generateAiDescription'])

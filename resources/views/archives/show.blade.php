@@ -208,6 +208,33 @@
                     </dl>
                 </div>
 
+                {{-- PUBLIC SHARE PROTOCOL --}}
+                @can('share', $archive)
+                    <div class="bg-surface border border-green-500/30 rounded p-5 shadow-lg">
+                        <h3
+                            class="text-xs font-bold uppercase tracking-widest text-secondary font-mono mb-4 border-b border-green-500/20 pb-2 flex items-center justify-between">
+                            <span>> PUBLIC_SHARE</span>
+                            @if ($archive->is_public && $archive->is_shared)
+                                <span
+                                    class="px-2 py-0.5 text-[9px] inline-flex items-center gap-1 rounded bg-green-900/50 text-green-400 border border-green-500/30 uppercase font-bold">
+                                    <span class="w-1 h-1 bg-green-400 rounded-full animate-pulse"></span>
+                                    online
+                                </span>
+                            @else
+                                <span
+                                    class="px-2 py-0.5 text-[9px] inline-flex items-center gap-1 rounded bg-red-900/50 text-red-400 border border-red-500/30 uppercase font-bold">
+                                    offline
+                                </span>
+                            @endif
+                        </h3>
+                        <p class="text-[10px] text-secondary font-mono mb-4 leading-relaxed">
+                            // Kontrol siapa yang boleh mengakses data ini melalui link
+                            publik, serta mode monetisasi (iklan / langsung ke data).
+                        </p>
+                        @include('archives.partials._share-controls', ['archive' => $archive, 'compact' => false])
+                    </div>
+                @endcan
+
                 {{-- ACTION BUTTONS --}}
                 <div class="flex flex-col gap-3">
                     {{-- Favorite Button --}}

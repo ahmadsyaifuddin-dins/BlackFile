@@ -47,13 +47,17 @@
             <div class="flex justify-between items-start gap-2">
                 <h2 class="font-bold text-primary break-all pr-2">{{ $archive->name }}</h2>
                 <div class="flex-shrink-0">
-                    @if ($archive->is_public)
-                        <span
-                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-900/50 text-green-300">Public</span>
+                    @can('share', $archive)
+                        @include('archives.partials._share-controls', ['archive' => $archive, 'compact' => true])
                     @else
-                        <span
-                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-900/50 text-red-300">Private</span>
-                    @endif
+                        @if ($archive->is_public)
+                            <span
+                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-900/50 text-green-300">Public</span>
+                        @else
+                            <span
+                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-900/50 text-red-300">Private</span>
+                        @endif
+                    @endcan
                 </div>
             </div>
 

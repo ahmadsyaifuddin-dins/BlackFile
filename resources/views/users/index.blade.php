@@ -1,67 +1,189 @@
 <x-app-layout>
     <x-slot:title>Agent Directory</x-slot:title>
 
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-3">
-        <h2 class="text-xl md:text-2xl font-bold text-primary text-glow mb-6">> [ AGENT DIRECTORY ]</h2>
+    <div class="space-y-6">
+        {{-- ===== HEADER ===== --}}
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
+            <div>
+                <h2 class="text-xl md:text-2xl font-bold text-primary text-glow">> [ {{ __('AGENT DIRECTORY') }} ]</h2>
+                <p class="text-secondary text-xs font-mono mt-1">{{ __('// PERSONNEL DATABASE // CLEARANCE-CONTROLLED ROSTER') }}</p>
+            </div>
 
-        @if(strtolower(Auth::user()->role->name) === 'director')
-        <x-button href="{{ route('register.agent') }}">
-            > Register New Agent
-        </x-button>
+            @if(strtolower(Auth::user()->role->name) === 'director')
+                <x-button href="{{ route('register.agent') }}">
+                    > {{ __('Register New Agent') }}
+                </x-button>
+            @endif
+        </div>
+
+        {{-- ===== FLASH ===== --}}
+        @if(session('success'))
+            <div class="bg-green-900/50 border border-primary text-primary px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
         @endif
-    </div>
 
-    @if(session('success'))
-    <div class="bg-green-900/50 border border-primary text-primary px-4 py-3 rounded relative" role="alert">
-        <span class="block sm:inline">{{ session('success') }}</span>
-    </div>
-    @endif
+        @if(session('error'))
+            <div class="bg-red-900/50 border border-primary text-primary px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        @endif
 
-    @if(session('error'))
-    <div class="bg-red-900/50 border border-primary text-primary px-4 py-3 rounded relative" role="alert">
-        <span class="block sm:inline">{{ session('error') }}</span>
-    </div>
-    @endif
+        {{-- ===== STATS ===== --}}
+        @php
+            $tiles = [
+                ['label' => __('TOTAL AGENTS'), 'value' => $stats['total'], 'accent' => 'text-primary', 'icon' => 'fa-users'],
+                ['label' => __('ONLINE NOW'), 'value' => $stats['online'], 'accent' => 'text-green-400', 'icon' => 'fa-signal'],
+                ['label' => __('DIRECTORS'), 'value' => $stats['directors'], 'accent' => 'text-amber-400', 'icon' => 'fa-shield-halved'],
+                ['label' => __('PENDING'), 'value' => $stats['pending'], 'accent' => 'text-yellow-400', 'icon' => 'fa-hourglass-half'],
+            ];
+        @endphp
 
-    <div class="space-y-4 mt-3">
-        @foreach($users as $agent)
-        <div
-            class="block bg-surface/50 border border-border-color rounded-lg p-4 hover:border-primary transition-colors">
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 font-mono">
+            @foreach($tiles as $tile)
+                <div class="relative bg-surface border border-border-color p-4 overflow-hidden">
+                    <span class="absolute top-0 right-0 w-6 h-6 border-t border-r border-border-color"></span>
+                    <div class="flex items-center justify-between gap-2">
+                        <p class="text-[10px] tracking-widest uppercase text-secondary">{{ $tile['label'] }}</p>
+                        <i class="fa-solid {{ $tile['icon'] }} {{ $tile['accent'] }} opacity-70 text-sm"></i>
+                    </div>
+                    <p class="text-2xl md:text-3xl font-bold {{ $tile['accent'] }} text-glow mt-2">{{ str_pad($tile['value'], 2, '0', STR_PAD_LEFT) }}</p>
+                </div>
+            @endforeach
+        </div>
 
-                <!-- [DIUBAH] Info Agent sekarang mencakup avatar -->
-                <div class="flex items-center space-x-4">
-                    <img src="{{ $agent->avatar ? asset($agent->avatar) : 'https://blackfile.xo.je/agent-default.jpg' }}"
-                        alt="Avatar"
-                        class="w-12 h-12 object-cover rounded-full border-2 border-border-color flex-shrink-0">
+        {{-- ===== FILTERS ===== --}}
+        <div class="bg-surface border border-border-color p-4 font-mono">
+            <p class="text-[10px] tracking-widest text-primary/60 mb-3">{{ __('// ACTIVE QUERY FILTER') }}</p>
+
+            <form action="{{ route('agents.index') }}" method="GET">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <div class="md:col-span-2">
+                        <x-forms.input name="q" placeholder="{{ __('Search codename, name, username...') }}" value="{{ request('q') }}">
+                            <x-slot:icon>
+                                <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </x-slot:icon>
+                        </x-forms.input>
+                    </div>
+
                     <div>
-                        <a href="{{ route('agents.show', $agent->id) }}">
-                            <p class="font-bold text-white text-lg text-glow">{{ $agent->codename }}</p>
-                            <p class="text-secondary text-sm">{{ $agent->role->alias }}</p>
-                            <p class="text-secondary text-sm text-glow">{{ $agent->specialization }}</p>
-                        </a>
+                        <x-forms.select name="role" :options="$roles" :searchable="true" :selected="request('role')" placeholder="{{ __('All Roles') }}" />
+                    </div>
+
+                    <div>
+                        <x-forms.select name="status" :options="$statuses" :searchable="true" :selected="request('status')" placeholder="{{ __('All Statuses') }}" />
+                    </div>
+
+                    <div>
+                        <x-forms.select name="sort" :options="$sortOptions" :selected="request('sort')" placeholder="{{ __('Default') }}" />
                     </div>
                 </div>
 
-                <!-- Tombol Aksi (Hanya untuk Director) -->
-                @if(strtolower(Auth::user()->role->name) === 'director')
-                <div class="flex items-center space-x-3 mt-4 sm:mt-0 self-end sm:self-center">
-                    <a href="{{ route('agents.edit', $agent->id) }}" class="text-blue-400 hover:text-blue-300"
-                        title="Edit Agent">
-                        [ EDIT ]
-                    </a>
-                    <x-button.delete :action="route('agents.destroy', $agent->id)" title="TERMINATE AGENT?"
-                        message="Confirm termination of agent {{ $agent->codename }}? Access will be revoked immediately."
-                        target="{{ $agent->codename }}">
-                        [ DELETE ]
-                    </x-button.delete>
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 mt-4 pt-4 border-t border-border-color/30">
+                    <x-button variant="outline" href="{{ route('agents.index') }}" class="w-full sm:w-auto justify-center">
+                        {{ __('[ CLEAR FILTERS ]') }}
+                    </x-button>
+                    <x-button type="submit" class="w-full sm:w-auto justify-center">
+                        {{ __('[ EXECUTE FILTER ]') }}
+                    </x-button>
                 </div>
-                @endif
-            </div>
+            </form>
         </div>
-        @endforeach
-    </div>
-    <div class="mt-6">
-        {{ $users->links() }}
+
+        {{-- ===== ROSTER ===== --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            @forelse($users as $agent)
+                @php
+                    $isOnline = $agent->last_active_at && $agent->last_active_at->gte($onlineThreshold);
+                @endphp
+
+                <div class="group relative bg-surface border-2 border-border-color hover:border-primary transition-colors duration-300 flex flex-col">
+                    {{-- corner brackets --}}
+                    <span class="absolute -top-px -left-px w-3 h-3 border-t-2 border-l-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                    <span class="absolute -top-px -right-px w-3 h-3 border-t-2 border-r-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                    <span class="absolute -bottom-px -left-px w-3 h-3 border-b-2 border-l-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                    <span class="absolute -bottom-px -right-px w-3 h-3 border-b-2 border-r-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity"></span>
+
+                    {{-- card header --}}
+                    <div class="px-4 py-2 border-b border-border-color flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full {{ $isOnline ? 'bg-green-500 animate-pulse' : 'bg-gray-600' }}"></span>
+                            <span class="text-[10px] tracking-widest {{ $isOnline ? 'text-green-400' : 'text-secondary' }}">
+                                {{ $isOnline ? __('ONLINE') : __('OFFLINE') }}
+                            </span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            @unless($agent->confirmed)
+                                <span class="text-[9px] px-2 py-0.5 border border-yellow-600/70 text-yellow-500 tracking-widest">
+                                    {{ __('PENDING') }}
+                                </span>
+                            @endunless
+                            <span class="text-[10px] text-primary/40 tracking-widest">ID-{{ str_pad($agent->id, 4, '0', STR_PAD_LEFT) }}</span>
+                        </div>
+                    </div>
+
+                    {{-- identity --}}
+                    <div class="p-4 flex items-center gap-4">
+                        <div class="relative flex-shrink-0">
+                            <img src="{{ $agent->avatar ? asset($agent->avatar) : 'https://blackfile.xo.je/agent-default.jpg' }}"
+                                alt="{{ $agent->codename }}"
+                                class="w-16 h-16 object-cover rounded-full border-2 border-border-color group-hover:border-primary transition-colors">
+                            @if($isOnline)
+                                <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-surface rounded-full animate-pulse"></span>
+                            @endif
+                        </div>
+
+                        <div class="min-w-0">
+                            <a href="{{ route('agents.show', $agent->id) }}" class="block">
+                                <p class="font-bold text-white text-lg text-glow truncate group-hover:text-primary transition-colors">{{ $agent->codename }}</p>
+                            </a>
+                            <p class="text-primary text-xs font-mono tracking-wider">{{ $agent->role->alias ?? $agent->role->name }}</p>
+                            <p class="text-secondary text-xs truncate">{{ $agent->specialization ?? '—' }}</p>
+                        </div>
+                    </div>
+
+                    {{-- data --}}
+                    <div class="px-4 pb-3 text-xs font-mono space-y-1 text-secondary/90 flex-grow">
+                        <p class="truncate"><span class="text-primary/40">> {{ __('REAL NAME') }}:</span> {{ $agent->name }}</p>
+                        <p class="truncate"><span class="text-primary/40">> {{ __('USERNAME') }}:</span> {{ $agent->username }}</p>
+                        <p class="truncate"><span class="text-primary/40">> {{ __('LAST ACTIVITY') }}:</span> {{ $agent->last_active_at ? $agent->last_active_at->diffForHumans() : __('Never') }}</p>
+                        <p class="truncate"><span class="text-primary/40">> {{ __('AGENT SINCE') }}:</span> {{ $agent->created_at->format('Y-m-d') }}</p>
+                    </div>
+
+                    {{-- actions --}}
+                    <div class="px-4 py-2 border-t border-border-color flex items-center justify-between gap-3">
+                        <a href="{{ route('agents.show', $agent->id) }}"
+                            class="text-primary text-xs font-bold font-mono hover:text-white transition-colors whitespace-nowrap">
+                            > {{ __('ACCESS DOSSIER') }}
+                        </a>
+
+                        @if(strtolower(Auth::user()->role->name) === 'director')
+                            <div class="flex items-center gap-3">
+                                <a href="{{ route('agents.edit', $agent->id) }}"
+                                    class="text-blue-400 hover:text-blue-300 text-xs font-mono font-bold" title="Edit Agent">
+                                    {{ __('[ EDIT ]') }}
+                                </a>
+                                <x-button.delete :action="route('agents.destroy', $agent->id)" title="TERMINATE AGENT?"
+                                    message="Confirm termination of agent {{ $agent->codename }}? Access will be revoked immediately."
+                                    target="{{ $agent->codename }}">
+                                    {{ __('[ DELETE ]') }}
+                                </x-button.delete>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @empty
+                <div class="md:col-span-2 xl:col-span-3 text-center py-16 border-2 border-dashed border-border-color">
+                    <p class="text-secondary font-mono text-lg">{{ __('[ NO AGENT RECORDS FOUND IN DATABASE ]') }}</p>
+                </div>
+            @endforelse
+        </div>
+
+        <div class="mt-2">
+            {{ $users->links() }}
+        </div>
     </div>
 </x-app-layout>

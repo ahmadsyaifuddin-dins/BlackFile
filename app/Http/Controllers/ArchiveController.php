@@ -22,7 +22,9 @@ class ArchiveController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        // Metode publik (link sharing) tidak butuh login;
+        // seluruh metode lain tetap memerlukan autentikasi.
+        $this->middleware('auth')->except(['publicLanding', 'publicOpen']);
     }
 
     public function index(Request $request)
@@ -253,6 +255,112 @@ class ArchiveController extends Controller
         $archive->is_favorited = $user->favorites()->where('archive_id', $archive->id)->exists();
 
         return view('archives.show', compact('archive'));
+    }
+
+    /**
+     * Gerbang publik untuk link sharing "/s/{token}".
+     *
+     * - Kalau archive tidak ter-publish -> 404 (link diam).
+     * - Kalau "has_ad" aktif -> tampilkan halaman interstitial (berisi iklan),
+     *   pengunjung menunggu lalu diarahkan otomatis ke halaman data tujuan.
+     * - Kalau "has_ad" NONAKTIF -> redirect langsung ke data tujuan
+     *   (link publik murni tanpa hambatan).
+     */
+    public function publicLanding(Archive $archive)
+    {
+        // Link eksternal mati bila visibilitas internal private (is_public=false)
+        // atau link eksternal sengaja dimatikan (is_shared=false).
+        if (! $archive->is_public || ! $archive->is_shared) {
+            abort(404);
+        }
+
+        // Pastikan link selalu punya token valid
+        $archive->ensurePublicToken();
+
+        $dataUrl = route('archives.public.open', $archive->public_token);
+
+        if ($archive->has_ad) {
+            $gateSeconds = (int) Config::get('blackfile.public_share.gate_seconds', 5);
+
+            return view('archives.public-gate', [
+                'archive' => $archive,
+                'dataUrl' => $dataUrl,
+                'gateSeconds' => $gateSeconds,
+            ]);
+        }
+
+        return redirect()->to($dataUrl);
+    }
+
+    /**
+     * Halaman data publik (tujuan akhir link sharing `/s/{token}/open`).
+     * UI-nya dirancang khusus untuk publik: tanpa sidebar, tanpa tombol
+     * edit/delete, dan tampilan dictum sebaik mungkin.
+     */
+    public function publicOpen(Archive $archive)
+    {
+        if (! $archive->is_public || ! $archive->is_shared) {
+            abort(404);
+        }
+
+        $archive->load(['user', 'tags']);
+
+        return view('archives.public', compact('archive'));
+    }
+
+    /**
+     * Toggle status "share" (link publik eksternal `/s/{token}`).
+     *
+     * PENTING: visibilitas internal (`is_public`) tetap milik pemilik/director.
+     * Link eksternal HANYA bisa dinyalakan kalau visibilitas internalnya
+     * juga public. Kalau `is_public` internal masih private, toggle share
+     * ditolak (409) supaya data private tidak bocor ke link publik.
+     */
+    public function toggleShare(Archive $archive)
+    {
+        $this->authorize('share', $archive);
+
+        // Mau "nyalakan" link eksternal tapi visibilitas internal masih private -> tolak.
+        if ($archive->is_shared === false && $archive->is_public === false) {
+            return response()->json([
+                'message' => 'Visibilitas internal masih private. Aktifkan status internal (PUBLIC) terlebih dahulu sebelum membagikan link eksternal.',
+            ], 409);
+        }
+
+        $archive->is_shared = ! $archive->is_shared;
+        $archive->save();
+
+        if ($archive->is_shared) {
+            $archive->ensurePublicToken();
+        }
+
+        return response()->json($this->shareState($archive));
+    }
+
+    /**
+     * Toggle mode iklan: lewat gerbang (menghasilkan uang) vs langsung ke data.
+     */
+    public function toggleAd(Archive $archive)
+    {
+        $this->authorize('share', $archive);
+
+        $archive->has_ad = ! $archive->has_ad;
+        $archive->save();
+
+        return response()->json($this->shareState($archive));
+    }
+
+    /**
+     * State JSON yang dikirim kembali ke frontend setelah toggle.
+     */
+    private function shareState(Archive $archive): array
+    {
+        return [
+            'is_public' => $archive->is_public,
+            'is_shared' => $archive->is_shared,
+            'has_ad' => $archive->has_ad,
+            'public_url' => $archive->publicUrl(),
+        ];
     }
 
     public function create()

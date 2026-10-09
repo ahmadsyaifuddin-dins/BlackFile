@@ -110,19 +110,23 @@
 
                             {{-- Kolom Status --}}
                             <td class="px-6 py-4 align-top">
-                                @if ($archive->is_public)
-                                    <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-green-900/30 text-green-400 border border-green-500/30">
-                                        <span class="w-1.5 h-1.5 mr-1.5 bg-green-400 rounded-full animate-pulse"></span>
-                                        PUBLIC
-                                    </span>
+                                @can('share', $archive)
+                                    @include('archives.partials._share-controls', ['archive' => $archive, 'compact' => true])
                                 @else
-                                    <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-red-900/30 text-red-400 border border-red-500/30">
-                                        <span class="w-1.5 h-1.5 mr-1.5 bg-red-400 rounded-full"></span>
-                                        PRIVATE
-                                    </span>
-                                @endif
+                                    @if ($archive->is_public)
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-green-900/30 text-green-400 border border-green-500/30">
+                                            <span class="w-1.5 h-1.5 mr-1.5 bg-green-400 rounded-full animate-pulse"></span>
+                                            PUBLIC
+                                        </span>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-red-900/30 text-red-400 border border-red-500/30">
+                                            <span class="w-1.5 h-1.5 mr-1.5 bg-red-400 rounded-full"></span>
+                                            PRIVATE
+                                        </span>
+                                    @endif
+                                @endcan
                             </td>
 
                             {{-- Kolom Kategori & Tipe --}}

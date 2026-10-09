@@ -63,6 +63,19 @@ class ArchivePolicy
     }
 
     /**
+     * Determine whether the user can manage public sharing (toggle public/ad).
+     * Director boleh mengatur semua archive; pemilik hanya arsipnya sendiri.
+     */
+    public function share(User $user, Archive $archive): bool
+    {
+        if ($this->isDirector($user)) {
+            return true;
+        }
+
+        return $user->id === $archive->user_id;
+    }
+
+    /**
      * Apakah user punya role Director (otoritas tertinggi).
      *
      * Dicek null-safe karena user tanpa role (mis. data belum lengkap)

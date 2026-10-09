@@ -14,10 +14,77 @@ class UserController extends Controller
     /**
      * Menampilkan daftar semua agen (direktori).
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::where('id', '!=', Auth::id())->orderBy('codename')->paginate(10);
-        return view('users.index', compact('users'));
+        $onlineThreshold = now()->subMinutes(15);
+
+        $query = User::query()
+            ->where('id', '!=', Auth::id())
+            ->with('role');
+
+        // Pencarian bebas: codename, nama asli, username, spesialisasi
+        if ($request->filled('q')) {
+            $term = '%' . $request->q . '%';
+            $query->where(function ($sub) use ($term) {
+                $sub->where('name', 'like', $term)
+                    ->orWhere('codename', 'like', $term)
+                    ->orWhere('username', 'like', $term)
+                    ->orWhere('specialization', 'like', $term);
+            });
+        }
+
+        // Filter berdasarkan role
+        if ($request->filled('role')) {
+            $query->whereHas('role', fn ($role) => $role->where('name', $request->role));
+        }
+
+        // Filter berdasarkan status kehadiran
+        if ($request->filled('status')) {
+            if ($request->status === 'online') {
+                $query->where('last_active_at', '>=', $onlineThreshold);
+            } elseif ($request->status === 'offline') {
+                $query->where(function ($sub) use ($onlineThreshold) {
+                    $sub->whereNull('last_active_at')
+                        ->orWhere('last_active_at', '<', $onlineThreshold);
+                });
+            } elseif ($request->status === 'pending') {
+                $query->where('confirmed', false);
+            }
+        }
+
+        // Urutan data
+        match ($request->get('sort')) {
+            'name' => $query->orderBy('name'),
+            'recent' => $query->orderByDesc('created_at'),
+            'activity' => $query->orderByDesc('last_active_at'),
+            default => $query->orderBy('codename'),
+        };
+
+        $perPage = Auth::user()->settings['per_page'] ?? 12;
+        $users = $query->paginate($perPage)->appends($request->query());
+
+        // Statistik ringkas untuk panel atas
+        $stats = [
+            'total' => User::where('id', '!=', Auth::id())->count(),
+            'online' => User::where('id', '!=', Auth::id())->where('last_active_at', '>=', $onlineThreshold)->count(),
+            'directors' => User::whereHas('role', fn ($role) => $role->where('name', 'Director'))->count(),
+            'pending' => User::where('confirmed', false)->count(),
+        ];
+
+        $roles = Role::orderBy('name')->pluck('alias', 'name');
+        $statuses = [
+            'online' => __('Online'),
+            'offline' => __('Offline'),
+            'pending' => __('Pending'),
+        ];
+        $sortOptions = [
+            'codename' => __('Codename (A-Z)'),
+            'name' => __('Real Name (A-Z)'),
+            'recent' => __('Newest Agent'),
+            'activity' => __('Recent Activity'),
+        ];
+
+        return view('users.index', compact('users', 'roles', 'statuses', 'sortOptions', 'stats', 'onlineThreshold'));
     }
 
     /**

@@ -106,4 +106,26 @@ class ProfileUpdateToastTest extends TestCase
             'toast error validasi tidak muncul'
         );
     }
+
+    public function test_toast_language_follows_user_setting()
+    {
+        $this->agent->settings = ['locale' => 'id'];
+        $this->agent->save();
+
+        $this->actingAs($this->agent)
+            ->patch('/profile', $this->payload())
+            ->assertRedirect('/profile');
+
+        $html = $this->actingAs($this->agent)
+            ->get('/profile')
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString(
+            "agentAlert('success', 'PROFIL DIPERBARUI'",
+            $html,
+            'toast tidak memakai bahasa user'
+        );
+        $this->assertStringContainsString('Agen Pribadi telah diperbarui.', $html);
+    }
 }

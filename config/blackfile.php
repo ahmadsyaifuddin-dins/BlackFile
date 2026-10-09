@@ -226,4 +226,49 @@ return [
         'Dokumen Word',
         'Other',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Public Archive Sharing
+    |--------------------------------------------------------------------------
+    |
+    | Pengaturan untuk link publik arsip ("/s/{token}").
+    |
+    | 'gate_seconds' => durasi (detik) pengunjung menunggu di halaman gerbang
+    |                    sebelum dialihkan ke data tujuan saat trik iklan
+    |                    (has_ad) aktif. Tempat menyisipkan kode iklan
+    |                    disiapkan di view `archives.public-gate`.
+    */
+    'public_share' => [
+        'gate_seconds' => 5,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Google AdSense (Monetisasi Link Publik)
+    |--------------------------------------------------------------------------
+    |
+    | Settings untuk unit iklan yang ditampilkan di halaman publik arsip
+    | ("/s/{token}" dan "/s/{token}/open").
+    |
+    | 'enabled'  => matikan/nyalakan iklan secara global.
+    | 'client'   => CA Publisher ID (ca-pub-XXXX).
+    | 'slot'     => Slot ID ad unit "Responsive" dari dashboard AdSense.
+    |
+    | Catatan: iklan sungguhan hanya tampil di domain yang sudah diverifikasi
+    | (mis. https://blackfile.xo.je). Di localhost area iklan tetap kosong.
+    |
+    | Referensi unit:
+    |   <ins class="adsbygoogle"
+    |        style="display:block"
+    |        data-ad-client="ca-pub-XXXX"
+    |        data-ad-slot="0000000000"
+    |        data-ad-format="auto"
+    |        data-full-width-responsive="true"></ins>
+    */
+    'adsense' => [
+        'enabled' => true,
+        'client' => 'ca-pub-4013515598409306',
+        'slot' => '9540365470',
+    ],
 ];

@@ -150,4 +150,35 @@ class AgentPasswordResetTest extends TestCase
 
         $this->assertSame('keepme123', $this->agent->fresh()->temp_password);
     }
+
+    public function test_credential_panel_follows_user_language_preference()
+    {
+        $this->director->settings = ['locale' => 'id'];
+        $this->director->save();
+
+        $html = $this->actingAs($this->director)
+            ->get('/agents/'.$this->agent->id)
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString('OTORITAS: DIRECTOR', $html, 'panel tidak ikut bahasa user');
+        $this->assertStringContainsString('PASSWORD TERCATAT:', $html);
+        $this->assertStringContainsString('RESET PASSWORD SATU KLIK', $html);
+        $this->assertStringContainsString('[ RESET SEKARANG ]', $html);
+    }
+
+    public function test_credential_panel_stays_english_for_english_preference()
+    {
+        $this->director->settings = ['locale' => 'en'];
+        $this->director->save();
+
+        $html = $this->actingAs($this->director)
+            ->get('/agents/'.$this->agent->id)
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString('CLEARANCE: DIRECTOR', $html);
+        $this->assertStringContainsString('ONE-CLICK PASSWORD RESET', $html);
+        $this->assertStringNotContainsString('OTORITAS: DIRECTOR', $html);
+    }
 }

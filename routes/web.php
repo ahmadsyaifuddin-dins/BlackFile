@@ -20,6 +20,7 @@ use App\Http\Controllers\OsintToolController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PrototypeController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SystemInfoController;
 use App\Http\Controllers\Tools\ExifIntelController;
 use App\Http\Controllers\Tools\UsernameTrackerController;
 use App\Http\Controllers\UserController;
@@ -111,6 +112,7 @@ Route::middleware(['auth', 'maintenance'])->group(function () {
 
     Route::resource('prototypes', PrototypeController::class);
     Route::get('/codex', [CodexController::class, 'index'])->name('codex.index');
+    Route::get('/system-info', [SystemInfoController::class, 'index'])->name('system-info.index');
 
     Route::prefix('entities')->name('entities.')->group(function () {
         // Route Menuju Halaman Edit Stats

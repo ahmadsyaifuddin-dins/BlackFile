@@ -271,4 +271,31 @@ return [
         'client' => 'ca-pub-4013515598409306',
         'slot' => '9540365470',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Project Metadata & System Information
+    |--------------------------------------------------------------------------
+    |
+    | Metadata ini ditampilkan pada halaman "System Information". Ubah nilai
+    | di sini untuk memperbarui versioning & identitas proyek tanpa perlu
+    | menyentuh kode view maupun controller.
+    |
+    */
+    'project' => [
+        'name' => 'BlackFile',
+        'codename' => 'SECURE TERMINAL',
+
+        // Versi aplikasi saat ini (juga dipakai di sidebar).
+        'version' => '5.0.0',
+        'channel' => 'STABLE',
+
+        // Tanggal & waktu proyek pertama kali diinisialisasi (commit pertama).
+        'created_at' => '2025-08-15 14:33:38',
+
+        // Tanggal & waktu build/rilis terakhir.
+        'released_at' => '2026-10-09 11:23:19',
+
+        'description' => 'BlackFile adalah terminal operasi rahasia untuk mengarsipkan data, memetakan jaringan aset, menganalisis entitas, dan menjalankan simulasi konflik.',
+    ],
 ];

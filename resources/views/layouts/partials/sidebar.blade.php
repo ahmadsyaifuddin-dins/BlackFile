@@ -25,7 +25,7 @@
             <div class="text-center mt-1">
                 {{-- UKURAN JUDUL DIKECILKAN (text-xl) --}}
                 <h2 class="text-xl font-bold text-primary tracking-[.25em] font-mono leading-none">BLACKFILE</h2>
-                <span class="text-[10px] text-secondary uppercase tracking-widest opacity-70">System v5.0.0</span>
+                <span class="text-[10px] text-secondary uppercase tracking-widest opacity-70">System v{{ config('blackfile.project.version', '5.0.0') }}</span>
             </div>
         </div>
 
@@ -205,6 +205,12 @@
             class="{{ $baseLinkClass }} {{ request()->routeIs('codex.index') ? $activeClass : $inactiveClass }}">
             <span class="opacity-50 group-hover:text-primary transition-colors text-lg">></span>
             <span>{{ __('Codex') }}</span>
+        </a>
+
+        <a href="{{ route('system-info.index') }}"
+            class="{{ $baseLinkClass }} {{ request()->routeIs('system-info.*') ? $activeClass : $inactiveClass }}">
+            <span class="opacity-50 group-hover:text-primary transition-colors text-lg">></span>
+            <span>{{ __('System Info') }}</span>
         </a>
 
         <a href="#"

@@ -20,7 +20,7 @@
         @if ($adDebug)
         ;(function () {
             var el = document.querySelector('.ad-unit-{{ $label }}');
-            var zone = {{ json_encode($label) }};
+            var zone = @js($label);
             if (!el) {
                 console.error('[ADS:' + zone + '] Unit iklan TIDAK ditemukan di DOM');
                 return;

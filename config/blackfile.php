@@ -240,7 +240,7 @@ return [
     |                    disiapkan di view `archives.public-gate`.
     */
     'public_share' => [
-        'gate_seconds' => 5,
+        'gate_seconds' => 15,
     ],
 
     /*
@@ -254,6 +254,9 @@ return [
     | 'enabled'  => matikan/nyalakan iklan secara global.
     | 'client'   => CA Publisher ID (ca-pub-XXXX).
     | 'slot'     => Slot ID ad unit "Responsive" dari dashboard AdSense.
+    | 'debug'    => cetak log di console browser (devtools) setiap kali unit
+    |               iklan selesai diproses, apakah berhasil termuat/tidak.
+    |               Berguna mencari tahu kenapa iklan tidak muncul.
     |
     | Catatan: iklan sungguhan hanya tampil di domain yang sudah diverifikasi
     | (mis. https://blackfile.xo.je). Di localhost area iklan tetap kosong.
@@ -270,6 +273,7 @@ return [
         'enabled' => true,
         'client' => 'ca-pub-4013515598409306',
         'slot' => '9540365470',
+        'debug' => true,
     ],
 
     /*

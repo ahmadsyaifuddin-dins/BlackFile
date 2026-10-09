@@ -115,7 +115,7 @@ class ArchivePublicShareTest extends TestCase
             ->assertOk()
             ->getContent();
 
-        $this->assertStringContainsString('Redirecting to target data', $html, 'halaman gerbang tidak tampil');
+        $this->assertStringContainsString('MENUJU TAUTAN', $html, 'tombol lanjut manual tidak tampil');
         $this->assertStringContainsString('/open', $html, 'target data hilang');
     }
 

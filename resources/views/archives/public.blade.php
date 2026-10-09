@@ -163,7 +163,7 @@
         {{-- Ad Unit --}}
         <div class="border border-green-500/30 rounded-lg p-5 mb-8 bg-surface/40">
             <span class="block text-[9px] uppercase tracking-[0.25em] text-secondary/60 mb-3">// AD_SPACE</span>
-            @include('archives.partials._adsense')
+            @include('archives.partials._adsense', ['label' => 'detail'])
         </div>
 
         {{-- Footer --}}

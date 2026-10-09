@@ -270,10 +270,10 @@ return [
     |        data-full-width-responsive="true"></ins>
     */
     'adsense' => [
-        'enabled' => true,
+        'enabled' => false,
         'client' => 'ca-pub-4013515598409306',
         'slot' => '9540365470',
-        'debug' => true,
+        'debug' => false,
     ],
 
     /*
@@ -294,6 +294,11 @@ return [
         'enabled' => true,
         'provider' => 'socialbar',
         'script_url' => 'https://bauval.org/14/db1adb0d008fdfd6de74acc98ff3f0ce',
+        'type' => 'socialbar', // socialbar | popunder | native | banner468 | banner728
+        'popunder_url' => 'https://abscloud.org/1/2624e7d1165700df1b9b9a1bf3ea22a5',
+        'native_url' => 'https://bauval.org/21/20ca513c69bb83f1acc002451cd6bf4e',
+        'banner468_key' => 'fe32557a024b70bc78d9293f8222c1cf',
+        'banner728_key' => 'e1dd84fc917acff977b5bef0579fcad4',
     ],
 
     /*

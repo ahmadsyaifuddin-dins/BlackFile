@@ -278,6 +278,26 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Adsterra (Monetisasi Link Publik - Alternatif)
+    |--------------------------------------------------------------------------
+    |
+    | Pengaturan untuk Adsterra (Social Bar / Popunder / Banner). Script Social
+    | Bar biasanya bersifat async (dengan data-cfasync="false") dan bisa meng-
+    | inject elemen sendiri.
+    |
+    | 'enabled' => nyalakan/matikan Adsterra secara global.
+    | 'provider' => 'socialbar' (placeholder untuk fleksibilitas)
+    | 'script_url' => URL direct script Adsterra (sudah diobfuscate oleh pihak
+    |                 Adsterra). Akan disisipkan dengan data-cfasync="false".
+    */
+    'adsterra' => [
+        'enabled' => true,
+        'provider' => 'socialbar',
+        'script_url' => 'https://bauval.org/14/db1adb0d008fdfd6de74acc98ff3f0ce',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Project Metadata & System Information
     |--------------------------------------------------------------------------
     |

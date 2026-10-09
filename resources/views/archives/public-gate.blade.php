@@ -95,6 +95,7 @@
         <div class="relative border border-dashed border-green-500/40 rounded-lg p-6 mb-10 bg-surface/40 min-h-[160px]">
             <span class="absolute top-2 left-2 text-[9px] uppercase tracking-[0.25em] text-secondary/60">// AD_SPACE</span>
             @include('archives.partials._adsense', ['label' => 'gerbang'])
+            @include('archives.partials._adsterra')
         </div>
 
         {{-- Sponsor note --}}

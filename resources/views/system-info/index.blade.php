@@ -177,7 +177,7 @@
             <div class="grid sm:grid-cols-3 gap-6">
                 <div>
                     <p class="text-[10px] tracking-[0.25em] text-secondary/50 uppercase mb-1">{{ __('Author') }}</p>
-                    <p class="text-sm font-bold text-white">{{ $project['author'] ?? 'N/A' }}</p>
+                    <p class="text-sm font-bold text-white">{{ $project['author'] ?? 'Not Available' }}</p>
                 </div>
                 <div>
                     <p class="text-[10px] tracking-[0.25em] text-secondary/50 uppercase mb-1">{{ __('Last Build') }}</p>
@@ -192,7 +192,7 @@
                             <i class="fa-brands fa-github"></i> {{ __('View Source') }}
                         </a>
                     @else
-                        <p class="text-sm font-bold text-white">N/A</p>
+                        <p class="text-sm font-bold text-white">Not Available</p>
                     @endif
                 </div>
             </div>

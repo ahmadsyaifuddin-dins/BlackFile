@@ -97,9 +97,9 @@ class SystemInfoController extends Controller
     private function databaseName(): string
     {
         try {
-            return DB::connection()->getDatabaseName() ?: 'N/A';
+            return DB::connection()->getDatabaseName() ?: 'Not Available';
         } catch (Throwable $e) {
-            return 'N/A';
+            return 'Not Available';
         }
     }
 }

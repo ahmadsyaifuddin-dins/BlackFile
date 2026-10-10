@@ -9,7 +9,7 @@
                 <h2 class="text-2xl font-bold text-primary uppercase">
                     > [ EDITING AGENT: {{ $user->codename }} ]
                 </h2>
-                <p class="text-sm text-secondary font-mono mt-1">Updating existing personnel dossier.</p>
+                <p class="text-sm text-secondary font-mono mt-1">Updating existing personnel file.</p>
             </div>
             <x-button variant="outline" href="{{ url()->previous() }}">
                 &lt; Back

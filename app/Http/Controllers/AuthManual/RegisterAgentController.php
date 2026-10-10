@@ -33,6 +33,8 @@ class RegisterAgentController extends Controller
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|min:6|confirmed',
             'role_id' => 'required|exists:roles,id',
+            'gender' => 'nullable|string|in:male,female',
+            'date_of_birth' => 'nullable|date|before:today',
         ]);
 
         User::create([
@@ -45,6 +47,8 @@ class RegisterAgentController extends Controller
             'role_id' => $data['role_id'],
             'confirmed' => true,
             'parent_id' => Auth::id(),
+            'gender' => ($data['gender'] ?? null) ?: null,
+            'date_of_birth' => ($data['date_of_birth'] ?? null) ?: null,
         ]);
 
         return redirect('/agents')->with('success', 'Agent berhasil dibuat.');

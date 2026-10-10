@@ -16,12 +16,15 @@ class RegisterController extends Controller
 {
     public function showRegisterForm(Request $request)
     {
+        app()->setLocale('id');
         $inviteCode = $request->query('invite_code', '');
         return view('auth.register', ['inviteCode' => $inviteCode]);
     }
 
     public function register(Request $request)
     {
+        app()->setLocale('id');
+
         // 1. Validasi Input Awal (tidak berubah)
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -30,6 +33,8 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'invite_code' => ['nullable', 'string'],
+            'gender' => ['required', 'string', 'in:male,female'],
+            'date_of_birth' => ['required', 'date', 'before:today'],
         ]);
 
         // 2. Logika Anti-Spam (tidak berubah)
@@ -73,6 +78,8 @@ class RegisterController extends Controller
             'role_id' => $roleId,
             'confirmed' => $isConfirmed,
             'last_active_at' => now(),
+            'gender' => $request->input('gender'),
+            'date_of_birth' => $request->input('date_of_birth'),
         ]);
         
         RateLimiter::hit($limiterKey, 3 * 24 * 60 * 60);

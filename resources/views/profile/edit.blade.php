@@ -89,6 +89,18 @@
                                class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary p-2 rounded"
                                placeholder="e.g., Fortune favors the bold.">{{ old('quotes', $user->quotes) }}</textarea>
                     </div>
+
+                    <!-- Data biografi (opsional) -->
+                    <div>
+                        <label class="block text-primary/25 text-sm">> GENDER (OPTIONAL)</label>
+                        <x-forms.gender-picker name="gender" :value="old('gender', $user->gender ?? '')" />
+                    </div>
+                    <div>
+                        <label for="date_of_birth" class="block text-primary/25 text-sm">> DATE OF BIRTH (OPTIONAL)</label>
+                        <input type="date" id="date_of_birth" name="date_of_birth"
+                               value="{{ old('date_of_birth', $user->date_of_birth?->format('Y-m-d') ?? '') }}"
+                               class="mt-1 block w-full bg-base border-2 border-border-color focus:border-primary focus:ring-primary p-2 rounded">
+                    </div>
                 </div>
 
                 <!-- Bagian Password -->

@@ -154,6 +154,9 @@ class DashboardController extends Controller
             'totalUrlArchives' => $totalUrlArchives,
             'totalFileArchives' => $totalFileArchives,
             'totalPhysicalStorage' => $totalPhysicalStorage,
+
+            // CTA dossier: user belum melengkapi gender / tanggal lahir (opsional)
+            'dossierIncomplete' => empty(Auth::user()->gender) || empty(Auth::user()->date_of_birth),
         ]);
     }
 }

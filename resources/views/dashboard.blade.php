@@ -6,6 +6,9 @@
     {{-- Header & Time --}}
     <x-dashboard.header />
 
+    {{-- CTA: lengkapi dossier (gender & tanggal lahir) --}}
+    <x-dashboard.dossier-cta :incomplete="$dossierIncomplete" />
+
     {{-- Direct Actions --}}
     <x-dashboard.actions />
 

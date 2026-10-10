@@ -3,7 +3,16 @@
         Agent: {{ $user->codename }}
     </x-slot:title>
 
-    <div class="mb-6">
+    @php
+    $genderMeta = [
+        'male' => ['icon' => 'fa-mars', 'color' => 'text-blue-400', 'label' => __('Male')],
+        'female' => ['icon' => 'fa-venus', 'color' => 'text-pink-400', 'label' => __('Female')],
+        'other' => ['icon' => 'fa-user-secret', 'color' => 'text-purple-400', 'label' => __('Other')],
+    ];
+    $gm = $user->gender ? ($genderMeta[$user->gender] ?? null) : null;
+@endphp
+
+<div class="mb-6">
         <h2 class="text-2xl font-bold text-primary text-glow"> > [ AGENT : {{ $user->codename }} ] </h2>
         <div class="mt-3 sm:mt-2 flex sm:justify-end">
             <a href="{{ route('agents.index') }}"
@@ -36,7 +45,16 @@
             <p><span class="text-primary/25">> REAL NAME:</span> {{ $user->name }}</p>
             <p><span class="text-primary/25">> CODENAME:</span> {{ $user->codename }}</p>
             <p><span class="text-primary/25">> DESIGNATION:</span> {{ $user->role->alias }}</p>
+            <p><span class="text-primary/25">> EMAIL:</span> {{ $user->email }}</p>
             <p><span class="text-primary/25">> SPECIALIZATION:</span> {{ $user->specialization ?? 'N/A' }}</p>
+            <p><span class="text-primary/25">> GENDER:</span>
+                @if ($gm)
+                    <i class="fa-solid {{ $gm['icon'] }} {{ $gm['color'] }} mr-1"></i>{{ $gm['label'] }}
+                @else
+                    N/A
+                @endif
+            </p>
+            <p><span class="text-primary/25">> DATE OF BIRTH:</span> {{ $user->date_of_birth?->format('Y-m-d') ?? 'N/A' }}</p>
             <p><span class="text-primary/25">> QUOTES:</span> "{{ $user->quotes ?? '...' }}"</p>
             <p><span class="text-primary/25">> HANDLER:</span> {{ $user->parent->codename ?? '[ UNKNOWN ]' }}</p>
             <p><span class="text-primary/25">> LAST ACTIVITY:</span> {{ $user->last_active_at ? $user->last_active_at->diffForHumans() : 'Never' }}</p>

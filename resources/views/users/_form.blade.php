@@ -93,6 +93,23 @@
             />
         </div>
 
+        {{-- Gender (opsional) --}}
+        <div>
+            <label class="block text-primary text-sm mb-1">> GENDER (OPTIONAL)</label>
+            <x-forms.gender-picker name="gender" :value="old('gender', $user->gender ?? '')" />
+        </div>
+
+        {{-- Date of Birth (opsional) --}}
+        <div>
+            <label for="date_of_birth" class="block text-primary text-sm mb-1">> DATE OF BIRTH (OPTIONAL)</label>
+            <x-forms.input
+                type="date"
+                id="date_of_birth"
+                name="date_of_birth"
+                :value="old('date_of_birth', optional($user)->date_of_birth?->format('Y-m-d') ?? '')"
+            />
+        </div>
+
         {{-- Password Section --}}
         <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-border-color">
             @if($isEdit)

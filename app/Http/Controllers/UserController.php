@@ -223,10 +223,17 @@ class UserController extends Controller
             'password' => 'nullable|min:6|confirmed',
             'specialization' => 'nullable|string|max:255',
             'quotes' => 'nullable|string',
+            'gender' => 'nullable|string|in:male,female',
+            'date_of_birth' => 'nullable|date|before:today',
         ]);
-        
+
         // Update data utama, kecuali password
         $user->update($request->except('password'));
+
+        // Normalisasi kolom opsional: kosong => null
+        $user->gender = $request->input('gender') ?: null;
+        $user->date_of_birth = $request->input('date_of_birth') ?: null;
+        $user->save();
 
         // Hanya update password jika field-nya diisi
         if ($request->filled('password')) {

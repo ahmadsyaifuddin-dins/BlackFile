@@ -32,6 +32,8 @@ class User extends Authenticatable
         'temp_password',
         'avatar',
         'specialization',
+        'gender',
+        'date_of_birth',
         'quotes',
         'last_active_at',
         'settings',
@@ -59,6 +61,7 @@ class User extends Authenticatable
         'master_password' => 'hashed',
         'settings' => 'array',
         'temp_password' => 'encrypted',
+        'date_of_birth' => 'date',
     ];
 
     public function role()

@@ -15,7 +15,12 @@ class ProfileController extends Controller
      */
     public function show()
     {
-        return view('profile.show', ['user' => Auth::user()]);
+        $user = Auth::user();
+
+        return view('profile.show', [
+            'user' => $user,
+            'dossierIncomplete' => empty($user->gender) || empty($user->date_of_birth),
+        ]);
     }
 
     /**
@@ -42,11 +47,17 @@ class ProfileController extends Controller
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'specialization' => 'nullable|string|max:255',
             'quotes' => 'nullable|string|max:255',
+            'gender' => 'nullable|string|in:male,female',
+            'date_of_birth' => 'nullable|date|before:today',
         ]);
 
         // Update data teks
         /** @var \App\Models\User $user */
         $user->fill($request->except('password', 'avatar'));
+
+        // Normalisasi kolom opsional: kosong => null
+        $user->gender = $request->input('gender') ?: null;
+        $user->date_of_birth = $request->input('date_of_birth') ?: null;
 
         // [BARU] Logika handle upload avatar
         if ($request->hasFile('avatar')) {

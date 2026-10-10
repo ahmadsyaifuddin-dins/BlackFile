@@ -14,6 +14,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefaultMusicController;
 use App\Http\Controllers\EncryptedContactController;
 use App\Http\Controllers\EntityController;
+use App\Http\Controllers\Finance\CashTransactionController;
+use App\Http\Controllers\Finance\FundSourceController;
+use App\Http\Controllers\Finance\ReceivableController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\MasterPasswordController;
 use App\Http\Controllers\OsintToolController;
@@ -153,6 +156,15 @@ Route::middleware(['auth', 'maintenance'])->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/agents', [UserController::class, 'index'])->name('agents.index');
+
+    // === REALTIME PRESENCE ===
+    // Heartbeat: menandai "masih online" saat membuka halaman apa pun.
+    // Offline: dipanggil via sendBeacon ketika tab/browser ditutup atau logout.
+    // Presence: JSON berisi status online terkini untuk polling realtime di /agents.
+    Route::get('/agents/presence', [UserController::class, 'presence'])->name('agents.presence');
+    Route::post('/agents/heartbeat', [UserController::class, 'heartbeat'])->name('agents.heartbeat');
+    Route::post('/agents/offline', [UserController::class, 'offline'])->name('agents.offline');
+
     Route::get('/agents/{user}', [UserController::class, 'show'])->name('agents.show');
 
     // --- RUTE UNTUK SETUP MASTER PASSWORD ---
@@ -177,6 +189,18 @@ Route::middleware(['auth', 'maintenance'])->group(function () {
     Route::resource('archives', ArchiveController::class);
 
     Route::resource('credits', CreditController::class);
+
+    // --- FINANCE MODULE (Personal cash flow, fund sources & receivables) ---
+    Route::prefix('finance')->name('finance.')->group(function () {
+        Route::resource('fund-sources', FundSourceController::class)->except(['show']);
+        Route::resource('transactions', CashTransactionController::class)->except(['show']);
+        Route::resource('receivables', ReceivableController::class)->except(['show']);
+
+        Route::post('receivables/{receivable}/settle', [ReceivableController::class, 'settle'])
+            ->name('receivables.settle');
+        Route::post('receivables/{receivable}/unsettle', [ReceivableController::class, 'unsettle'])
+            ->name('receivables.unsettle');
+    });
 
     Route::middleware('role:Director')->group(function () {
         Route::post('/admin/setting/maintenance', [AdminController::class, 'toggleMaintenance'])

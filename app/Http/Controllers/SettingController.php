@@ -56,6 +56,8 @@ class SettingController extends Controller
             'alert_position' => 'nullable|string',
             'archive_edit_redirect' => 'nullable|string|in:index_position,show',
             'archive_create_redirect' => 'nullable|string|in:index_position,show',
+            'finance_default_income_category' => 'nullable|string|max:100',
+            'finance_default_expense_category' => 'nullable|string|max:100',
         ]);
 
         $user = Auth::user();
@@ -71,6 +73,9 @@ class SettingController extends Controller
         $settings['archive_edit_redirect'] = $request->input('archive_edit_redirect', 'index_position');
         // Setelan terpisah untuk alur "tambah arsip baru".
         $settings['archive_create_redirect'] = $request->input('archive_create_redirect', 'index_position');
+        // Default kategori Keuangan (null bila dikosongkan).
+        $settings['finance_default_income_category'] = $request->input('finance_default_income_category') ?: null;
+        $settings['finance_default_expense_category'] = $request->input('finance_default_expense_category') ?: null;
         // Simpan kembali ke database
         $user->settings = $settings;
 

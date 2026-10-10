@@ -6,7 +6,7 @@
         @forelse($agents as $agent)
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                    @if($agent->last_active_at->diffInMinutes(now()) < 5)
+                    @if($agent->last_active_at->diffInSeconds(now()) < 120)
                         <span class="w-2 h-2 bg-green-400 rounded-full mr-3 animate-pulse"></span>
                     @else
                         <span class="w-2 h-2 bg-gray-600 rounded-full mr-3"></span>

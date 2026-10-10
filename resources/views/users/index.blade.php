@@ -47,7 +47,7 @@
                         <p class="text-[10px] tracking-widest uppercase text-secondary">{{ $tile['label'] }}</p>
                         <i class="fa-solid {{ $tile['icon'] }} {{ $tile['accent'] }} opacity-70 text-sm"></i>
                     </div>
-                    <p class="text-2xl md:text-3xl font-bold {{ $tile['accent'] }} text-glow mt-2">{{ str_pad($tile['value'], 2, '0', STR_PAD_LEFT) }}</p>
+                    <p @if($tile['label'] === __('ONLINE NOW')) id="stat-online-value" @endif class="text-2xl md:text-3xl font-bold {{ $tile['accent'] }} text-glow mt-2">{{ str_pad($tile['value'], 2, '0', STR_PAD_LEFT) }}</p>
                 </div>
             @endforeach
         </div>
@@ -99,7 +99,7 @@
                     $isOnline = $agent->last_active_at && $agent->last_active_at->gte($onlineThreshold);
                 @endphp
 
-                <div class="group relative bg-surface border-2 border-border-color hover:border-primary transition-colors duration-300 flex flex-col">
+                <div data-agent-card data-agent-id="{{ $agent->id }}" data-seen="{{ $agent->last_active_at ? $agent->last_active_at->toIso8601String() : '' }}" class="group relative bg-surface border-2 border-border-color hover:border-primary transition-colors duration-300 flex flex-col">
                     {{-- corner brackets --}}
                     <span class="absolute -top-px -left-px w-3 h-3 border-t-2 border-l-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity"></span>
                     <span class="absolute -top-px -right-px w-3 h-3 border-t-2 border-r-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity"></span>
@@ -109,8 +109,8 @@
                     {{-- card header --}}
                     <div class="px-4 py-2 border-b border-border-color flex items-center justify-between gap-2">
                         <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full {{ $isOnline ? 'bg-green-500 animate-pulse' : 'bg-gray-600' }}"></span>
-                            <span class="text-[10px] tracking-widest {{ $isOnline ? 'text-green-400' : 'text-secondary' }}">
+                            <span data-status-dot class="w-2 h-2 rounded-full {{ $isOnline ? 'bg-green-500 animate-pulse' : 'bg-gray-600' }}"></span>
+                            <span data-status-label class="text-[10px] tracking-widest {{ $isOnline ? 'text-green-400' : 'text-secondary' }}">
                                 {{ $isOnline ? __('ONLINE') : __('OFFLINE') }}
                             </span>
                         </div>
@@ -132,7 +132,7 @@
                                 alt="{{ $agent->codename }}"
                                 class="w-16 h-16 object-cover rounded-full border-2 border-border-color group-hover:border-primary transition-colors">
                             @if($isOnline)
-                                <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-surface rounded-full animate-pulse"></span>
+                                <span data-status-badge class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-surface rounded-full animate-pulse"></span>
                             @endif
                         </div>
 
@@ -149,7 +149,7 @@
                     <div class="px-4 pb-3 text-xs font-mono space-y-1 text-secondary/90 flex-grow">
                         <p class="truncate"><span class="text-primary/40">> {{ __('REAL NAME') }}:</span> {{ $agent->name }}</p>
                         <p class="truncate"><span class="text-primary/40">> {{ __('USERNAME') }}:</span> {{ $agent->username }}</p>
-                        <p class="truncate"><span class="text-primary/40">> {{ __('LAST ACTIVITY') }}:</span> {{ $agent->last_active_at ? $agent->last_active_at->diffForHumans() : __('Never') }}</p>
+                        <p class="truncate"><span class="text-primary/40">> {{ __('LAST ACTIVITY') }}:</span> <span data-activity data-fallback="{{ $agent->last_active_at ? $agent->last_active_at->diffForHumans() : __('Never') }}">{{ $agent->last_active_at ? $agent->last_active_at->diffForHumans() : __('Never') }}</span></p>
                         <p class="truncate"><span class="text-primary/40">> {{ __('AGENT SINCE') }}:</span> {{ $agent->created_at->format('Y-m-d') }}</p>
                     </div>
 
@@ -186,4 +186,115 @@
             {{ $users->links() }}
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        (function () {
+            const POLL_MS = 20000;
+            const PRESENCE_URL = @json(route('agents.presence'));
+            const RTF = new Intl.RelativeTimeFormat(@json(app()->getLocale()), { numeric: 'auto' });
+            const LBL_ON = @json(__('ONLINE'));
+            const LBL_OFF = @json(__('OFFLINE'));
+            const ACT_LABEL = @json(__('LAST ACTIVITY'));
+
+            const cards = Array.from(document.querySelectorAll('[data-agent-card]'));
+            const onlineValueEl = document.getElementById('stat-online-value');
+            if (!cards.length && !onlineValueEl) return;
+
+            const seen = new Map();
+            const fallbacks = new Map();
+
+            cards.forEach(function (card) {
+                const id = String(card.dataset.agentId);
+                const iso = card.dataset.seen || null;
+                if (iso) { seen.set(id, iso); } else { seen.set(id, null); }
+                const act = card.querySelector('[data-activity]');
+                fallbacks.set(id, act ? act.dataset.fallback : '');
+            });
+
+            function agoIso(iso) {
+                if (!iso) return null;
+                let diffMs = Date.now() - new Date(iso).getTime();
+                if (diffMs < 0) diffMs = 0;
+                const secs = Math.floor(diffMs / 1000);
+                if (secs < 60) return RTF.format(-secs, 'second');
+                const mins = Math.floor(secs / 60);
+                if (mins < 60) return RTF.format(-mins, 'minute');
+                const hours = Math.floor(mins / 60);
+                if (hours < 24) return RTF.format(-hours, 'hour');
+                return RTF.format(-Math.floor(hours / 24), 'day');
+            }
+
+            function applyState(card, online, iso) {
+                const dot = card.querySelector('[data-status-dot]');
+                const label = card.querySelector('[data-status-label]');
+                const badge = card.querySelector('[data-status-badge]');
+                const act = card.querySelector('[data-activity]');
+                const id = String(card.dataset.agentId);
+
+                if (dot) {
+                    dot.classList.toggle('bg-green-500', online);
+                    dot.classList.toggle('animate-pulse', online);
+                    dot.classList.toggle('bg-gray-600', !online);
+                }
+
+                if (label) {
+                    label.textContent = online ? LBL_ON : LBL_OFF;
+                    label.classList.toggle('text-green-400', online);
+                    label.classList.toggle('text-secondary', !online);
+                }
+
+                if (badge) badge.classList.toggle('hidden', !online);
+
+                if (act) {
+                    const rel = online ? agoIso(iso) : (iso ? agoIso(iso) : fallbacks.get(id));
+                    if (rel) act.textContent = rel;
+                }
+            }
+
+            function poll() {
+                fetch(PRESENCE_URL, { headers: { 'Accept': 'application/json' }, cache: 'no-store' })
+                    .then(function (res) {
+                        if (!res.ok) throw new Error('bad status');
+                        return res.json();
+                    })
+                    .then(function (data) {
+                        if (!data || typeof data !== 'object') return;
+
+                        if (data.agents && typeof data.agents === 'object') {
+                            Object.keys(data.agents).forEach(function (idStr) {
+                                const iso = data.agents[idStr];
+                                if (iso && typeof iso === 'string') {
+                                    seen.set(idStr, iso);
+                                } else if (!seen.has(idStr)) {
+                                    seen.set(idStr, null);
+                                }
+                            });
+                        }
+
+                        const onlineSet = new Set((data.online_ids || []).map(String));
+                        cards.forEach(function (card) {
+                            const id = String(card.dataset.agentId);
+                            applyState(card, onlineSet.has(id), seen.get(id) || null);
+                        });
+
+                        if (onlineValueEl && typeof data.online_count === 'number') {
+                            onlineValueEl.textContent = String(data.online_count).padStart(2, '0');
+                        }
+                    })
+                    .catch(function () {});
+            }
+
+            cards.forEach(function (card) {
+                const id = String(card.dataset.agentId);
+                const iso = seen.get(id);
+                const online = !!iso && (Date.now() - new Date(iso).getTime() <= 120000);
+                applyState(card, online, iso);
+            });
+
+            poll();
+            setInterval(poll, POLL_MS);
+        })();
+    </script>
+    @endpush
 </x-app-layout>

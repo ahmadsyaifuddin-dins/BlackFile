@@ -199,6 +199,27 @@
         @endif
 
         <div class="my-4 border-t border-primary/10 mx-2"></div>
+        <div class="px-4 text-xs text-primary/50 uppercase tracking-widest font-bold mb-2">{{ __('Finance') }}</div>
+
+        <a href="{{ route('finance.transactions.index') }}"
+            class="{{ $baseLinkClass }} {{ request()->routeIs('finance.transactions.*') ? $activeClass : $inactiveClass }}">
+            <span class="opacity-50 group-hover:text-primary transition-colors text-lg">></span>
+            <span>{{ __('Transactions') }}</span>
+        </a>
+
+        <a href="{{ route('finance.fund-sources.index') }}"
+            class="{{ $baseLinkClass }} {{ request()->routeIs('finance.fund-sources.*') ? $activeClass : $inactiveClass }}">
+            <span class="opacity-50 group-hover:text-primary transition-colors text-lg">></span>
+            <span>{{ __('Fund Sources') }}</span>
+        </a>
+
+        <a href="{{ route('finance.receivables.index') }}"
+            class="{{ $baseLinkClass }} {{ request()->routeIs('finance.receivables.*') ? $activeClass : $inactiveClass }}">
+            <span class="opacity-50 group-hover:text-primary transition-colors text-lg">></span>
+            <span>{{ __('Receivables') }}</span>
+        </a>
+
+        <div class="my-4 border-t border-primary/10 mx-2"></div>
         <div class="px-4 text-xs text-primary/50 uppercase tracking-widest font-bold mb-2">System</div>
 
         <a href="{{ route('codex.index') }}"

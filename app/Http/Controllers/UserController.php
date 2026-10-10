@@ -16,7 +16,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $onlineThreshold = now()->subMinutes(15);
+        $onlineThreshold = now()->subMinutes(2);
 
         $query = User::query()
             ->where('id', '!=', Auth::id())
@@ -85,6 +85,84 @@ class UserController extends Controller
         ];
 
         return view('users.index', compact('users', 'roles', 'statuses', 'sortOptions', 'stats', 'onlineThreshold'));
+    }
+
+    /**
+     * REALTIME PRESENCE — Heartbeat.
+     * Dipanggil setiap beberapa detik oleh halaman yang terbuka agar pengguna
+     * terlihat "online" melalui last_active_at. Tidak menyentuh updated_at.
+     */
+    public function heartbeat(Request $request)
+    {
+        if (! Auth::id()) {
+            return response()->json(['ok' => false], 401);
+        }
+
+        $this->touchPresence();
+
+        return response()->json(['ok' => true], 200);
+    }
+
+    /**
+     * REALTIME PRESENCE — Mark offline.
+     * Dipanggil via sendBeacon saat tab/browser ditutup atau saat logout.
+     */
+    public function offline(Request $request)
+    {
+        if (! Auth::id()) {
+            return response()->json(['ok' => false], 401);
+        }
+
+        User::query()
+            ->where('id', Auth::id())
+            ->update(['last_active_at' => null]);
+
+        return response()->json(['ok' => true], 200);
+    }
+
+    /**
+     * REALTIME PRESENCE — Snapshot status untuk polling /agents.
+     * Mengembalikan peta id -> last_active_at (ISO), daftar id online, dan jumlahnya.
+     */
+    public function presence(Request $request)
+    {
+        $threshold = now()->subMinutes(2);
+
+        $rows = User::query()
+            ->where('id', '!=', Auth::id())
+            ->orderByDesc('last_active_at')
+            ->get(['id', 'last_active_at']);
+
+        $agents = [];
+        $onlineIds = [];
+
+        foreach ($rows as $user) {
+            $agents[$user->id] = $user->last_active_at ? $user->last_active_at->toIso8601String() : null;
+
+            if ($user->last_active_at && $user->last_active_at->gte($threshold)) {
+                $onlineIds[] = $user->id;
+            }
+        }
+
+        return response()->json([
+            'agents' => $agents,
+            'online_ids' => $onlineIds,
+            'online_count' => count($onlineIds),
+        ]);
+    }
+
+    /**
+     * Menulis heartbeat last_active_at tanpa menyentuh kolom updated_at.
+     */
+    private function touchPresence(): void
+    {
+        if (! Auth::id()) {
+            return;
+        }
+
+        User::query()
+            ->where('id', Auth::id())
+            ->update(['last_active_at' => now()]);
     }
 
     /**

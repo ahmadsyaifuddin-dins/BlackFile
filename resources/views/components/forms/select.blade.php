@@ -56,6 +56,10 @@
             this.open = false;
             this.search = '';
             this.focusedIndex = -1; // Reset focus
+            this.$el.dispatchEvent(new CustomEvent('select-changed', {
+                bubbles: true,
+                detail: value,
+            }));
         },
     
         toggle() {

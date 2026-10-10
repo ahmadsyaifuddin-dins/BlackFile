@@ -58,4 +58,60 @@
             }
         }
     </style>
+
+    {{-- REALTIME PRESENCE BOOT — berjalan di semua halaman yang sudah login. --}}
+    <script>
+        (function () {
+            if (window.__bfPresenceBoot) return;
+            window.__bfPresenceBoot = true;
+
+            const heartbeatUrl = @json(route('agents.heartbeat'));
+            const offlineUrl = @json(route('agents.offline'));
+            const token = @json(csrf_token());
+
+            function beat() {
+                try {
+                    fetch(heartbeatUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': token,
+                        },
+                        body: '_token=' + encodeURIComponent(token),
+                        cache: 'no-store',
+                    }).catch(function () {});
+                } catch (e) {}
+            }
+
+            function goOffline() {
+                try {
+                    const payload = new Blob(['_token=' + encodeURIComponent(token)], { type: 'application/x-www-form-urlencoded' });
+                    if (navigator.sendBeacon) {
+                        navigator.sendBeacon(offlineUrl, payload);
+                    } else {
+                        fetch(offlineUrl, {
+                            method: 'POST',
+                            keepalive: true,
+                            credentials: 'include',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: '_token=' + encodeURIComponent(token),
+                        }).catch(function () {});
+                    }
+                } catch (e) {}
+            }
+
+            // Heartbeat rutin: tab yang terbuka (bahkan di background) = terlihat online.
+            beat();
+            setInterval(beat, 30000);
+
+            // Browser/tab ditutup atau navigasi keluar => langsung offline.
+            window.addEventListener('pagehide', goOffline);
+
+            // Kembali fokus ke aplikasi => kirim heartbeat langsung.
+            document.addEventListener('visibilitychange', function () {
+                if (document.visibilityState === 'visible') beat();
+            });
+        })();
+    </script>
 </x-layout>

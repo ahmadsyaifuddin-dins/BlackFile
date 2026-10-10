@@ -50,6 +50,17 @@ $alertPositionOptions = [
           'index_position' => __('Kembali ke Posisi Index (dengan filter)'),
           'show' => __('Masuk ke Detail Arsip'),
       ];
+
+      // 7. Kategori default Keuangan (preset + custom milik user)
+      $authSettings = Auth::user()->settings ?? [];
+      $incomeCatOptions = array_values(array_unique(array_merge(
+          \App\Http\Controllers\Finance\CashTransactionController::INCOME_CATEGORIES,
+          $authSettings['finance_income_categories'] ?? []
+      )));
+      $expenseCatOptions = array_values(array_unique(array_merge(
+          \App\Http\Controllers\Finance\CashTransactionController::EXPENSE_CATEGORIES,
+          $authSettings['finance_expense_categories'] ?? []
+      )));
   @endphp
  <x-app-layout title="{{ __('System Settings') }}">
      {{-- Header Halaman --}}
@@ -152,6 +163,28 @@ $alertPositionOptions = [
 
                   <p class="text-xs text-secondary mt-2">
                       {{ __('// Same rule as Post-Edit: "Posisi Index" keeps your active filter and highlights the new row.') }}
+                  </p>
+              </div>
+
+              {{-- Panel 7: Default Kategori Keuangan (BARU) --}}
+              <div class="bg-surface border border-border-color p-6 font-mono h-full">
+                  <h2 class="text-lg font-bold text-primary border-b border-border-color pb-2 mb-4">>
+                      {{ __('Finance Defaults') }}</h2>
+
+                  <div class="space-y-4">
+                      <x-forms.select label="{{ __('Default Income Category:') }}" name="finance_default_income_category"
+                          :options="$incomeCatOptions"
+                          :selected="Auth::user()->settings['finance_default_income_category'] ?? 'Gaji'"
+                          placeholder="{{ __('-- None --') }}" searchable />
+
+                      <x-forms.select label="{{ __('Default Expense Category:') }}" name="finance_default_expense_category"
+                          :options="$expenseCatOptions"
+                          :selected="Auth::user()->settings['finance_default_expense_category'] ?? 'Belanja'"
+                          placeholder="{{ __('-- None --') }}" searchable />
+                  </div>
+
+                  <p class="text-xs text-secondary mt-2">
+                      {{ __('// Preset category when creating transactions. Custom "Other" categories you type are automatically added to the lists.') }}
                   </p>
               </div>
 

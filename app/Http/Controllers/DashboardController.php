@@ -89,6 +89,7 @@ class DashboardController extends Controller
 
         // Mengambil status jaringan agen (tidak berubah)
         $activeAgents = User::whereNotNull('last_active_at')
+            ->where('last_active_at', '>=', now()->subMinutes(2))
             ->where('id', '!=', Auth::id())
             ->orderBy('last_active_at', 'desc')
             ->take(4)

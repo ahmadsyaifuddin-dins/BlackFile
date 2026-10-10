@@ -22,20 +22,20 @@
 <div
     x-data="{
         open: false,
-        type: '{{ $type }}',
-        sentinel: JSON.parse('{{ json_encode($sentinel) }}'),
-        selected: JSON.parse('{{ json_encode($selected) }}'),
-        customName: JSON.parse('{{ json_encode($customName) }}'),
-        defaultIn: JSON.parse('{{ json_encode($defaultIn) }}'),
-        defaultOut: JSON.parse('{{ json_encode($defaultOut) }}'),
-        income: {{ json_encode($income) }},
-        expense: {{ json_encode($expense) }},
-        icons: {{ json_encode($icons) }},
-        fallbackIcon: JSON.parse('{{ json_encode($fallback) }}'),
-        noCategoryIcon: JSON.parse('{{ json_encode($noCategoryIcon) }}'),
-        otherIcon: JSON.parse('{{ json_encode($otherIcon) }}'),
-        noCategoryText: JSON.parse('{{ json_encode($noCategoryText) }}'),
-        otherText: JSON.parse('{{ json_encode($otherText) }}'),
+        type: @js($type),
+        sentinel: @js($sentinel),
+        selected: @js($selected),
+        customName: @js($customName),
+        defaultIn: @js($defaultIn),
+        defaultOut: @js($defaultOut),
+        income: @js($income),
+        expense: @js($expense),
+        icons: @js($icons),
+        fallbackIcon: @js($fallback),
+        noCategoryIcon: @js($noCategoryIcon),
+        otherIcon: @js($otherIcon),
+        noCategoryText: @js($noCategoryText),
+        otherText: @js($otherText),
         focusedIndex: -1,
 
         get options() { return this.type === 'out' ? this.expense : this.income; },
@@ -107,7 +107,7 @@
             });
         },
     }"
-    class="relative font-mono w-full"
+    {{ $attributes->merge(['class' => 'relative font-mono w-full']) }}
     @select-changed.window="onTypeChanged($event.detail)"
     @click.outside="open = false"
     @keydown.escape="open = false"

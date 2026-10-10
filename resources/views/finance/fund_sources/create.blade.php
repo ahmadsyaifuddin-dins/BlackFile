@@ -13,7 +13,7 @@
             </x-button>
         </div>
 
-        @if ($errors->any())
+        @if (isset($errors) && $errors->any())
             <div class="mb-6 bg-red-900/50 border-l-4 border-red-500 text-red-300 p-4 rounded-r-lg text-sm" role="alert">
                 <p class="font-bold mb-2">> {{ __('Data Input Anomaly Detected') }}:</p>
                 <ul class="list-disc list-inside">

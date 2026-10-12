@@ -71,13 +71,12 @@
                     </div>
                 </div>
 
-                {{-- Links Section (Only for URL type) --}}
                 @if ($archive->type === 'url' && count($archive->links ?? []) > 0)
                     <div class="bg-surface/40 border border-green-500/30 rounded p-4">
                         <h3 class="text-xs font-bold uppercase tracking-widest text-secondary font-mono mb-3">>
                             LINKED_RESOURCES</h3>
                         <ul class="space-y-2">
-                            @foreach ($archive->links as $link)
+                            @foreach ($archive->parsed_links as $item)
                                 <li class="flex items-start gap-3 bg-black/20 p-2 rounded border border-green-500/10"
                                     x-data="{ tooltip: 'copy' }">
                                     <svg class="h-4 w-4 text-secondary mt-1 flex-shrink-0" fill="none"
@@ -86,15 +85,21 @@
                                             d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                                     </svg>
 
-                                    {{-- break-all digunakan di sini khusus untuk URL agar tidak merusak layout mobile --}}
-                                    <a href="{{ $link }}" target="_blank" rel="noopener noreferrer"
-                                        class="text-blue-400 hover:text-blue-300 text-sm flex-grow break-all hover:underline font-mono">
-                                        {{ $link }}
-                                    </a>
+                                    <div class="flex-grow min-w-0">
+                                        @if (!empty($item['label']))
+                                            <div class="text-[10px] text-emerald-400/80 font-mono mb-0.5 truncate">
+                                                {{ $item['label'] }}
+                                            </div>
+                                        @endif
+                                        <a href="{{ $item['url'] }}" target="_blank" rel="noopener noreferrer"
+                                            class="text-blue-400 hover:text-blue-300 text-sm block break-all hover:underline font-mono">
+                                            {{ $item['url'] }}
+                                        </a>
+                                    </div>
 
                                     <button
                                         @click="
-                                navigator.clipboard.writeText('{{ $link }}'); 
+                                navigator.clipboard.writeText('{{ $item['url'] }}'); 
                                 tooltip = 'copied'; 
                                 setTimeout(() => tooltip = 'copy', 1500)
                             "

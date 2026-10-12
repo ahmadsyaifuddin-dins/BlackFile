@@ -89,6 +89,42 @@
             });
         },
 
+        autoFormatLinks(text) {
+            if (!text) return text;
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const result = [];
+            for (let i = 0; i < lines.length; i++) {
+                let current = lines[i];
+                if (current.includes('|')) {
+                    let parts = current.split('|').map(p => p.trim());
+                    let isFirstUrl = /^https?:\/\//i.test(parts[0]) || /^www\./i.test(parts[0]);
+                    let isSecondUrl = parts[1] && (/^https?:\/\//i.test(parts[1]) || /^www\./i.test(parts[1]));
+                    if (!isFirstUrl && isSecondUrl) {
+                        result.push(parts[1] + ' | ' + parts[0]);
+                    } else {
+                        result.push(parts[0] + (parts[1] ? ' | ' + parts[1] : ''));
+                    }
+                    continue;
+                }
+                let isUrl = /^https?:\/\//i.test(current) || /^www\./i.test(current);
+                if (!isUrl) {
+                    if (i + 1 < lines.length) {
+                        let next = lines[i + 1];
+                        let isNextUrl = /^https?:\/\//i.test(next) || /^www\./i.test(next);
+                        if (isNextUrl) {
+                            result.push(next + ' | ' + current);
+                            i++;
+                            continue;
+                        }
+                    }
+                    result.push(current);
+                } else {
+                    result.push(current);
+                }
+            }
+            return result.join('\n');
+        },
+
         submitHandler() {
             this.isUploading = true;
             this.uploadPercentage = 0;

@@ -69,12 +69,17 @@
 
     <!-- B. URL Links -->
     <div x-show="form.type === 'url'" x-transition x-cloak>
-        <label class="block text-sm font-medium text-secondary mb-1">> URL Link(s)</label>
+        <div class="flex items-center justify-between mb-1">
+            <label class="block text-sm font-medium text-secondary">> URL Link(s)</label>
+            <button type="button" @click="if (form.links) form.links = autoFormatLinks(form.links)" class="text-[10px] uppercase tracking-widest text-emerald-400 hover:text-emerald-300 px-2 py-1 border border-emerald-500/30 rounded cursor-pointer">
+                ✨ Rapikan Format
+            </button>
+        </div>
         <textarea x-model="form.links" 
                   rows="5" 
                   class="form-underline font-mono"
                   placeholder="https://example.com/document.pdf&#10;https://another-site.com/info"></textarea>
-        <p class="text-xs text-secondary mt-1">One link per line.</p>
+        <p class="text-xs text-secondary mt-1">Satu link per baris (URL | Catatan). Gunakan tombol Rapikan Format jika mem-paste teks bertingkat.</p>
         <template x-if="errors.links">
             <p class="mt-1 text-xs text-red-500" x-text="errors.links[0]"></p>
         </template>

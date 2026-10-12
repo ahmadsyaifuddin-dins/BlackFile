@@ -4,6 +4,8 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 import intersect from '@alpinejs/intersect';
+import collapse from '@alpinejs/collapse';
+import focus from '@alpinejs/focus';
 import axios from 'axios';
 import cytoscape from 'cytoscape';
 import prototypesCRUD from './prototypes-crud';
@@ -19,6 +21,8 @@ window.cytoscape = cytoscape;
 
 // 3. Daftarkan plugin-plugin Alpine
 Alpine.plugin(intersect);
+Alpine.plugin(collapse);
+Alpine.plugin(focus);
 
 // 4. Daftarkan semua komponen data Alpine Anda
 Alpine.data('prototypesCRUD', prototypesCRUD);

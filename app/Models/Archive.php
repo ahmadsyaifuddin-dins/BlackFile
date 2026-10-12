@@ -90,6 +90,43 @@ class Archive extends Model
     }
 
     /**
+     * Get parsed links array with optional labels.
+     *
+     * @return array<int, array{url: string, label: string|null}>
+     */
+    public function getParsedLinksAttribute(): array
+    {
+        $links = $this->links;
+        if (empty($links) || ! is_array($links)) {
+            return [];
+        }
+
+        $results = [];
+        foreach ($links as $line) {
+            if (! is_string($line)) {
+                continue;
+            }
+            $line = trim($line);
+            if ($line === '') {
+                continue;
+            }
+            $parts = explode('|', $line, 2);
+            $url = trim($parts[0]);
+            $label = null;
+            if (isset($parts[1]) && trim($parts[1]) !== '') {
+                $label = trim($parts[1]);
+            }
+
+            $results[] = [
+                'url' => $url,
+                'label' => $label,
+            ];
+        }
+
+        return $results;
+    }
+
+    /**
      * Pastikan archive punya token publik (dipanggil saat pertama kali public).
      */
     public function ensurePublicToken(): void

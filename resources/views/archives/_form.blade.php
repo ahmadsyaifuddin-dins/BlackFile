@@ -157,14 +157,17 @@
                 fd.append('return_url', this.returnUrl);
             }
 
+            const csrfToken = this.csrf || document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
             axios.post(this.endpoint, fd, {
                 headers: {
-                    'X-CSRF-TOKEN': this.csrf,
-                    'Content-Type': 'multipart/form-data'
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': csrfToken,
                 },
-                onUploadProgress: (e) => {
-                    if (e.total) {
-                        this.uploadPercentage = Math.round((e.loaded * 100) / e.total);
+                onUploadProgress: (progressEvent) => {
+                    if (progressEvent.lengthComputable) {
+                        this.uploadPercentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                     }
                 }
             })
@@ -180,8 +183,14 @@
                     this.errors = err.response.data.errors || {};
                     this.errorMessage = 'Please correct the errors below.';
                     this.$el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else if (err.response?.data?.message) {
+                    this.errorMessage = err.response.data.message;
+                } else if (err.response?.status === 419) {
+                    this.errorMessage = 'Session expired. Please refresh the page and try again.';
+                } else if (err.response?.status === 403) {
+                    this.errorMessage = 'Forbidden. You may not have permission to perform this action.';
                 } else {
-                    this.errorMessage = err.response?.data?.message || 'Upload failed! Please try again.';
+                    this.errorMessage = err.response?.status ? `Upload failed (${err.response.status})! Please try again.` : 'Upload failed! Please try again.';
                 }
             });
         }

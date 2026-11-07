@@ -220,6 +220,27 @@ class ArchiveController extends Controller
             $q->where('type', $request->type);
         });
 
+        // Ringkasan koleksi favorit (ikut filter aktif, sama seperti vault stats
+        // di halaman index). Entri "game" dihitung terpisah supaya UI bisa
+        // menonjolkan warna khusus untuk data game.
+        $gameConstraint = function ($q) {
+            $q->where('category', 'Link Game')
+                ->orWhere('category_other', 'like', '%game%');
+        };
+
+        $totalFavorites = (clone $query)->count();
+        $gameFavorites = (clone $query)->where($gameConstraint)->count();
+        $publicFavorites = (clone $query)->where('is_public', true)->count();
+
+        $favoriteStats = [
+            'total' => $totalFavorites,
+            'game' => $gameFavorites,
+            'other' => max($totalFavorites - $gameFavorites, 0),
+            'public' => $publicFavorites,
+            'private' => max($totalFavorites - $publicFavorites, 0),
+            'last_saved' => (clone $query)->max('archive_user.created_at'),
+        ];
+
         $favorites = $query->with(['user', 'tags'])
             ->withCount('favoritedBy')
             // Default favorit: urut dari yang paling baru difavoritkan (pivot), bukan
@@ -239,6 +260,7 @@ class ArchiveController extends Controller
             'categories' => $categories,
             'sortOptions' => ArchiveSort::OPTIONS,
             'currentSort' => ArchiveSort::normalize($request->input('sort')),
+            'favoriteStats' => $favoriteStats,
         ]);
     }
 

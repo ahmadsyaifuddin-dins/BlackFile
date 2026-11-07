@@ -1,4 +1,11 @@
-<div class="bg-surface border border-green-500/30 rounded-md p-4 font-mono">
+@php
+    // Aksen panel filter: default hijau (archive index), bisa di-override
+    // (mis. 'rose' untuk halaman favorites) tanpa menduplikasi markup.
+    $accent = $accent ?? 'green';
+    $accentBorder = $accent === 'rose' ? 'border-rose-500/30' : 'border-green-500/30';
+@endphp
+
+<div class="bg-surface border {{ $accentBorder }} rounded-md p-4 font-mono">
     <form action="{{ $searchRoute }}" method="GET">
 
         {{-- Persiapan Data untuk Select Component --}}
@@ -66,7 +73,7 @@
 
         {{-- Tombol Aksi (Responsive Stacked) --}}
         <div
-            class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 mt-4 pt-4 border-t border-green-500/30">
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 mt-4 pt-4 border-t {{ $accentBorder }}">
             <x-button variant="outline" href="{{ $searchRoute }}" class="w-full sm:w-auto justify-center">
                 [ RESET ]
             </x-button>

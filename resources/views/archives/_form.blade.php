@@ -157,7 +157,10 @@
                 fd.append('return_url', this.returnUrl);
             }
 
-            const csrfToken = this.csrf || document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+            // PENTING: selector ini berada di dalam atribut HTML x-data.
+            // Jangan memakai tanda kutip ganda di sini, karena akan menutup
+            // atribut lebih awal dan membuat seluruh Alpine component rusak.
+            const csrfToken = this.csrf || document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || '';
 
             axios.post(this.endpoint, fd, {
                 headers: {
@@ -179,18 +182,22 @@
             })
             .catch(err => {
                 this.isUploading = false;
-                if (err.response?.status === 422) {
-                    this.errors = err.response.data.errors || {};
+                const status = err.response?.status;
+
+                if (status === 422) {
+                    this.errors = err.response?.data?.errors || {};
                     this.errorMessage = 'Please correct the errors below.';
                     this.$el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else if (status === 419) {
+                    // Cek 419 lebih dulu: respons ini bisa membawa `message`
+                    // umum yang akan menutupi pesan session-expired.
+                    this.errorMessage = 'Session expired. Please refresh the page and try again.';
+                } else if (status === 403) {
+                    this.errorMessage = 'Forbidden. You may not have permission to perform this action.';
                 } else if (err.response?.data?.message) {
                     this.errorMessage = err.response.data.message;
-                } else if (err.response?.status === 419) {
-                    this.errorMessage = 'Session expired. Please refresh the page and try again.';
-                } else if (err.response?.status === 403) {
-                    this.errorMessage = 'Forbidden. You may not have permission to perform this action.';
                 } else {
-                    this.errorMessage = err.response?.status ? `Upload failed (${err.response.status})! Please try again.` : 'Upload failed! Please try again.';
+                    this.errorMessage = status ? `Upload failed (${status})! Please try again.` : 'Upload failed! Please try again.';
                 }
             });
         }
